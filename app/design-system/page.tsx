@@ -14,6 +14,7 @@ import { Card } from "@/components/Card";
 import { Container } from "@/components/Container";
 import { DatePicker } from "@/components/DatePicker";
 import { Divider } from "@/components/Divider";
+import { DraftNotice } from "@/components/DraftNotice";
 import { EmptyState } from "@/components/EmptyState";
 import { EstimateNotice } from "@/components/EstimateNotice";
 import { Faq } from "@/components/Faq";
@@ -35,12 +36,15 @@ import { Select } from "@/components/Select";
 import { ShareActions } from "@/components/ShareActions";
 import { Skeleton } from "@/components/Skeleton";
 import { Stack } from "@/components/Stack";
+import { Steps } from "@/components/Steps";
 import { Table } from "@/components/Table";
 import { TextField } from "@/components/TextField";
+import { ToolCard } from "@/components/ToolCard";
 import { Textarea } from "@/components/Textarea";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { ESTIMATE_DISCLAIMER } from "@/content/legal";
 import { practiceAreas } from "@/content/practice-areas";
+import { toolList } from "@/content/tools";
 import { formatToman, toPersianDigits } from "@/lib/format";
 import { ToastDemo } from "./ToastDemo";
 
@@ -308,6 +312,7 @@ export default function DesignSystemPage() {
             چند دقیقه دیگر دوباره تلاش کنید یا با دفتر تماس بگیرید.
           </Alert>
           <EstimateNotice />
+          <DraftNotice />
         </div>
         <Sub title="Toast">
           <ToastDemo />
@@ -366,6 +371,18 @@ export default function DesignSystemPage() {
             <p className="text-sm text-muted">padding=&quot;lg&quot;</p>
           </Card>
         </Grid>
+        <Grid cols={2}>
+          {toolList.map((tool) => (
+            <ToolCard key={tool.slug} tool={tool} />
+          ))}
+        </Grid>
+        <Steps
+          items={[
+            { title: "گام نمونه نخست", text: "توضیح کوتاه گام نخست." },
+            { title: "گام نمونه دوم", text: "توضیح کوتاه گام دوم." },
+            { title: "گام نمونه سوم", text: "توضیح کوتاه گام سوم." },
+          ]}
+        />
         <Divider />
         <Faq
           items={[

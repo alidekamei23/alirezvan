@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Calculator, ChevronLeft, Clock, MapPin, Phone } from "lucide-react";
+import { Clock, MapPin, Phone } from "lucide-react";
 import { BaleButton } from "@/components/BaleButton";
 import { CallButton } from "@/components/CallButton";
 import { Card } from "@/components/Card";
@@ -12,26 +12,26 @@ import { Ltr } from "@/components/Ltr";
 import { LicenseStrip } from "@/components/LicenseStrip";
 import { PracticeIndex } from "@/components/PracticeIndex";
 import { Section } from "@/components/Section";
+import { ToolCard } from "@/components/ToolCard";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { lawyer } from "@/content/lawyer";
 import { requestNav } from "@/content/navigation";
+import { homeCopy } from "@/content/pages";
 import { practiceAreas } from "@/content/practice-areas";
+import { toolList } from "@/content/tools";
+import { pageMetadata } from "@/lib/seo";
 import { toPersianDigits } from "@/lib/format";
 
-const tools = [
-  {
-    href: "/tools/khesarat-takhir",
-    title: "محاسبه خسارت تأخیر تأدیه",
-    // TODO: lawyer review
-    summary: "برآورد خسارت تأخیر بر پایه شاخص قیمت بانک مرکزی",
-  },
-  {
-    href: "/tools/ejare",
-    title: "محاسبه افزایش اجاره",
-    // TODO: lawyer review
-    summary: "برآورد سقف افزایش اجاره‌بها در تهران",
-  },
-];
+export const metadata = {
+  ...pageMetadata({
+    title: `${lawyer.name} | ${lawyer.grade}`,
+    description:
+      "وب‌سایت علی رضوان، وکیل پایه یک دادگستری در تهران؛ چک و سفته، ملکی و اجاره، مطالبه و طلب، قرارداد.",
+    path: "/",
+  }),
+  // The root layout appends the lawyer's name to titles; Home already contains it.
+  title: { absolute: `${lawyer.name} | ${lawyer.grade}` },
+};
 
 export default function Home() {
   return (
@@ -54,7 +54,7 @@ export default function Home() {
             width={lawyer.photo.width}
             height={lawyer.photo.height}
             sizes="(min-width: 64rem) 24rem, 1px"
-            priority
+            preload
             className="hero-portrait hidden h-auto w-96 shrink-0 lg:order-last lg:block"
           />
           <div className="max-w-reading lg:self-center lg:pb-16">
@@ -64,9 +64,7 @@ export default function Home() {
                 {lawyer.grade}
               </span>
             </h1>
-            <p className="mt-5 text-lg text-ink">
-              مشاوره و وکالت در تهران؛ دعاوی چک و سفته، ملکی و اجاره، مطالبه طلب و قرارداد.
-            </p>
+            <p className="mt-5 text-lg text-ink">{homeCopy.lead}</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <LinkButton href={requestNav.href} size="lg">
                 {requestNav.label}
@@ -93,19 +91,8 @@ export default function Home() {
         lead="نتیجه این ابزارها تخمینی است و مشاوره حقوقی محسوب نمی‌شود."
       >
         <Grid cols={2}>
-          {tools.map((tool) => (
-            <Card key={tool.href} href={tool.href} className="h-full">
-              <span className="flex items-start gap-4">
-                <Calculator aria-hidden="true" className="mt-1 size-6 shrink-0 text-primary" />
-                <span className="flex flex-1 flex-col gap-1">
-                  <span className="text-lg font-bold text-ink group-hover:text-primary">
-                    {tool.title}
-                  </span>
-                  <span className="text-sm text-muted">{tool.summary}</span>
-                </span>
-                <ChevronLeft aria-hidden="true" className="mt-1.5 size-5 shrink-0 text-primary" />
-              </span>
-            </Card>
+          {toolList.map((tool) => (
+            <ToolCard key={tool.slug} tool={tool} />
           ))}
         </Grid>
       </Section>
