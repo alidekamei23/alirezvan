@@ -154,7 +154,9 @@ and at the end.
 - Mobile first. LCP < 2.5 s and CLS < 0.1 on a 4G phone. Tap targets ≥ 44 px.
 - WCAG 2.1 AA contrast; every input has a visible label.
 - Collect only the fields above. No document uploads.
-- `npm run lint`, `npm run typecheck` and `npm test` pass before a session ends.
+- UI is built only from the tokens and components in `docs/design-system.md`.
+- `npm run lint`, `npm run typecheck`, `npm test` and `npm run check:contrast` pass before a
+  session ends.
 
 ## 8. Working agreement for Claude Code
 - Start each session by reading this file and `SESSIONS.md`, then confirm the session goal.
