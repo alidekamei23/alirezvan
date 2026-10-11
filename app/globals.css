@@ -233,6 +233,21 @@ body:has(:is(input:not([type="radio"], [type="checkbox"]), textarea):focus)
       --hero-dots-origin: 35% 50%;
     }
   }
+
+  /*
+   * The portrait is a JPG on solid white. Its empty side and top margins fade out so
+   * the dots run up to the figure with no rectangle edge, and never show over it.
+   */
+  .hero-portrait {
+    -webkit-mask-image:
+      linear-gradient(to right, transparent, #000 15%, #000 85%, transparent),
+      linear-gradient(to bottom, transparent, #000 7%);
+    mask-image:
+      linear-gradient(to right, transparent, #000 15%, #000 85%, transparent),
+      linear-gradient(to bottom, transparent, #000 7%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
 }
 
 /* ---------- Prose: long-form Persian text (MDX guides) ---------- */

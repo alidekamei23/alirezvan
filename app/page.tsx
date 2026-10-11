@@ -55,7 +55,7 @@ export default function Home() {
             height={lawyer.photo.height}
             sizes="(min-width: 64rem) 24rem, 1px"
             priority
-            className="hidden h-auto w-96 shrink-0 mix-blend-multiply lg:order-last lg:block"
+            className="hero-portrait hidden h-auto w-96 shrink-0 lg:order-last lg:block"
           />
           <div className="max-w-reading lg:self-center lg:pb-16">
             <h1>
