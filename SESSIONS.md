@@ -5,6 +5,18 @@ Each session lists what you (the human) must have ready, a starter prompt to pas
 Claude Code, and the "done when" check. If a session runs over, the unfinished item moves to
 "after launch" in CLAUDE.md §3 — the launch date does not move.
 
+## Progress (update at the end of every session)
+
+| Session | Status | Notes |
+| --- | --- | --- |
+| 1 Setup and skeleton | Done 11 Oct | Liara preview deploy not done (no account yet) |
+| 2 Design system and Home | Done 11 Oct | See docs/design-system.md |
+| 3 Practice hubs, About, Contact | Done 11 Oct | Copy is draft; review/hubs.md must go to the lawyer. Map waits for the office address |
+| 4–10 | Not started | |
+
+Still open from "Before session 1": domain, hosting account, SMS provider account and OTP
+template, and the lawyer's details (license, bio, address, phones).
+
 ---
 
 ## Before session 1 — do today or tomorrow (outside approvals are the slowest part)

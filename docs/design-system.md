@@ -81,10 +81,10 @@ One component per file in `components/`. Each file starts with a usage note.
 | Foundations | `Container`, `Section`, `Stack`, `Grid`, `Prose`, `Ltr`, `Divider` |
 | Actions | `Button`, `LinkButton`, `CallButton`, `WhatsAppButton`, `BaleButton` (base: `ContactButton`; classes: `buttonStyles`) |
 | Forms | `TextField`, `PhoneField`, `MoneyField`, `Select`, `Textarea`, `RadioCards`, `DatePicker`, `OtpInput` (shell: `Field`) |
-| Feedback | `Alert`, `EstimateNotice`, `Toast` (`ToastProvider`, `useToast`), `Skeleton`, `EmptyState` |
-| Content | `Card`, `PracticeIndex`, `PracticeCard`, `GuideCard`, `Faq`, `Breadcrumbs`, `Badge`, `Table` |
+| Feedback | `Alert`, `EstimateNotice`, `DraftNotice`, `Toast` (`ToastProvider`, `useToast`), `Skeleton`, `EmptyState` |
+| Content | `Card`, `PracticeIndex`, `PracticeCard`, `ToolCard`, `Steps`, `GuideCard`, `Faq`, `Breadcrumbs`, `Badge`, `Table` |
 | Trust | `LicenseStrip`, `LawyerCard`, `AuthorBox`, `ReviewedAt` |
-| Layout | `Header`, `MobileMenu`, `Footer`, `StickyContactBar`, `SkipLink` |
+| Layout | `Header`, `MobileMenu`, `Footer`, `PageHeader`, `ContactCta`, `PracticeHub` (page template), `StickyContactBar`, `SkipLink` |
 | Calculator | `ResultCard`, `ShareActions` |
 
 State coverage: buttons have hover, focus-visible, active, disabled and loading; form

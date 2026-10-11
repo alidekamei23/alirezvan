@@ -10,7 +10,8 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check:contrast": "node scripts/check-contrast.mjs"
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "review:hubs": "node --experimental-strip-types --no-warnings scripts/export-review.ts"
   },
   "dependencies": {
     "date-fns-jalali": "^4.4.0-0",
