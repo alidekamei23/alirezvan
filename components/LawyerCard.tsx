@@ -4,6 +4,7 @@
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import { Card } from "@/components/Card";
+import { LicensingBody } from "@/components/LicensingBody";
 import { Ltr } from "@/components/Ltr";
 import { lawyer } from "@/content/lawyer";
 import { toPersianDigits } from "@/lib/format";
@@ -25,13 +26,19 @@ export function LawyerCard({ showPhoto = true }: { showPhoto?: boolean }) {
         <div className="min-w-0">
           <p className="text-xl font-bold text-ink">{lawyer.name}</p>
           <p className="text-muted">{lawyer.grade}</p>
-          <dl className="mt-4 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
-            <dt className="text-muted">مرجع صدور پروانه</dt>
-            <dd className="font-semibold text-ink">{lawyer.licensingBody}</dd>
-            <dt className="text-muted">شماره پروانه</dt>
-            <dd className="font-semibold text-ink">
-              <Ltr>{toPersianDigits(lawyer.licenseNumber)}</Ltr>
-            </dd>
+          <dl className="mt-4 flex flex-col gap-3 text-sm">
+            <div>
+              <dt className="text-muted">مرجع صدور پروانه</dt>
+              <dd className="mt-0.5 font-semibold text-ink">
+                <LicensingBody size="sm" />
+              </dd>
+            </div>
+            <div>
+              <dt className="text-muted">شماره پروانه</dt>
+              <dd className="font-semibold text-ink">
+                <Ltr>{toPersianDigits(lawyer.licenseNumber)}</Ltr>
+              </dd>
+            </div>
           </dl>
           {lawyer.licenseLookupUrl && (
             <a

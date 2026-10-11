@@ -1,7 +1,7 @@
 /**
  * Single source of truth for the lawyer's identity and contact details.
  *
- * Values in [brackets] and the phone numbers below are PLACEHOLDERS until
+ * Values still in [brackets] and the phone numbers below are PLACEHOLDERS until
  * Mr. Rezvan supplies the real ones. Do not guess them. `null` means "not known yet";
  * components must render nothing for a null field.
  */
@@ -9,9 +9,11 @@ export const lawyer = {
   name: "علی رضوان",
   grade: "وکیل پایه یک دادگستری",
 
-  // TODO(lawyer): licensing body, license number and the official lookup page
-  licensingBody: "[مرجع صدور پروانه]",
-  licenseNumber: "[شماره پروانه]",
+  licensingBody: "کانون وکلای دادگستری مرکز",
+  /** Emblem of the licensing body, on a white background. */
+  licensingBodyLogo: { src: "/images/kanoon-markaz.webp", width: 320, height: 395 },
+  licenseNumber: "40949",
+  // TODO(lawyer): URL of the official license-lookup page
   licenseLookupUrl: null as string | null,
 
   // TODO(lawyer): short bio, education, more photos
@@ -22,9 +24,9 @@ export const lawyer = {
   /** Square head-and-shoulders crop for small sizes. */
   avatar: { src: "/images/ali-rezvan-avatar.jpg", width: 384, height: 384 },
 
-  // TODO(lawyer): office address, working hours, map coordinates
+  // TODO(lawyer): working hours, map coordinates
   city: "تهران",
-  address: "[نشانی دفتر]",
+  address: "خیابان دکتر شریعتی، روبه‌روی حسینیه ارشاد، ابتدای کوچه شهیم، پلاک ۶، واحد ۳",
   workingHours: "[ساعات کاری]",
   googleMapsUrl: null as string | null,
 
