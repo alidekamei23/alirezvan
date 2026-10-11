@@ -9,7 +9,8 @@ import { Grid } from "@/components/Grid";
 import { LawyerCard } from "@/components/LawyerCard";
 import { LinkButton } from "@/components/LinkButton";
 import { Ltr } from "@/components/Ltr";
-import { PracticeCard } from "@/components/PracticeCard";
+import { LicenseStrip } from "@/components/LicenseStrip";
+import { PracticeIndex } from "@/components/PracticeIndex";
 import { Section } from "@/components/Section";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { lawyer } from "@/content/lawyer";
@@ -35,7 +36,7 @@ const tools = [
 export default function Home() {
   return (
     <>
-      <section className="border-b border-line bg-surface py-10 md:py-16">
+      <section className="bg-surface py-10 md:py-16">
         <Container className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
           <Image
             src={lawyer.photo.src}
@@ -48,7 +49,7 @@ export default function Home() {
           />
           <div className="max-w-reading">
             <h1>
-              <span className="block text-3xl font-extrabold text-ink">{lawyer.name}</span>
+              <span className="block text-3xl font-black text-ink">{lawyer.name}</span>
               <span className="mt-1 block text-xl font-medium text-primary">
                 {lawyer.grade}
               </span>
@@ -69,13 +70,10 @@ export default function Home() {
           </div>
         </Container>
       </section>
+      <LicenseStrip />
 
       <Section id="practice" title="حوزه‌های کاری">
-        <Grid cols={4}>
-          {practiceAreas.map((area) => (
-            <PracticeCard key={area.slug} area={area} />
-          ))}
-        </Grid>
+        <PracticeIndex areas={practiceAreas} />
       </Section>
 
       <Section

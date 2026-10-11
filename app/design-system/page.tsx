@@ -20,11 +20,13 @@ import { Faq } from "@/components/Faq";
 import { Grid } from "@/components/Grid";
 import { GuideCard } from "@/components/GuideCard";
 import { LawyerCard } from "@/components/LawyerCard";
+import { LicenseStrip } from "@/components/LicenseStrip";
 import { LinkButton } from "@/components/LinkButton";
 import { MoneyField } from "@/components/MoneyField";
 import { OtpInput } from "@/components/OtpInput";
 import { PhoneField } from "@/components/PhoneField";
 import { PracticeCard } from "@/components/PracticeCard";
+import { PracticeIndex } from "@/components/PracticeIndex";
 import { Prose } from "@/components/Prose";
 import { RadioCards } from "@/components/RadioCards";
 import { ResultCard } from "@/components/ResultCard";
@@ -341,6 +343,7 @@ export default function DesignSystemPage() {
           <Badge tone="danger">بسته شد</Badge>
           <Badge tone="info">جدید</Badge>
         </div>
+        <PracticeIndex areas={practiceAreas} />
         <Grid cols={4}>
           {practiceAreas.map((area) => (
             <PracticeCard key={area.slug} area={area} />
@@ -398,6 +401,7 @@ export default function DesignSystemPage() {
       </Block>
 
       <Block title="اعتماد">
+        <LicenseStrip />
         <Grid cols={2}>
           <LawyerCard />
           <Stack gap="sm">

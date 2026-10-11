@@ -82,8 +82,8 @@ One component per file in `components/`. Each file starts with a usage note.
 | Actions | `Button`, `LinkButton`, `CallButton`, `WhatsAppButton`, `BaleButton` (base: `ContactButton`; classes: `buttonStyles`) |
 | Forms | `TextField`, `PhoneField`, `MoneyField`, `Select`, `Textarea`, `RadioCards`, `DatePicker`, `OtpInput` (shell: `Field`) |
 | Feedback | `Alert`, `EstimateNotice`, `Toast` (`ToastProvider`, `useToast`), `Skeleton`, `EmptyState` |
-| Content | `Card`, `PracticeCard`, `GuideCard`, `Faq`, `Breadcrumbs`, `Badge`, `Table` |
-| Trust | `LawyerCard`, `AuthorBox`, `ReviewedAt` |
+| Content | `Card`, `PracticeIndex`, `PracticeCard`, `GuideCard`, `Faq`, `Breadcrumbs`, `Badge`, `Table` |
+| Trust | `LicenseStrip`, `LawyerCard`, `AuthorBox`, `ReviewedAt` |
 | Layout | `Header`, `MobileMenu`, `Footer`, `StickyContactBar`, `SkipLink` |
 | Calculator | `ResultCard`, `ShareActions` |
 
@@ -95,6 +95,10 @@ states; errors use `Alert tone="danger"`.
 Form values: `PhoneField`, `MoneyField`, `DatePicker` and `OtpInput` show Persian digits
 and submit Latin digits through a hidden input named by `name`. Dates are submitted as
 Jalali `YYYY-MM-DD`.
+
+Home leads with the license particulars (`LicenseStrip`) and lists the practice areas
+as a ruled index (`PracticeIndex`), in the manner of a formal document. Reach for a
+ruled list before a grid of identical cards when the items are the page's main content.
 
 ## 3. Do and don't
 
