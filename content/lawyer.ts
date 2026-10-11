@@ -17,7 +17,10 @@ export const lawyer = {
   // TODO(lawyer): short bio, education, more photos
   bio: null as string | null,
   education: [] as string[],
-  photo: { src: "/images/ali-rezvan.jpg", width: 890, height: 1004 },
+  /** Full portrait on a white background; use on white surfaces only. */
+  photo: { src: "/images/ali-rezvan-portrait.jpg", width: 976, height: 1100 },
+  /** Square head-and-shoulders crop for small sizes. */
+  avatar: { src: "/images/ali-rezvan-avatar.jpg", width: 384, height: 384 },
 
   // TODO(lawyer): office address, working hours, map coordinates
   city: "تهران",

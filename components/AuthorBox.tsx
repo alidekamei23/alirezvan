@@ -14,14 +14,14 @@ export function AuthorBox({ reviewedAt }: { reviewedAt: string }) {
       aria-label="نویسنده"
       className="flex items-start gap-4 rounded-md border border-line bg-surface p-4"
     >
-      {lawyer.photo && (
+      {lawyer.avatar && (
         <Image
-          src={lawyer.photo.src}
+          src={lawyer.avatar.src}
           alt=""
-          width={lawyer.photo.width}
-          height={lawyer.photo.height}
+          width={lawyer.avatar.width}
+          height={lawyer.avatar.height}
           sizes="56px"
-          className="size-14 shrink-0 rounded-full object-cover object-top"
+          className="size-14 shrink-0 rounded-full border border-line"
         />
       )}
       <div className="min-w-0 text-sm">

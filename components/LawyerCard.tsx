@@ -12,14 +12,14 @@ export function LawyerCard({ showPhoto = true }: { showPhoto?: boolean }) {
   return (
     <Card padding="lg">
       <div className="flex flex-col gap-5 xs:flex-row xs:items-start">
-        {showPhoto && lawyer.photo && (
+        {showPhoto && lawyer.avatar && (
           <Image
-            src={lawyer.photo.src}
+            src={lawyer.avatar.src}
             alt={`تصویر ${lawyer.name}`}
-            width={lawyer.photo.width}
-            height={lawyer.photo.height}
+            width={lawyer.avatar.width}
+            height={lawyer.avatar.height}
             sizes="96px"
-            className="size-24 shrink-0 rounded-md object-cover object-top"
+            className="size-24 shrink-0 rounded-md border border-line"
           />
         )}
         <div className="min-w-0">

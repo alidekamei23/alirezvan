@@ -36,18 +36,27 @@ const tools = [
 export default function Home() {
   return (
     <>
-      <section className="bg-surface py-10 md:py-16">
-        <Container className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
+      <section className="bg-surface py-10 md:py-16 lg:pb-0">
+        <Container className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
+          {/* Phones get the tight crop; from lg the full portrait stands on the strip below. */}
+          <Image
+            src={lawyer.avatar.src}
+            alt={`تصویر ${lawyer.name}`}
+            width={lawyer.avatar.width}
+            height={lawyer.avatar.height}
+            sizes="7rem"
+            className="size-28 shrink-0 rounded-md border border-line lg:hidden"
+          />
           <Image
             src={lawyer.photo.src}
             alt={`تصویر ${lawyer.name}`}
             width={lawyer.photo.width}
             height={lawyer.photo.height}
-            sizes="(min-width: 64rem) 20rem, 6rem"
+            sizes="(min-width: 64rem) 24rem, 1px"
             priority
-            className="size-24 shrink-0 rounded-md object-cover object-top lg:order-last lg:h-auto lg:w-80 lg:rounded-lg"
+            className="hidden h-auto w-96 shrink-0 lg:order-last lg:block"
           />
-          <div className="max-w-reading">
+          <div className="max-w-reading lg:self-center lg:pb-16">
             <h1>
               <span className="block text-3xl font-black text-ink">{lawyer.name}</span>
               <span className="mt-1 block text-xl font-medium text-primary">
