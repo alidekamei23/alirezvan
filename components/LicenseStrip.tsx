@@ -34,12 +34,15 @@ export function LicenseStrip() {
             <div
               key={item.label}
               className={cn(
-                "flex flex-col justify-center gap-0.5 border-line py-3 md:px-8 md:py-4",
+                "flex flex-col gap-0.5 border-line py-3 md:px-8",
                 item.className,
               )}
             >
               <dt className="text-sm text-muted">{item.label}</dt>
-              <dd className="font-semibold text-ink">{item.value}</dd>
+              {/* One fixed row height (the emblem's) so labels and values line up across columns. */}
+              <dd className="flex items-center font-semibold text-ink md:min-h-11">
+                {item.value}
+              </dd>
             </div>
           ))}
         </dl>

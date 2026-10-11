@@ -36,7 +36,9 @@ export const metadata = {
 export default function Home() {
   return (
     <>
-      <section className="relative isolate bg-surface py-10 md:py-16 lg:pb-0">
+      {/* From lg the hero has no block padding: the portrait file carries its own top margin,
+          and this keeps the license strip below it inside the first screen on laptops. */}
+      <section className="relative isolate bg-surface py-10 md:py-16 lg:py-0">
         <div aria-hidden="true" className="hero-dots" />
         <Container className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
           {/* Phones get the tight crop; from lg the full portrait stands on the strip below. */}
@@ -57,7 +59,7 @@ export default function Home() {
             preload
             className="hero-portrait hidden h-auto w-96 shrink-0 lg:order-last lg:block"
           />
-          <div className="max-w-reading lg:self-center lg:pb-16">
+          <div className="max-w-reading lg:self-center lg:pb-10">
             <h1>
               <span className="block text-3xl font-black text-ink">{lawyer.name}</span>
               <span className="mt-1 block text-xl font-medium text-primary">
