@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+/* Starter tokens. The full design system (type scale, spacing, radius) is session 2. */
+@theme inline {
+  --font-sans: var(--font-vazirmatn), Tahoma, sans-serif;
+
+  --color-surface: #ffffff;
+  --color-surface-alt: #f5f6f7;
+  --color-line: #dfe3e7;
+  --color-ink: #17212b;
+  --color-muted: #51606e;
+  --color-accent: #1d4a5f;
+  --color-accent-strong: #143646;
+  --color-on-accent: #ffffff;
+}
+
+body {
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}

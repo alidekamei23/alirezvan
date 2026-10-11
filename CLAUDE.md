@@ -1,0 +1,167 @@
+# CLAUDE.md — Ali Rezvan law practice website
+
+Read this file at the start of every session. It describes what we are building, the rules
+that cannot be broken, and how the code is organised. The full strategy and PRD live in the
+"Lawyer Website — Strategy, Plan & PRD" doc; this file is the working summary for code.
+
+## 1. Project in one paragraph
+
+A Persian-only (RTL) website for **Ali Rezvan (علی رضوان), grade-one attorney (وکیل پایه یک)**
+in Tehran. Practice areas: checks and promissory notes (چک و سفته), real estate and leases
+(ملکی و اجاره), debt claims (مطالبه و طلب), contracts (قرارداد). The site's one job is lead
+generation: phone calls, WhatsApp/Bale chats and consultation requests. Launch date:
+**Saturday 31 October 2026 (9 Aban 1405)**.
+
+## 2. Non-negotiable rules
+
+### 2.1 Bar Association compliance (copy and UI)
+The Iranian Bar actively disciplines lawyers for advertising-style content. The site is an
+information and practice site, not an advert.
+
+Never write or render:
+- Superlatives or rankings: «بهترین وکیل», «شماره یک», «برترین», «معروف‌ترین»
+- Outcome promises: «تضمینی», «۱۰۰٪», «قطعاً برنده», win rates or success percentages
+- Discounts, promotions, countdowns, «تخفیف», comparisons with other lawyers
+- Identifiable client details or court documents
+- Sensational imagery (gavels exploding, robe-selfie style)
+
+Always:
+- Show name, license grade, licensing body and license number (from `content/lawyer.ts`)
+- Link to the official license-lookup page of the licensing body
+- Label every calculator result: «این نتیجه تخمینی است و مشاوره حقوقی محسوب نمی‌شود.»
+- Show a «آخرین بازبینی حقوقی» (last legal review) date on every guide
+
+If a request would break these rules, stop and say so instead of writing the copy.
+
+### 2.2 Must work on Iran's domestic network alone
+Global internet access in Iran has been cut several times (most recently Feb–May 2026).
+- No runtime dependency on foreign services in the visitor path: no Google Fonts, Google
+  Analytics, reCAPTCHA, foreign CDNs, YouTube embeds, or external icon/font CDNs.
+- Fonts are self-hosted (`next/font/local`, Vazirmatn). Icons are inline SVG or a bundled
+  package (e.g., `lucide-react`), never a CDN.
+- Maps: Neshan embed or static image; Google Maps only as an outbound link.
+- Third-party scripts need explicit approval in the PR description.
+
+### 2.3 Persian and RTL
+- `<html lang="fa" dir="rtl">`. Use Tailwind logical utilities (`ms-*`, `me-*`, `ps-*`, `pe-*`,
+  `start-*`, `end-*`, `text-start`), never `ml-*`/`mr-*`/`left-*`/`right-*` for layout.
+- Persian digits in all visible numbers (`toPersianDigits()` in `lib/format.ts`); store and
+  compute with Latin digits. Accept both Persian and Latin digits in inputs.
+- Money: tomans in the UI with thousands separators (`۱۲٬۵۰۰٬۰۰۰ تومان`).
+- Dates: Jalali everywhere in the UI (`date-fns-jalali`), Asia/Tehran time zone.
+- Use the Persian letters ی and ک (not Arabic ي and ك) and the zero-width non-joiner (ZWNJ)
+  where Persian needs it (e.g., «می‌شود», «پرونده‌ها»). Normalise user input the same way.
+
+## 3. Stack (launch version)
+
+| Concern | Choice |
+| --- | --- |
+| Framework | Next.js (App Router), TypeScript strict, React Server Components by default |
+| Styling | Tailwind CSS, logical properties, design tokens in `app/globals.css` |
+| Content | MDX files in `content/guides/*.mdx` (frontmatter validated with Zod) |
+| Database | PostgreSQL with Drizzle ORM (`db/schema.ts`, migrations in `db/migrations`) |
+| Validation | Zod for every form, server action and content file |
+| Dates | `date-fns-jalali` |
+| SMS / OTP | Iranian SMS gateway behind `lib/sms.ts` (Kavenegar first; swappable) |
+| Lead alerts | Bale bot (Telegram-compatible Bot API) behind `lib/notify.ts` |
+| Admin | `/admin` protected by HTTP basic auth in `middleware.ts` (env credentials) |
+| Analytics | Self-hosted Umami (script served from our own domain) |
+| Tests | Vitest for logic (calculators, digits, OTP); Playwright smoke tests if time allows |
+| Hosting | Iranian PaaS with Next.js + PostgreSQL (Liara is the default candidate) |
+
+Deferred until after launch (do not build unless asked): Payload CMS, real-time booking
+calendar, reminder SMS, PDF export, online payment, client accounts, English version.
+
+## 4. Directory layout
+
+```
+app/
+  layout.tsx                 # fonts, <html dir="rtl">, header, footer, sticky contact bar
+  page.tsx                   # Home
+  check-safte/page.tsx       # practice hub: checks and promissory notes
+  melki-ejare/page.tsx       # practice hub: real estate and leases
+  motalebe/page.tsx          # practice hub: debt claims
+  gharardad/page.tsx         # practice hub: contracts
+  tools/khesarat-takhir/     # late-payment damages calculator
+  tools/ejare/               # rent increase calculator
+  guides/page.tsx            # guides index
+  guides/[slug]/page.tsx     # guide page (Persian slugs from frontmatter)
+  about/ contact/ request/ privacy/ disclaimer/
+  admin/                     # leads list (basic auth)
+  api/ or actions/           # server actions for request form and OTP
+  sitemap.ts robots.ts
+components/                  # UI components (one per file, Persian-first props)
+content/
+  lawyer.ts                  # single source of truth for name, license, address, phones
+  practice-areas.ts          # hub data: titles, steps, FAQs
+  guides/*.mdx
+  cpi.json                   # Central Bank monthly price index (see §5.1)
+  settings.ts                # rent cap, deposit conversion rate, etc.
+lib/                         # format, jalali, calculators, sms, notify, otp, seo helpers
+db/                          # Drizzle schema and migrations
+tests/
+```
+
+Practice hubs and fixed pages use the Latin slugs above. Guides use Persian slugs.
+
+## 5. Feature specs
+
+### 5.1 Late-payment damages calculator (`lib/calculators/damages.ts`)
+- Inputs: principal (tomans), start date (due date, or bounce date for a check), end date
+  (default: today), all Jalali.
+- Method: monthly consumer price index of the Central Bank, as Tehran courts apply it:
+  `value = principal × (index[endMonth] / index[startMonth])`, `damages = value − principal`.
+- `content/cpi.json`: `{ "base": "...", "source": "CBI ...", "updated": "1405-07-..",
+  "months": { "1404-01": 0.0, ... } }` keyed by Jalali `YYYY-MM`. Use one consistent base
+  year. If `endMonth` is not published yet, use the latest available month and tell the user
+  which month was used.
+- Output: principal, damages, total, and the two index months used.
+- Unit tests: at least 3 hand-checked examples, plus edge cases (same month, end before
+  start, missing months, Persian-digit input).
+
+### 5.2 Rent increase calculator (`lib/calculators/rent.ts`)
+- Inputs: current monthly rent, deposit, city (Tehran only at launch).
+- `maxNewRent = rent × (1 + cap)` where `cap` comes from `content/settings.ts`
+  (Tehran 1405: `0.27`). Deposit-to-rent conversion uses a configurable rate in settings
+  (value to be confirmed by the lawyer; show it on the page).
+
+### 5.3 Consultation request (launch version)
+1. Fields: name, mobile (09xxxxxxxxx), practice area, consultation type (phone 15 min /
+   in-office 45 min / video 45 min), preferred day and time window, summary ≤ 300 chars.
+2. SMS OTP: 5 digits, stored hashed, expires in 2 minutes, max 3 attempts, rate-limited
+   per phone and per IP.
+3. On success: save lead (status `new`, `source` = page or calculator), send Bale alert to
+   the assistant, show a confirmation screen with the office phone.
+4. Calculator "send result to the lawyer" pre-fills the summary with the result.
+
+### 5.4 Leads admin
+`/admin` lists leads newest first with status (`new`, `contacted`, `consultation`,
+`retained`, `closed`), source, area and created time (Jalali). Status is editable. No delete.
+
+### 5.5 Guides (MDX)
+Frontmatter (Zod-validated): `title`, `slug` (Persian), `area`, `summary`, `reviewedAt`
+(Jalali date), `faqs` (array of q/a), `relatedTool` (optional), `references` (laws with
+links). Each guide renders an author box, FAQ schema, and contact boxes after section 2
+and at the end.
+
+## 6. SEO checklist (every page)
+- Unique Persian `<title>` and meta description; canonical URL; Open Graph tags.
+- JSON-LD: `LegalService`/`Attorney` + `LocalBusiness` site-wide (from `content/lawyer.ts`),
+  `Article` + `FAQPage` + `BreadcrumbList` on guides.
+- `sitemap.ts` and `robots.ts`; no `noindex` outside `/admin`.
+
+## 7. Quality bar
+- Mobile first. LCP < 2.5 s and CLS < 0.1 on a 4G phone. Tap targets ≥ 44 px.
+- WCAG 2.1 AA contrast; every input has a visible label.
+- Collect only the fields above. No document uploads.
+- `npm run lint`, `npm run typecheck` and `npm test` pass before a session ends.
+
+## 8. Working agreement for Claude Code
+- Start each session by reading this file and `SESSIONS.md`, then confirm the session goal.
+- Keep commits small and messages in English; UI copy in Persian.
+- Do not invent legal facts. When copy needs a legal statement, write a draft marked
+  `{/* TODO: lawyer review */}` and list it at the end of the session.
+- Anything that needs a secret goes in `.env.local` (never committed); keep `.env.example`
+  up to date.
+- End each session with: what was done, what moved to "after launch", and what the next
+  session needs from the human.
