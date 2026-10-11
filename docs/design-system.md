@@ -116,6 +116,8 @@ Do
 Don't
 - Don't write a hex colour, pixel size or shadow in a component.
 - Don't add gradients, glass effects, entrance animations, carousels or countdowns.
+  The one exception is the faint dot grid behind the Home hero (`.hero-dots` in
+  `app/globals.css`); don't reuse it elsewhere.
 - Don't use scales, gavels, courtrooms or gold-and-black styling.
 - Don't use badges, banners or copy for superlatives, rankings, discounts, success
   rates, outcome promises or client details (`CLAUDE.md` §2.1).

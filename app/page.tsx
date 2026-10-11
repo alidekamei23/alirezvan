@@ -36,7 +36,8 @@ const tools = [
 export default function Home() {
   return (
     <>
-      <section className="bg-surface py-10 md:py-16 lg:pb-0">
+      <section className="relative isolate bg-surface py-10 md:py-16 lg:pb-0">
+        <div aria-hidden="true" className="hero-dots" />
         <Container className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
           {/* Phones get the tight crop; from lg the full portrait stands on the strip below. */}
           <Image
@@ -54,7 +55,7 @@ export default function Home() {
             height={lawyer.photo.height}
             sizes="(min-width: 64rem) 24rem, 1px"
             priority
-            className="hidden h-auto w-96 shrink-0 lg:order-last lg:block"
+            className="hidden h-auto w-96 shrink-0 mix-blend-multiply lg:order-last lg:block"
           />
           <div className="max-w-reading lg:self-center lg:pb-16">
             <h1>

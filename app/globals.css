@@ -201,6 +201,40 @@ body:has(:is(input:not([type="radio"], [type="checkbox"]), textarea):focus)
   display: none;
 }
 
+/*
+ * Home hero dot grid. A decorative layer behind the hero content (the hero itself is
+ * `relative isolate`), faded out toward the edges with a radial mask. The mask is
+ * centred on phones and shifted toward the portrait side from `lg`.
+ */
+@layer components {
+  .hero-dots {
+    --hero-dots-origin: 50% 50%;
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.28;
+    background-image: radial-gradient(var(--color-primary) 1px, transparent 1px);
+    background-size: 22px 22px;
+    -webkit-mask-image: radial-gradient(
+      ellipse 75% 70% at var(--hero-dots-origin),
+      #000 25%,
+      transparent 80%
+    );
+    mask-image: radial-gradient(
+      ellipse 75% 70% at var(--hero-dots-origin),
+      #000 25%,
+      transparent 80%
+    );
+  }
+
+  @media (min-width: 64rem) {
+    .hero-dots {
+      --hero-dots-origin: 35% 50%;
+    }
+  }
+}
+
 /* ---------- Prose: long-form Persian text (MDX guides) ---------- */
 @layer components {
   .prose-fa {
