@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { ContactBar } from "@/components/ContactBar";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { SkipLink } from "@/components/SkipLink";
+import { StickyContactBar } from "@/components/StickyContactBar";
+import { ToastProvider } from "@/components/Toast";
 import { lawyer } from "@/content/lawyer";
 import "./globals.css";
 
@@ -26,17 +28,23 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1d4a5f",
+  // emerald-700, the primary token in app/globals.css
+  themeColor: "#047857",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="fa" dir="rtl" className={`${vazirmatn.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col pb-16 font-sans lg:pb-0">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <ContactBar />
+      <body className="flex min-h-full flex-col pb-(--contact-bar-height) font-sans lg:pb-0">
+        <ToastProvider>
+          <SkipLink />
+          <Header />
+          <main id="main" tabIndex={-1} className="flex-1 outline-none">
+            {children}
+          </main>
+          <Footer />
+          <StickyContactBar />
+        </ToastProvider>
       </body>
     </html>
   );

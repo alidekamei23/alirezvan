@@ -18,6 +18,8 @@ export const siteNav: NavItem[] = [
   { href: "/contact", label: "تماس" },
 ];
 
+export const requestNav: NavItem = { href: "/request", label: "درخواست مشاوره" };
+
 export const legalNav: NavItem[] = [
   { href: "/privacy", label: "حریم خصوصی" },
   { href: "/disclaimer", label: "سلب مسئولیت" },

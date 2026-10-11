@@ -14,10 +14,10 @@ export const lawyer = {
   licenseNumber: "[شماره پروانه]",
   licenseLookupUrl: null as string | null,
 
-  // TODO(lawyer): short bio, education, photos
+  // TODO(lawyer): short bio, education, more photos
   bio: null as string | null,
   education: [] as string[],
-  photo: null as string | null,
+  photo: { src: "/images/ali-rezvan.jpg", width: 890, height: 1004 },
 
   // TODO(lawyer): office address, working hours, map coordinates
   city: "تهران",
