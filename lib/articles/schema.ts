@@ -1,9 +1,10 @@
 // Zod schemas for everything the admin can submit about an article. Every Server Action
 // parses its input with these before touching the database.
 import { z } from "zod";
-import { practiceAreas, type PracticeAreaSlug } from "@/content/practice-areas";
-import { isReservedSlug, normalizeSlug } from "@/lib/articles/slug";
-import { normalizePersian } from "@/lib/format";
+// (Relative imports with extensions: scripts run this file with plain Node.)
+import { practiceAreas, type PracticeAreaSlug } from "../../content/practice-areas.ts";
+import { normalizePersian } from "../format.ts";
+import { isReservedSlug, normalizeSlug } from "./slug.ts";
 
 const AREA_SLUGS = practiceAreas.map((area) => area.slug) as [
   PracticeAreaSlug,

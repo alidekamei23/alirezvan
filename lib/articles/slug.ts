@@ -1,6 +1,7 @@
 // Article slugs: the part of the URL after /blog/. Persian or Latin words joined by
 // hyphens. The same normalisation runs on generated and hand-typed slugs.
-import { normalizePersian, toLatinDigits } from "@/lib/format";
+// (Relative imports with extensions: scripts run this file with plain Node.)
+import { normalizePersian, toLatinDigits } from "../format.ts";
 
 /** Route segments under /blog that a slug must not shadow. */
 export const RESERVED_SLUGS = ["page", "topic"];

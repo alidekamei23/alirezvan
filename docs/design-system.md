@@ -87,7 +87,9 @@ One component per file in `components/`. Each file starts with a usage note.
 | Feedback | `Alert`, `EstimateNotice`, `DraftNotice`, `Toast` (`ToastProvider`, `useToast`), `Skeleton`, `EmptyState` |
 | Content | `Card`, `PracticeIndex`, `PracticeCard`, `ToolCard`, `Steps`, `PostCard`, `TopicFilter`, `Pagination`, `ContactBox`, `Faq`, `Disclosure` (`DisclosureGroup`), `Breadcrumbs`, `Badge`, `Table` |
 | Trust | `LicenseStrip`, `LawyerCard`, `AuthorBox`, `UpdatedAt` |
-| Layout | `Header`, `MobileMenu`, `Footer`, `PageHeader`, `ContactCta`, `PracticeHub`, `BlogIndex` and `TextPage` (page templates), `StickyContactBar`, `SkipLink` |
+| Article text | `ArticleBody` (an article's Markdown from the database, rendered inside `Prose`; also the editor preview) |
+| Admin (`components/admin/`) | `LoginForm`, `ArticleEditor`. The admin panel uses the same tokens and form components as the site, with its own plain header instead of `SiteShell` |
+| Layout | `SiteShell` (frame of every public page), `Header`, `MobileMenu`, `Footer`, `PageHeader`, `ContactCta`, `PracticeHub`, `BlogIndex` and `TextPage` (page templates), `StickyContactBar`, `SkipLink` |
 | Calculator | `ResultCard`, `ShareActions`, `CopyButton`, `TadiehCalculator` (late-payment damages) and `HazineCalculator` (court fees), both in rials |
 
 State coverage: buttons have hover, focus-visible, active, disabled and loading; form

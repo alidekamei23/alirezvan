@@ -20,7 +20,9 @@ export function databasePath(url: string): string {
   const value = url.startsWith("file:") ? url.slice("file:".length) : url;
   if (value === ":memory:") return value;
   if (value.trim() === "") throw new Error("DATABASE_URL is empty");
-  return path.resolve(process.cwd(), value);
+  // The path comes from the environment; the comment stops Turbopack from bundling the
+  // whole project folder because of it.
+  return path.resolve(/* turbopackIgnore: true */ process.cwd(), value);
 }
 
 export function openDatabase(url: string): Db {

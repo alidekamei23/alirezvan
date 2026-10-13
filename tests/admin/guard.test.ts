@@ -25,6 +25,8 @@ vi.mock("next/headers", () => ({
   headers: async () => ({ get: (name: string) => request.headers.get(name) ?? null }),
 }));
 
+vi.mock("next/server", () => ({ connection: async () => {} }));
+
 vi.mock("next/navigation", () => ({
   redirect: (path: string) => {
     throw new Error(`REDIRECT:${path}`);

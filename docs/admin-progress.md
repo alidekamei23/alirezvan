@@ -4,7 +4,8 @@ Spec: `docs/admin-panel-spec.md`. Re-read both files at the start of every phase
 
 ## Current phase
 
-Phase 2 — Admin interface and editor: **in progress**.
+Phase 2 — Admin interface and editor: **done 13 Oct 2026, waiting for the owner to approve**.
+Phase 3 has not started.
 
 ## Done
 
@@ -25,6 +26,22 @@ Phase 2 — Admin interface and editor: **in progress**.
      sessions (migration `0001`). `npm run revoke-sessions` for manual revocation.
   3. All repository and auth data-access functions are async, and Drizzle queries live
      only in the repository files.
+- Phase 2:
+  - Public pages moved into `app/(site)/`; `components/SiteShell.tsx` holds the public
+    frame. All 33 public routes and their URLs are unchanged.
+  - `proxy.ts`, login and logout, article list (search, status filter, sort, paging),
+    editor with live side-by-side preview, preview page, delete with confirmation.
+  - `lib/articles/repository.ts` (lifecycle, slug redirects without chains or loops).
+  - `components/ArticleBody.tsx`: Markdown renderer shared by preview and (in Phase 3)
+    the public page; contact box after section 2 or at a `[contact-box]` line.
+  - Uploads: `lib/uploads.ts`, `POST /admin/api/upload`, `/uploads/<name>`,
+    `npm run uploads:clean`.
+  - SEO fields with search-result preview, character guidance, warnings, canonical
+    preview, legal-review reminder and the required lawyer-approval tick.
+  - Checked in the browser against `next start` with throwaway credentials (removed
+    afterwards): login, wrong password, create, upload, publish, rename, unpublish,
+    delete, logout, access without a session.
+  - 259 tests pass (66 from before this task). Lint, typecheck, contrast and build pass.
 - The owner's `.env.local` is complete (username, hash, session secret; never committed)
   and the local database exists at `data/alirezvan.db`.
 
@@ -88,9 +105,33 @@ built now.
 - Repository files (`lib/auth/session.ts`, `lib/auth/rate-limit.ts`) use relative
   imports with `.ts` extensions so the maintenance scripts can run them with plain Node.
 
+## Decisions made during Phase 2
+
+- Server Actions redirect to the login page without a session; the upload route answers
+  401. Both check the session themselves.
+- A published article needs the lawyer-approval tick on every save, not only on the
+  first publication, because every save of a published article goes live.
+- Uploads are always stored as WebP, at most 2400 px on the long side.
+- Inline images carry their size in the address (`#<width>x<height>`) so the page can
+  reserve their space.
+- Images in article text may only come from this site (no foreign hosts, CLAUDE.md §2.2).
+- HTML typed into an article is dropped, not shown as text.
+- The session check calls `connection()` so Next.js never renders it ahead of time.
+- After a new article is created the "new" form is emptied, because Next.js keeps the
+  previous page alive in the background.
+
 ## Open issues
 
 - The hidden-input prompt of `hash-password` was tested by me only with piped input.
+- The public blog still reads MDX; panel articles are not public until Phase 3. The list
+  therefore has no "view on site" link yet.
+- No cache invalidation yet (nothing public reads the database). Phase 3.
+- The unsaved-changes warning covers closing and reloading the tab, not links inside the
+  panel.
+- Cover images on the public page will need a check that `next/image` can optimise
+  files served by `/uploads/<name>` (Phase 3).
+- The owner has not yet logged in with their own password; I tested with throwaway
+  credentials only.
 - `npm audit`: 5 high-severity advisories were there before this task (the ESLint plugin
   chain, through `braces`). Phase 1 added 4 moderate ones, all from the old `esbuild`
   inside `drizzle-kit`. Both are development tools and not part of the running site.
@@ -98,6 +139,7 @@ built now.
 
 ## Next step
 
-Phase 2: move public pages into `app/(site)/`, `proxy.ts`, login page, article
-repository and actions, list, editor with preview, uploads, SEO fields. Then stop and
-report.
+Wait for approval of Phase 2. Then Phase 3: importer with dry-run (against
+`content/blog/_sample.mdx`), switch public reads to the database behind
+`BLOG_SOURCE`, draft 404s, slug redirects (308), cache tags and invalidation in the
+actions, article metadata and sitemap, CLAUDE.md §4–§5.5, VPS documentation.

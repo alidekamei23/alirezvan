@@ -1,9 +1,11 @@
-// The admin check for pages and Server Actions. This is the security boundary: call
-// requireAdminPage() at the top of every admin page and requireAdminAction() at the top
-// of every admin action and route handler. proxy.ts is only an early redirect.
+// The admin check. This is the security boundary: every admin page and every Server
+// Action starts with requireAdminPage() (no session → to the login page), and every
+// Route Handler with requireAdminAction() (no session → an error the handler turns into
+// 401). proxy.ts is only an early redirect.
 import "server-only";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { cache } from "react";
 import { getAuthConfig } from "@/lib/auth/config";
 import { sessionFromCookie } from "@/lib/auth/login";
@@ -24,17 +26,20 @@ export class UnauthorizedError extends Error {
 export const getAdminSession = cache(async (): Promise<Session | null> => {
   const value = (await cookies()).get(SESSION_COOKIE)?.value;
   if (!value) return null;
+  // The check compares the expiry with the current time, so it belongs to the request
+  // itself and must never be part of anything Next.js renders ahead of time.
+  await connection();
   return sessionFromCookie(getDb(), getAuthConfig(), value);
 });
 
-/** For pages: sends a visitor without a session to the login page. */
+/** For pages and Server Actions: sends a visitor without a session to the login page. */
 export async function requireAdminPage(): Promise<Session> {
   const session = await getAdminSession();
   if (!session) redirect(ADMIN_LOGIN_PATH);
   return session;
 }
 
-/** For Server Actions and Route Handlers: throws without a session. */
+/** For Route Handlers: throws without a session. */
 export async function requireAdminAction(): Promise<Session> {
   const session = await getAdminSession();
   if (!session) throw new UnauthorizedError();
