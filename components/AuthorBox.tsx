@@ -1,14 +1,12 @@
-// AuthorBox — the compact author line on a guide: photo, name, grade, license number,
-// last legal review date and a link to the About page.
-// Usage: <AuthorBox reviewedAt="1405-07-12" />
+// AuthorBox — the author of a blog post: photo, name, grade, license number and a link
+// to the About page. Usage: <AuthorBox />
 import Image from "next/image";
 import Link from "next/link";
 import { Ltr } from "@/components/Ltr";
-import { ReviewedAt } from "@/components/ReviewedAt";
 import { lawyer } from "@/content/lawyer";
 import { toPersianDigits } from "@/lib/format";
 
-export function AuthorBox({ reviewedAt }: { reviewedAt: string }) {
+export function AuthorBox() {
   return (
     <aside
       aria-label="نویسنده"
@@ -34,7 +32,6 @@ export function AuthorBox({ reviewedAt }: { reviewedAt: string }) {
         <p className="text-muted">
           {lawyer.grade}، شماره پروانه <Ltr>{toPersianDigits(lawyer.licenseNumber)}</Ltr>
         </p>
-        <ReviewedAt date={reviewedAt} className="mt-1" />
       </div>
     </aside>
   );

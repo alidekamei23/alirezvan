@@ -60,7 +60,7 @@ export function Footer() {
         </div>
 
         <FooterList title="حوزه‌های کاری" items={practiceNav} />
-        <FooterList title="ابزارها و راهنماها" items={[...toolsNav, ...siteNav]} />
+        <FooterList title="ابزارها و صفحه‌ها" items={[...toolsNav, ...siteNav]} />
 
         <div className="text-sm text-muted">
           <h2 className="mb-1 text-sm font-bold text-ink">دفتر</h2>

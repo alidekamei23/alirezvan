@@ -276,12 +276,12 @@ body:has(:is(input:not([type="radio"], [type="checkbox"]), textarea):focus)
     line-height: var(--text-lg--line-height);
     font-weight: 700;
   }
-  .prose-fa a {
+  .prose-fa a:not(.not-prose a) {
     color: var(--color-primary);
     text-decoration: underline;
     text-underline-offset: 0.25em;
   }
-  .prose-fa a:hover {
+  .prose-fa a:not(.not-prose a):hover {
     color: var(--color-primary-hover);
   }
   .prose-fa strong {
@@ -322,7 +322,9 @@ body:has(:is(input:not([type="radio"], [type="checkbox"]), textarea):focus)
     font-size: 0.9em;
   }
   .prose-fa table {
-    width: 100%;
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
     border-collapse: collapse;
     font-size: var(--text-sm);
     line-height: var(--text-sm--line-height);
@@ -338,7 +340,7 @@ body:has(:is(input:not([type="radio"], [type="checkbox"]), textarea):focus)
     font-weight: 700;
   }
   /* Footnotes (remark-gfm output) */
-  .prose-fa sup a {
+  .prose-fa sup a:not(.not-prose a) {
     text-decoration: none;
     padding-inline: 0.15em;
   }
