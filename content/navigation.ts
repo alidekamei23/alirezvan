@@ -13,7 +13,7 @@ export const toolsNav: NavItem[] = [
 ];
 
 export const siteNav: NavItem[] = [
-  { href: "/guides", label: "راهنماها" },
+  { href: "/blog", label: "وبلاگ" },
   { href: "/about", label: "درباره وکیل" },
   { href: "/contact", label: "تماس" },
 ];

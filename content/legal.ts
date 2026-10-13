@@ -6,4 +6,4 @@ export const ESTIMATE_DISCLAIMER =
 export const SITE_DISCLAIMER =
   "مطالب این وب‌سایت جنبه اطلاع‌رسانی دارد و مشاوره حقوقی محسوب نمی‌شود.";
 
-export const REVIEWED_AT_LABEL = "آخرین بازبینی حقوقی";
+export const UPDATED_AT_LABEL = "آخرین به‌روزرسانی";
