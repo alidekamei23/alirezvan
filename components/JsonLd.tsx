@@ -3,7 +3,7 @@
 // require. Usage: <JsonLd data={{ "@context": "https://schema.org", "@type": "Article", … }} />
 import { absoluteUrl } from "@/lib/seo";
 
-const URL_KEYS = new Set(["item", "url", "image", "mainEntityOfPage"]);
+const URL_KEYS = new Set(["item", "url", "image", "mainEntityOfPage", "@id"]);
 
 function resolve(value: unknown, key?: string): unknown {
   if (typeof value === "string") {

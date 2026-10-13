@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { SiteJsonLd } from "@/components/SiteJsonLd";
 import { SkipLink } from "@/components/SkipLink";
 import { StickyContactBar } from "@/components/StickyContactBar";
 import { ToastProvider } from "@/components/Toast";
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </main>
           <Footer />
           <StickyContactBar />
+          <SiteJsonLd />
         </ToastProvider>
       </body>
     </html>

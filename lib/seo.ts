@@ -18,6 +18,14 @@ export function absoluteUrl(path: string): string {
   return `${SITE_URL}${path}`;
 }
 
+/** Link-preview image used by every page that has no image of its own (1200×630). */
+export const DEFAULT_OG_IMAGE = {
+  url: "/images/og.png",
+  width: 1200,
+  height: 630,
+  alt: `${lawyer.name}، ${lawyer.grade}`,
+};
+
 /**
  * Metadata for one page: title, description, canonical URL and Open Graph.
  * `path` starts with "/" and is resolved against `metadataBase` from the root layout.
@@ -42,6 +50,7 @@ export function pageMetadata({
       siteName: lawyer.name,
       locale: "fa_IR",
       type: "website",
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }
