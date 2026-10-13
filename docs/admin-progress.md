@@ -4,11 +4,21 @@ Spec: `docs/admin-panel-spec.md`. Re-read both files at the start of every phase
 
 ## Current phase
 
-Phase 1 — Foundation and security: **in progress**.
+Phase 1 — Foundation and security: **done 13 Oct 2026, waiting for the owner to approve**.
+Phase 2 has not started.
 
 ## Done
 
 - Phase 0 (audit and plan): approved by the owner on 13 Oct 2026.
+- Phase 1:
+  - Driver check passed: better-sqlite3 13 installs on this machine with no download
+    (prebuilt Windows and Linux binaries are inside the npm package); WAL works.
+  - `db/schema.ts`, `db/client.ts`, `lib/db.ts`, first migration `0000_init`.
+  - `lib/auth/`: config, sessions, rate limit, login/logout, page and action guards.
+  - `lib/articles/`: slug rules and the Zod input schema with publish requirements.
+  - `npm run hash-password`, `npm run db:generate`, `npm run db:migrate`.
+  - 79 new tests in `tests/admin` (145 in total). Lint, typecheck, contrast and build pass.
+  - `docs/admin.md` started.
 
 ## Approved decisions (owner's answers to the Phase 0 questions, 13 Oct 2026)
 
@@ -59,11 +69,29 @@ built now.
 (34 pairs) and `npm run build` (33 static pages) all pass. One build warning: a stray
 `package-lock.json` in the user's home folder confuses Turbopack's root detection.
 
+## Decisions made during Phase 1
+
+- bcrypt through `bcryptjs` (pure JavaScript, nothing to compile), cost 12.
+- The rate-limit table is general (`scope` + `key`) so OTP limits can reuse it.
+- The client IP is read only from the header named in `TRUSTED_IP_HEADER`; without it
+  all visitors share one login counter.
+- `sessions.id` holds the SHA-256 of the token, not the token.
+- Slugs: half-spaces become hyphens and digits are stored as Latin digits.
+- Two dates per article: `updatedAt` (any save, admin only) and `contentUpdatedAt`
+  (the public «آخرین به‌روزرسانی»).
+
 ## Open issues
 
-- None yet.
+- The hidden-input prompt of `hash-password` was tested only with piped input; the
+  owner should run it once in a real terminal.
+- `npm audit`: 5 high-severity advisories were there before this task (the ESLint plugin
+  chain, through `braces`). Phase 1 added 4 moderate ones, all from the old `esbuild`
+  inside `drizzle-kit`. Both are development tools and not part of the running site.
+  Nothing was changed for them.
+- `proxy.ts`, the login page and the article repository belong to Phase 2.
 
 ## Next step
 
-Phase 1: driver check, schema and first migration, auth, sessions, rate limiting,
-validation, slug utilities, `hash-password`, tests. Then stop and report.
+Wait for approval of Phase 1. Then Phase 2: move public pages into `app/(site)/`,
+`proxy.ts`, login page, article repository and actions, list, editor with preview,
+uploads, SEO fields.
