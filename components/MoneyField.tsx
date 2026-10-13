@@ -1,6 +1,7 @@
 "use client";
-// MoneyField — an amount in tomans. Accepts Persian or Latin digits, shows Persian digits
-// with thousands separators as you type, and submits a plain Latin integer under `name`.
+// MoneyField — an amount in tomans (or in rials with unit="ریال"). Accepts Persian or
+// Latin digits, shows Persian digits with thousands separators as you type, and submits a
+// plain Latin integer under `name`.
 // Usage: <MoneyField label="مبلغ اصل طلب" name="principal" error={errors.principal} />
 import { useId, useState } from "react";
 import { Field, controlClasses, fieldIds, type FieldBaseProps } from "@/components/Field";
@@ -11,10 +12,12 @@ const MAX_DIGITS = 15;
 export type MoneyFieldProps = FieldBaseProps & {
   name: string;
   id?: string;
-  /** Tomans. */
+  /** Shown inside the field. Defaults to tomans. */
+  unit?: string;
+  /** In `unit`. */
   defaultValue?: number;
   disabled?: boolean;
-  /** Called with the amount in tomans, or null when the field is empty. */
+  /** Called with the amount in `unit`, or null when the field is empty. */
   onValueChange?: (value: number | null) => void;
 };
 
@@ -25,6 +28,7 @@ export function MoneyField({
   optional,
   name,
   id,
+  unit = "تومان",
   defaultValue,
   disabled,
   onValueChange,
@@ -61,7 +65,7 @@ export function MoneyField({
           aria-hidden="true"
           className="pointer-events-none absolute inset-y-0 end-3 flex items-center text-sm text-muted"
         >
-          تومان
+          {unit}
         </span>
       </div>
       <input type="hidden" name={name} value={value ?? ""} />

@@ -14,6 +14,7 @@ Claude Code, and the "done when" check. If a session runs over, the unfinished i
 | 3 Practice hubs, About, Contact | Done 11 Oct | Copy is draft; review/hubs.md must go to the lawyer. Map waits for the office address |
 | Blog (replaces the guides system of session 7) | Done 13 Oct | /blog with topics and pagination; dev-only sample posts until real articles arrive |
 | Request (contact-only version), Privacy, Disclaimer, 404, sitemap, robots, favicon | Done 13 Oct | Privacy and Disclaimer copy is draft; the request form with OTP is still to build |
+| Late-payment damages calculator | Done 13 Oct | /tools/khesarat-takhir. Logic and index table supplied by the owner in lib/tadieh/ (replaces content/cpi.json and lib/calculators/damages.ts of CLAUDE.md §5.1); amounts are in rials. Legal notes are draft (content/tadieh.ts) |
 | 4–10 | Not started | Calculators postponed by the owner; articles are written by the owner and approved by the lawyer offline |
 
 Still open from "Before session 1": domain, hosting account, SMS provider account and OTP

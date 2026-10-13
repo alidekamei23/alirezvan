@@ -1,4 +1,5 @@
-// ResultCard — a calculator result: labelled amounts, an emphasised total, notes (e.g.
+// ResultCard — a calculator result: labelled amounts (one may be highlighted with
+// `emphasis`), an emphasised total, notes (e.g.
 // which index months were used) and actions. It always renders the estimate notice, so
 // a result can never be shown without it (CLAUDE.md §2.1).
 // Usage:
@@ -8,8 +9,9 @@
 // </ResultCard>
 import type { ReactNode } from "react";
 import { EstimateNotice } from "@/components/EstimateNotice";
+import { cn } from "@/lib/cn";
 
-export type ResultRow = { label: string; value: string };
+export type ResultRow = { label: string; value: string; emphasis?: boolean };
 
 export function ResultCard({
   title,
@@ -37,15 +39,39 @@ export function ResultCard({
           {rows.map((row) => (
             <div
               key={row.label}
-              className="flex flex-wrap items-baseline justify-between gap-x-4 py-3"
+              className={cn(
+                "flex flex-wrap items-baseline justify-between gap-x-4 py-3",
+                row.emphasis && "-mx-5 bg-primary-soft px-5 md:-mx-6 md:px-6",
+              )}
             >
-              <dt className="text-muted">{row.label}</dt>
-              <dd className="font-semibold text-ink">{row.value}</dd>
+              <dt className={row.emphasis ? "font-bold text-ink" : "text-muted"}>
+                {row.label}
+              </dt>
+              <dd
+                className={cn(
+                  "tabular-nums",
+                  row.emphasis
+                    ? "text-2xl font-bold text-primary"
+                    : "font-semibold text-ink",
+                )}
+              >
+                {row.value}
+              </dd>
             </div>
           ))}
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 pt-4">
             <dt className="font-bold text-ink">{total.label}</dt>
-            <dd className="text-2xl font-bold text-primary">{total.value}</dd>
+            {/* One key figure per card: a highlighted row takes the accent from the total. */}
+            <dd
+              className={cn(
+                "font-bold tabular-nums",
+                rows.some((row) => row.emphasis)
+                  ? "text-xl text-ink"
+                  : "text-2xl text-primary",
+              )}
+            >
+              {total.value}
+            </dd>
           </div>
         </dl>
         {notes.length > 0 && (

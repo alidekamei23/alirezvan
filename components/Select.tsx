@@ -10,8 +10,8 @@ export type SelectOption = { value: string; label: string };
 export type SelectProps = FieldBaseProps &
   Omit<SelectHTMLAttributes<HTMLSelectElement>, "required" | "children"> & {
     options: SelectOption[];
-    /** First, empty option. */
-    placeholder?: string;
+    /** First, empty option. Pass null when the select always has a value. */
+    placeholder?: string | null;
   };
 
 export function Select({
@@ -39,7 +39,7 @@ export function Select({
           className={controlClasses(error, cn("min-h-12 appearance-none pe-10", className))}
           {...rest}
         >
-          <option value="">{placeholder}</option>
+          {placeholder !== null && <option value="">{placeholder}</option>}
           {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}

@@ -84,10 +84,10 @@ One component per file in `components/`. Each file starts with a usage note.
 | Actions | `Button`, `LinkButton`, `CallButton`, `WhatsAppButton`, `BaleButton` (base: `ContactButton`; classes: `buttonStyles`) |
 | Forms | `TextField`, `PhoneField`, `MoneyField`, `Select`, `Textarea`, `RadioCards`, `DatePicker`, `OtpInput` (shell: `Field`) |
 | Feedback | `Alert`, `EstimateNotice`, `DraftNotice`, `Toast` (`ToastProvider`, `useToast`), `Skeleton`, `EmptyState` |
-| Content | `Card`, `PracticeIndex`, `PracticeCard`, `ToolCard`, `Steps`, `PostCard`, `TopicFilter`, `Pagination`, `ContactBox`, `Faq`, `Breadcrumbs`, `Badge`, `Table` |
+| Content | `Card`, `PracticeIndex`, `PracticeCard`, `ToolCard`, `Steps`, `PostCard`, `TopicFilter`, `Pagination`, `ContactBox`, `Faq`, `Disclosure` (`DisclosureGroup`), `Breadcrumbs`, `Badge`, `Table` |
 | Trust | `LicenseStrip`, `LawyerCard`, `AuthorBox`, `UpdatedAt` |
 | Layout | `Header`, `MobileMenu`, `Footer`, `PageHeader`, `ContactCta`, `PracticeHub`, `BlogIndex` and `TextPage` (page templates), `StickyContactBar`, `SkipLink` |
-| Calculator | `ResultCard`, `ShareActions` |
+| Calculator | `ResultCard`, `ShareActions`, `TadiehCalculator` (late-payment damages, in rials) |
 
 State coverage: buttons have hover, focus-visible, active, disabled and loading; form
 controls have hover, focus-visible, disabled and error; link cards have hover, focus and
