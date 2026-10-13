@@ -61,15 +61,15 @@ Global internet access in Iran has been cut several times (most recently Feb–M
 | Framework | Next.js (App Router), TypeScript strict, React Server Components by default |
 | Styling | Tailwind CSS, logical properties, design tokens in `app/globals.css` |
 | Content | MDX files in `content/blog/*.mdx` (an exported `meta` object validated with Zod) |
-| Database | PostgreSQL with Drizzle ORM (`db/schema.ts`, migrations in `db/migrations`) |
+| Database | SQLite (WAL mode) with Drizzle ORM (`db/schema.ts`, migrations in `db/migrations`); all access through the repository layer in `lib/`, so a later move to PostgreSQL stays feasible |
 | Validation | Zod for every form, server action and content file |
 | Dates | `date-fns-jalali` |
 | SMS / OTP | Iranian SMS gateway behind `lib/sms.ts` (Kavenegar first; swappable) |
 | Lead alerts | Bale bot (Telegram-compatible Bot API) behind `lib/notify.ts` |
-| Admin | `/admin` protected by HTTP basic auth in `middleware.ts` (env credentials) |
+| Admin | `/admin` (articles; leads later at `/admin/leads`) behind a database-backed session login. `proxy.ts` (the Next.js 16 name for middleware) is only an early check; every page and action checks the session itself |
 | Analytics | Self-hosted Umami (script served from our own domain) |
 | Tests | Vitest for logic (calculators, digits, OTP); Playwright smoke tests if time allows |
-| Hosting | Iranian PaaS with Next.js + PostgreSQL (Liara is the default candidate) |
+| Hosting | The owner's own VPS running `next start` (local only for now). SQLite file and uploads live outside the build output |
 
 Deferred until after launch (do not build unless asked): Payload CMS, real-time booking
 calendar, reminder SMS, PDF export, online payment, client accounts, English version.
@@ -90,7 +90,7 @@ app/
   blog/topic/[area]/         # posts of one practice area, with the same pagination
   blog/[slug]/page.tsx       # blog post (Persian slug from the post's meta)
   about/ contact/ request/ privacy/ disclaimer/
-  admin/                     # leads list (basic auth)
+  admin/                     # login, articles; leads later at admin/leads (session auth)
   api/ or actions/           # server actions for request form and OTP
   sitemap.ts robots.ts
 components/                  # UI components (one per file, Persian-first props)

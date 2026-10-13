@@ -60,20 +60,20 @@ The Phase 0 report must include: verified findings, risks/conflicts, recommended
 - Use TypeScript consistently with the project.
 
 ### Database
-SQLite with Prisma, unless Phase 0 finds a concrete incompatibility.
+SQLite with Drizzle ORM (decided after Phase 0, replacing Prisma: no binary downloads that may fail from Iran). Driver: `better-sqlite3`, WAL mode on. Hosting target: the owner's own VPS running `next start`.
 - Connection from `DATABASE_URL`; database file outside build output.
 - Database access only on the server.
-- Prisma migrations with a documented dev workflow.
+- Drizzle migrations (`drizzle-kit`) with a documented dev workflow.
 - Appropriate indexes, unique constraints, foreign keys, and transactions.
 - Slug uniqueness enforced by the database as the final authority (handle constraint violations gracefully).
 - Keep persistence isolated so a future move to PostgreSQL stays feasible; do not claim it is automatic without verifying.
 
 ### Data model
-Base the Prisma schema on this logical model:
+Base the Drizzle schema on this logical model:
 
 **Article**: `id` (immutable), `title`, `slug` (unique), `excerpt`, `content` (Markdown), `coverImage` (optional), `coverImageAlt`, `status` (DRAFT | PUBLISHED), `publishedAt` (null until first publication), `seoTitle`, `seoDescription`, `createdAt`, `updatedAt`.
 
-**Tag**: separate table with a many-to-many relation to Article (SQLite with Prisma does not support scalar lists).
+**Tag**: not built (decided after Phase 0: the site uses practice areas and nothing would use tags). A possible future addition. Ignore later mentions of tags in this file.
 
 **SlugRedirect**: `fromSlug` (unique), `articleId` — records old published slugs so they can be permanently redirected.
 
@@ -197,12 +197,12 @@ Test at least:
 - All persistent paths (`DATABASE_URL`, `UPLOAD_DIR`) configurable via env.
 - No production credentials, server, domain, Nginx, or HTTPS required locally.
 
-Document (do not perform) future VPS requirements for `next start`: production env variables, persistent DB and upload paths, permissions, production Prisma migrations, backups and restore for the SQLite file and uploads, reverse proxy with HTTPS, request-size limits for uploads, trusted proxy headers for client IP, process management and restarts (note: in-memory state is unsafe with multiple processes). Do not invent server details; production deployment is a separate task I will request explicitly.
+Document (do not perform) future VPS requirements for `next start`: production env variables, persistent DB and upload paths, permissions, production Drizzle migrations, backups and restore for the SQLite file and uploads, reverse proxy with HTTPS, request-size limits for uploads, trusted proxy headers for client IP, process management and restarts (note: in-memory state is unsafe with multiple processes). Do not invent server details; production deployment is a separate task I will request explicitly.
 
 ## Implementation phases
 
 - **Phase 0 — Audit and plan.** Findings only. Stop.
-- **Phase 1 — Foundation and security.** Prisma schema and migrations, hash-password script, DB sessions, auth, authorization helpers, rate limiting, validation, test setup and focused tests. Stop and report.
+- **Phase 1 — Foundation and security.** Drizzle schema and migrations, hash-password script, DB sessions, auth, authorization helpers, rate limiting, validation, test setup and focused tests. Stop and report.
 - **Phase 2 — Admin interface and editor.** Dashboard, article CRUD, Markdown editor with shared-pipeline preview, image uploads, tags, article SEO fields. Stop and report.
 - **Phase 3 — Migration and public integration.** Importer with dry-run, switch public reads after validation, draft handling, slug redirects, cache invalidation, article metadata and sitemap entries. Run tests, lint, build; report pre-existing failures separately. Update documentation. Stop and report. Do not delete original content.
 
