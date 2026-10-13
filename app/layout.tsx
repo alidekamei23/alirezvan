@@ -1,11 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
-import { SiteJsonLd } from "@/components/SiteJsonLd";
-import { SkipLink } from "@/components/SkipLink";
-import { StickyContactBar } from "@/components/StickyContactBar";
-import { ToastProvider } from "@/components/Toast";
 import { lawyer } from "@/content/lawyer";
 import { ALLOW_INDEXING, SITE_URL } from "@/lib/seo";
 import "./globals.css";
@@ -28,7 +22,10 @@ const vazirmatnLatin = localFont({
   display: "swap",
   preload: false,
   declarations: [
-    { prop: "unicode-range", value: "U+0022, U+0025, U+0030-0039, U+0041-005A, U+0061-007A, U+2026" },
+    {
+      prop: "unicode-range",
+      value: "U+0022, U+0025, U+0030-0039, U+0041-005A, U+0061-007A, U+2026",
+    },
   ],
 });
 
@@ -54,19 +51,13 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="fa" dir="rtl" className={`${vazirmatn.variable} ${vazirmatnLatin.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col pb-[calc(var(--contact-bar-height)+env(safe-area-inset-bottom))] font-sans lg:pb-0">
-        <ToastProvider>
-          <SkipLink />
-          <Header />
-          <main id="main" tabIndex={-1} className="flex-1 outline-none">
-            {children}
-          </main>
-          <Footer />
-          <StickyContactBar />
-          <SiteJsonLd />
-        </ToastProvider>
-      </body>
+    <html
+      lang="fa"
+      dir="rtl"
+      className={`${vazirmatn.variable} ${vazirmatnLatin.variable} h-full antialiased`}
+    >
+      {/* Public pages add their frame in app/(site)/layout.tsx, the admin panel in app/admin. */}
+      <body className="flex min-h-full flex-col font-sans">{children}</body>
     </html>
   );
 }
