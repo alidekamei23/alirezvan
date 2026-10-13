@@ -44,7 +44,8 @@ redefining tokens; dark mode is not built.
 
 ### Type
 
-One family: Vazirmatn (variable, self-hosted in `app/fonts/`). Six fluid steps:
+One family: Vazirmatn (variable, self-hosted in `app/fonts/`). Pages load the 48KB Persian
+build; the full build is fetched only where Latin letters or digits are shown. Six fluid steps:
 
 | Utility | Size | Line height | Use |
 | --- | --- | --- | --- |

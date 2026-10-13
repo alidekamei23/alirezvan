@@ -120,7 +120,7 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-vazirmatn), Tahoma, sans-serif;
+  --font-sans: var(--font-vazirmatn), var(--font-vazirmatn-latin), Tahoma, sans-serif;
 }
 
 :root {
