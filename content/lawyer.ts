@@ -1,9 +1,8 @@
 /**
  * Single source of truth for the lawyer's identity and contact details.
  *
- * Values still in [brackets] and the phone numbers below are PLACEHOLDERS until
- * Mr. Rezvan supplies the real ones. Do not guess them. `null` means "not known yet";
- * components must render nothing for a null field.
+ * `null` means "not known yet": components must render nothing for a null field.
+ * Do not guess missing values.
  */
 export const lawyer = {
   name: "علی رضوان",
@@ -24,23 +23,21 @@ export const lawyer = {
   /** Square head-and-shoulders crop for small sizes. */
   avatar: { src: "/images/ali-rezvan-avatar.jpg", width: 384, height: 384 },
 
-  // TODO(lawyer): working hours, map coordinates
+  // TODO(lawyer): map coordinates. Working hours are not shown, by the owner's decision.
   city: "تهران",
   address: "خیابان دکتر شریعتی، روبه‌روی حسینیه ارشاد، ابتدای کوچه شهیم، پلاک ۶، واحد ۳",
-  workingHours: "[ساعات کاری]",
   googleMapsUrl: null as string | null,
 
-  // TODO(lawyer): real numbers. Stored with Latin digits; format for display.
-  phone: { display: "021-00000000", tel: "+982100000000" },
-  mobile: { display: "0912-000-0000", tel: "+989120000000" },
+  /** The one contact number. Stored with Latin digits; format for display. */
+  phone: { display: "0910-070-8005", tel: "+989100708005" },
   /** International format without "+", as wa.me expects. */
-  whatsapp: "989120000000",
-  /** Bale username, without "@". */
-  bale: "placeholder",
+  whatsapp: "989100708005",
+  // TODO(lawyer): Bale username, without "@". The Bale button is hidden while this is null.
+  bale: null as string | null,
 } as const;
 
 export const contactLinks = {
   call: `tel:${lawyer.phone.tel}`,
   whatsapp: `https://wa.me/${lawyer.whatsapp}`,
-  bale: `https://ble.ir/${lawyer.bale}`,
+  bale: lawyer.bale ? `https://ble.ir/${lawyer.bale}` : null,
 } as const;

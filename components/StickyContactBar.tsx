@@ -5,7 +5,11 @@
 import { contactChannels, type ContactChannel } from "@/components/ContactButton";
 import { cn } from "@/lib/cn";
 
-const order: ContactChannel[] = ["call", "whatsapp", "bale"];
+// Channels without details yet (href null) are left out, and the bar keeps equal columns.
+const channels = (["call", "whatsapp", "bale"] as ContactChannel[]).filter(
+  (channel) => contactChannels[channel].href !== null,
+);
+const columns = { 1: "grid-cols-1", 2: "grid-cols-2", 3: "grid-cols-3" }[channels.length];
 
 export function StickyContactBar() {
   return (
@@ -14,13 +18,18 @@ export function StickyContactBar() {
       aria-label="راه‌های تماس"
       className="fixed inset-x-0 bottom-0 z-bar border-t border-line bg-surface pb-[env(safe-area-inset-bottom)] shadow-md lg:hidden"
     >
-      <ul className="mx-auto grid max-w-page grid-cols-3 divide-x divide-x-reverse divide-line">
-        {order.map((channel) => {
+      <ul
+        className={cn(
+          "mx-auto grid max-w-page divide-x divide-x-reverse divide-line",
+          columns,
+        )}
+      >
+        {channels.map((channel) => {
           const { href, shortLabel, label, Icon, external } = contactChannels[channel];
           return (
             <li key={channel}>
               <a
-                href={href}
+                href={href ?? undefined}
                 aria-label={label}
                 {...(external && { target: "_blank", rel: "noopener noreferrer" })}
                 className={cn(

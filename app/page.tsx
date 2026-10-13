@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Clock, MapPin, Phone } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import { BaleButton } from "@/components/BaleButton";
 import { CallButton } from "@/components/CallButton";
 import { Card } from "@/components/Card";
@@ -134,10 +134,6 @@ export default async function Home() {
                 <span>
                   {lawyer.city}، {lawyer.address}
                 </span>
-              </p>
-              <p className="flex items-start gap-3">
-                <Clock aria-hidden="true" className="mt-1.5 size-5 shrink-0 text-muted" />
-                <span>{lawyer.workingHours}</span>
               </p>
               <p className="flex items-start gap-3">
                 <Phone aria-hidden="true" className="mt-1.5 size-5 shrink-0 text-muted" />

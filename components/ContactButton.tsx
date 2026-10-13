@@ -11,7 +11,14 @@ export type ContactChannel = "call" | "whatsapp" | "bale";
 
 export const contactChannels: Record<
   ContactChannel,
-  { href: string; label: string; shortLabel: string; Icon: LucideIcon; external: boolean }
+  {
+    /** null while the channel's details are not known; the button is then not rendered. */
+    href: string | null;
+    label: string;
+    shortLabel: string;
+    Icon: LucideIcon;
+    external: boolean;
+  }
 > = {
   call: {
     href: contactLinks.call,
@@ -52,6 +59,7 @@ export function ContactButton({
   ...rest
 }: ContactButtonProps & { channel: ContactChannel }) {
   const { href, label, Icon, external } = contactChannels[channel];
+  if (!href) return null;
   return (
     <LinkButton
       href={href}

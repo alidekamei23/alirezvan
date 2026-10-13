@@ -1,4 +1,4 @@
-import { Clock, ExternalLink, MapPin, Phone, Smartphone } from "lucide-react";
+import { ExternalLink, MapPin, Phone } from "lucide-react";
 import { BaleButton } from "@/components/BaleButton";
 import { CallButton } from "@/components/CallButton";
 import { Card } from "@/components/Card";
@@ -57,24 +57,10 @@ export default function ContactPage() {
                 </span>
               </p>
               <p className={rowClass}>
-                <Clock aria-hidden="true" className={iconClass} />
-                <span>
-                  <span className="block text-sm text-muted">ساعات کاری</span>
-                  {lawyer.workingHours}
-                </span>
-              </p>
-              <p className={rowClass}>
                 <Phone aria-hidden="true" className={iconClass} />
                 <span>
-                  <span className="block text-sm text-muted">تلفن دفتر</span>
+                  <span className="block text-sm text-muted">تلفن تماس</span>
                   <Ltr>{toPersianDigits(lawyer.phone.display)}</Ltr>
-                </span>
-              </p>
-              <p className={rowClass}>
-                <Smartphone aria-hidden="true" className={iconClass} />
-                <span>
-                  <span className="block text-sm text-muted">تلفن همراه</span>
-                  <Ltr>{toPersianDigits(lawyer.mobile.display)}</Ltr>
                 </span>
               </p>
             </address>

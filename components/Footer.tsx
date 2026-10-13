@@ -68,7 +68,6 @@ export function Footer() {
             <p className="py-1.5">
               {lawyer.city}، {lawyer.address}
             </p>
-            <p className="py-1.5">{lawyer.workingHours}</p>
             <a
               href={contactLinks.call}
               className="flex min-h-11 items-center font-semibold text-ink hover:text-primary"
