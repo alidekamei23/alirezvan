@@ -6,6 +6,7 @@ import { SkipLink } from "@/components/SkipLink";
 import { StickyContactBar } from "@/components/StickyContactBar";
 import { ToastProvider } from "@/components/Toast";
 import { lawyer } from "@/content/lawyer";
+import { SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 const vazirmatn = localFont({
@@ -15,10 +16,8 @@ const vazirmatn = localFont({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: `${lawyer.name} | ${lawyer.grade}`,
     template: `%s | ${lawyer.name}`,

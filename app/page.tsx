@@ -10,16 +10,18 @@ import { LawyerCard } from "@/components/LawyerCard";
 import { LinkButton } from "@/components/LinkButton";
 import { Ltr } from "@/components/Ltr";
 import { LicenseStrip } from "@/components/LicenseStrip";
+import { PostCard } from "@/components/PostCard";
 import { PracticeIndex } from "@/components/PracticeIndex";
 import { Section } from "@/components/Section";
 import { ToolCard } from "@/components/ToolCard";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { lawyer } from "@/content/lawyer";
 import { requestNav } from "@/content/navigation";
-import { homeCopy } from "@/content/pages";
+import { blogCopy, homeCopy } from "@/content/pages";
 import { practiceAreas } from "@/content/practice-areas";
 import { toolList } from "@/content/tools";
 import { pageMetadata } from "@/lib/seo";
+import { blogHref, getAllPosts } from "@/lib/blog";
 import { toPersianDigits } from "@/lib/format";
 
 export const metadata = {
@@ -33,7 +35,9 @@ export const metadata = {
   title: { absolute: `${lawyer.name} | ${lawyer.grade}` },
 };
 
-export default function Home() {
+export default async function Home() {
+  const latestPosts = (await getAllPosts()).slice(0, 3);
+
   return (
     <>
       {/* From lg the hero has no block padding: the portrait file carries its own top margin,
@@ -99,11 +103,25 @@ export default function Home() {
         </Grid>
       </Section>
 
-      <Section id="guides" title="راهنماهای حقوقی">
-        <EmptyState
-          title="راهنماها در حال آماده‌سازی است"
-          description="راهنماهای هر حوزه پس از بازبینی حقوقی در همین بخش منتشر می‌شود."
-        />
+      <Section id="blog" title="تازه‌ترین مقاله‌های وبلاگ">
+        {latestPosts.length === 0 ? (
+          <EmptyState title={blogCopy.emptyTitle} description={blogCopy.emptyText} />
+        ) : (
+          <>
+            <ul className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+              {latestPosts.map((post) => (
+                <li key={post.slug}>
+                  <PostCard post={post} headingLevel="h3" />
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8">
+              <LinkButton href={blogHref()} variant="secondary">
+                همه مقاله‌ها
+              </LinkButton>
+            </div>
+          </>
+        )}
       </Section>
 
       <Section id="office" tone="surface" title="دفتر وکالت" className="border-t border-line">

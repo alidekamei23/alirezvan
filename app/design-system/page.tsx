@@ -19,19 +19,19 @@ import { EmptyState } from "@/components/EmptyState";
 import { EstimateNotice } from "@/components/EstimateNotice";
 import { Faq } from "@/components/Faq";
 import { Grid } from "@/components/Grid";
-import { GuideCard } from "@/components/GuideCard";
 import { LawyerCard } from "@/components/LawyerCard";
 import { LicenseStrip } from "@/components/LicenseStrip";
 import { LinkButton } from "@/components/LinkButton";
 import { MoneyField } from "@/components/MoneyField";
 import { OtpInput } from "@/components/OtpInput";
+import { Pagination } from "@/components/Pagination";
 import { PhoneField } from "@/components/PhoneField";
+import { PostCard } from "@/components/PostCard";
 import { PracticeCard } from "@/components/PracticeCard";
 import { PracticeIndex } from "@/components/PracticeIndex";
 import { Prose } from "@/components/Prose";
 import { RadioCards } from "@/components/RadioCards";
 import { ResultCard } from "@/components/ResultCard";
-import { ReviewedAt } from "@/components/ReviewedAt";
 import { Select } from "@/components/Select";
 import { ShareActions } from "@/components/ShareActions";
 import { Skeleton } from "@/components/Skeleton";
@@ -40,11 +40,14 @@ import { Steps } from "@/components/Steps";
 import { Table } from "@/components/Table";
 import { TextField } from "@/components/TextField";
 import { ToolCard } from "@/components/ToolCard";
+import { TopicFilter } from "@/components/TopicFilter";
+import { UpdatedAt } from "@/components/UpdatedAt";
 import { Textarea } from "@/components/Textarea";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { ESTIMATE_DISCLAIMER } from "@/content/legal";
 import { practiceAreas } from "@/content/practice-areas";
 import { toolList } from "@/content/tools";
+import { getAllPosts } from "@/lib/blog";
 import { formatToman, toPersianDigits } from "@/lib/format";
 import { ToastDemo } from "./ToastDemo";
 
@@ -124,8 +127,10 @@ function Sub({ title, children }: { title: string; children: ReactNode }) {
 
 const row = "flex flex-wrap items-center gap-3";
 
-export default function DesignSystemPage() {
+export default async function DesignSystemPage() {
   if (process.env.NODE_ENV === "production") notFound();
+
+  const samplePosts = (await getAllPosts()).slice(0, 3);
 
   const sampleResult = [
     "اصل طلب: ۱۰۰٬۰۰۰٬۰۰۰ تومان",
@@ -354,14 +359,7 @@ export default function DesignSystemPage() {
             <PracticeCard key={area.slug} area={area} />
           ))}
         </Grid>
-        <Grid cols={3}>
-          <GuideCard
-            href="/guides"
-            area="چک و سفته"
-            title="عنوان نمونه یک راهنما"
-            summary="خلاصه نمونه برای نمایش چیدمان کارت راهنما در دو تا سه سطر."
-            reviewedAt="1405-07-12"
-          />
+        <Grid cols={2}>
           <Card>
             <p className="font-bold">کارت ساده</p>
             <p className="text-sm text-muted">برای گروه‌بندی محتوای مرتبط.</p>
@@ -417,13 +415,32 @@ export default function DesignSystemPage() {
         </Prose>
       </Block>
 
+      <Block title="وبلاگ">
+        <TopicFilter active="check-safte" />
+        {samplePosts[0] && <PostCard post={samplePosts[0]} featured />}
+        <ul className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+          {samplePosts.map((post) => (
+            <li key={post.slug}>
+              <PostCard post={post} headingLevel="h3" />
+            </li>
+          ))}
+        </ul>
+        <Sub title="Pagination: first, middle, last">
+          <Stack gap="sm">
+            <Pagination current={1} total={3} hrefFor={() => "/design-system"} />
+            <Pagination current={6} total={12} hrefFor={() => "/design-system"} />
+            <Pagination current={12} total={12} hrefFor={() => "/design-system"} />
+          </Stack>
+        </Sub>
+      </Block>
+
       <Block title="اعتماد">
         <LicenseStrip />
         <Grid cols={2}>
           <LawyerCard />
           <Stack gap="sm">
-            <AuthorBox reviewedAt="1405-07-12" />
-            <ReviewedAt date="1405-07-12" />
+            <AuthorBox />
+            <UpdatedAt date="1405-07-12" />
           </Stack>
         </Grid>
       </Block>
