@@ -4,8 +4,7 @@ import { blogHref, getAllPosts, postHref } from "@/lib/blog";
 import { jalaliToGregorianISO } from "@/lib/jalali";
 import { absoluteUrl } from "@/lib/seo";
 
-// Fixed pages that exist today. Add a path here when its page is built
-// (the rent calculator).
+// Fixed pages that exist today. Add a path here when its page is built.
 const STATIC_PATHS = [
   "/",
   "/about",
@@ -13,6 +12,7 @@ const STATIC_PATHS = [
   "/request",
   "/blog",
   "/tools/khesarat-takhir",
+  "/tools/hazine-dadresi",
   "/privacy",
   "/disclaimer",
 ];

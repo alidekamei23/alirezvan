@@ -1,19 +1,24 @@
 // Table — data in rows and columns. A wide table scrolls inside its own box (focusable,
 // so keyboard users can scroll it); the page itself never scrolls sideways.
 // Usage: <Table caption="شاخص ماهانه" head={["ماه", "شاخص"]} rows={[["مهر ۱۴۰۵", "…"]]} />
-// The first cell of each row is its row header.
+// The first cell of each row is its row header. `selectedRow` highlights one row (say in
+// the cell text which one it is; colour alone is not enough).
 import type { ReactNode } from "react";
+import { cn } from "@/lib/cn";
 
 export function Table({
   caption,
   head,
   rows,
   emptyText = "داده‌ای برای نمایش وجود ندارد.",
+  selectedRow,
 }: {
   caption: string;
   head: string[];
   rows: ReactNode[][];
   emptyText?: string;
+  /** Index in `rows`. */
+  selectedRow?: number;
 }) {
   return (
     <div
@@ -46,7 +51,13 @@ export function Table({
             </tr>
           ) : (
             rows.map((row, rowIndex) => (
-              <tr key={rowIndex} className="border-t border-line">
+              <tr
+                key={rowIndex}
+                className={cn(
+                  "border-t border-line",
+                  rowIndex === selectedRow && "bg-primary-soft",
+                )}
+              >
                 {row.map((cell, cellIndex) =>
                   cellIndex === 0 ? (
                     <th

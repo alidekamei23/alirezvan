@@ -9,7 +9,7 @@ export const practiceNav: NavItem[] = [
 
 export const toolsNav: NavItem[] = [
   { href: "/tools/khesarat-takhir", label: "محاسبه خسارت تأخیر تأدیه" },
-  { href: "/tools/ejare", label: "محاسبه افزایش اجاره" },
+  { href: "/tools/hazine-dadresi", label: "محاسبه هزینه دادرسی" },
 ];
 
 export const siteNav: NavItem[] = [

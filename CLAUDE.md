@@ -85,7 +85,7 @@ app/
   motalebe/page.tsx          # practice hub: debt claims
   gharardad/page.tsx         # practice hub: contracts
   tools/khesarat-takhir/     # late-payment damages calculator
-  tools/ejare/               # rent increase calculator
+  tools/hazine-dadresi/      # court-fee calculator
   blog/page.tsx              # blog index (page 1); blog/page/[page] for pages 2..N
   blog/topic/[area]/         # posts of one practice area, with the same pagination
   blog/[slug]/page.tsx       # blog post (Persian slug from the post's meta)
@@ -99,7 +99,6 @@ content/
   practice-areas.ts          # hub data: titles, steps, FAQs
   blog/*.mdx                 # posts; files starting with "_" are dev fixtures
   cpi.json                   # Central Bank monthly price index (see §5.1)
-  settings.ts                # rent cap, deposit conversion rate, etc.
 lib/                         # format, jalali, calculators, sms, notify, otp, seo helpers
 db/                          # Drizzle schema and migrations
 tests/
@@ -123,11 +122,8 @@ The public name of the section is «وبلاگ».
 - Unit tests: at least 3 hand-checked examples, plus edge cases (same month, end before
   start, missing months, Persian-digit input).
 
-### 5.2 Rent increase calculator (`lib/calculators/rent.ts`)
-- Inputs: current monthly rent, deposit, city (Tehran only at launch).
-- `maxNewRent = rent × (1 + cap)` where `cap` comes from `content/settings.ts`
-  (Tehran 1405: `0.27`). Deposit-to-rent conversion uses a configurable rate in settings
-  (value to be confirmed by the lawyer; show it on the page).
+### 5.2 Rent increase calculator (removed)
+Removed by the site owner on 13 Oct 2026. Do not build it or link to it unless asked.
 
 ### 5.3 Consultation request (launch version)
 1. Fields: name, mobile (09xxxxxxxxx), practice area, consultation type (phone 15 min /

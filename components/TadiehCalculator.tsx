@@ -4,16 +4,16 @@
 // types; nothing leaves the browser. The arithmetic is lib/tadieh/tadieh-calc.ts.
 // Usage: <TadiehCalculator /> (once, on /tools/khesarat-takhir)
 import { useId, useRef, useState } from "react";
-import { Calculator, Check, Copy, Plus, Trash2 } from "lucide-react";
+import { Calculator, Plus, Trash2 } from "lucide-react";
 import { Alert } from "@/components/Alert";
 import { Button } from "@/components/Button";
+import { CopyButton } from "@/components/CopyButton";
 import { EmptyState } from "@/components/EmptyState";
 import { MoneyField } from "@/components/MoneyField";
 import { RadioCards } from "@/components/RadioCards";
 import { ResultCard } from "@/components/ResultCard";
 import { Select } from "@/components/Select";
 import { Table } from "@/components/Table";
-import { useToast } from "@/components/Toast";
 import { tadiehCopy } from "@/content/tadieh";
 import { cn } from "@/lib/cn";
 import { toPersianDigits } from "@/lib/format";
@@ -92,14 +92,12 @@ function IndexLine({ date, basis }: { date: JalaliMonth; basis: Basis }) {
 
 export function TadiehCalculator() {
   const id = useId();
-  const toast = useToast();
   const nextId = useRef(1);
   const addRowRef = useRef<HTMLDivElement>(null);
   const [mode, setMode] = useState<Mode>("single");
   const [basis, setBasis] = useState<Basis>("monthly");
   const [rows, setRows] = useState<Row[]>([{ id: 0, amount: null, due: DEFAULT_DUE }]);
   const [payment, setPayment] = useState<JalaliMonth>(LATEST);
-  const [copied, setCopied] = useState(false);
 
   const multi = mode === "multi";
   const activeRows = multi ? rows : rows.slice(0, 1);
@@ -129,18 +127,6 @@ export function TadiehCalculator() {
         basis,
       )
     : null;
-
-  const copy = async () => {
-    if (!result?.ok) return;
-    try {
-      await navigator.clipboard.writeText(buildSummary(result));
-      setCopied(true);
-      toast("نتیجه کپی شد.");
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      toast("کپی انجام نشد. متن را دستی انتخاب و کپی کنید.");
-    }
-  };
 
   const annual = basis === "annual";
 
@@ -361,13 +347,7 @@ export function TadiehCalculator() {
                     : []),
                 ]}
               >
-                <Button
-                  variant="secondary"
-                  icon={copied ? <Check /> : <Copy />}
-                  onClick={copy}
-                >
-                  {copied ? "کپی شد" : "کپی نتیجه"}
-                </Button>
+                <CopyButton text={buildSummary(result)} />
               </ResultCard>
             </>
           )}

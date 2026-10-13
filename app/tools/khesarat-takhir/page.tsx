@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Section } from "@/components/Section";
 import { Table } from "@/components/Table";
 import { TadiehCalculator } from "@/components/TadiehCalculator";
+import { ToolCard } from "@/components/ToolCard";
 import { tadiehCopy, tadiehLegalNotes } from "@/content/tadieh";
 import { tools } from "@/content/tools";
 import { toPersianDigits } from "@/lib/format";
@@ -71,6 +72,12 @@ export default function Page() {
             </ul>
           </Disclosure>
         </DisclosureGroup>
+      </Section>
+
+      <Section id="related" tone="muted" title="ابزار مرتبط">
+        <div className="max-w-reading">
+          <ToolCard tool={tools["hazine-dadresi"]} />
+        </div>
       </Section>
 
       <ContactCta />

@@ -1,4 +1,4 @@
-export type ToolSlug = "khesarat-takhir" | "ejare";
+export type ToolSlug = "khesarat-takhir" | "hazine-dadresi";
 
 export type Tool = {
   slug: ToolSlug;
@@ -15,12 +15,12 @@ export const tools: Record<ToolSlug, Tool> = {
     // TODO: lawyer review
     summary: "برآورد خسارت تأخیر بر پایه شاخص قیمت بانک مرکزی",
   },
-  ejare: {
-    slug: "ejare",
-    href: "/tools/ejare",
-    title: "محاسبه افزایش اجاره",
+  "hazine-dadresi": {
+    slug: "hazine-dadresi",
+    href: "/tools/hazine-dadresi",
+    title: "محاسبه هزینه دادرسی",
     // TODO: lawyer review
-    summary: "برآورد سقف افزایش اجاره‌بها در تهران",
+    summary: "برآورد هزینه دادرسی دعاوی مالی در مراحل بدوی، تجدیدنظر و فرجام",
   },
 };
 

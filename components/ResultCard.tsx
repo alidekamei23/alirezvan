@@ -11,7 +11,8 @@ import type { ReactNode } from "react";
 import { EstimateNotice } from "@/components/EstimateNotice";
 import { cn } from "@/lib/cn";
 
-export type ResultRow = { label: string; value: string; emphasis?: boolean };
+/** `detail` is a small line under the row, e.g. how a tiered amount is made up. */
+export type ResultRow = { label: string; value: string; detail?: string; emphasis?: boolean };
 
 export function ResultCard({
   title,
@@ -57,6 +58,9 @@ export function ResultCard({
               >
                 {row.value}
               </dd>
+              {row.detail && (
+                <dd className="basis-full text-sm text-muted tabular-nums">{row.detail}</dd>
+              )}
             </div>
           ))}
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 pt-4">

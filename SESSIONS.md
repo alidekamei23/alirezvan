@@ -15,6 +15,8 @@ Claude Code, and the "done when" check. If a session runs over, the unfinished i
 | Blog (replaces the guides system of session 7) | Done 13 Oct | /blog with topics and pagination; dev-only sample posts until real articles arrive |
 | Request (contact-only version), Privacy, Disclaimer, 404, sitemap, robots, favicon | Done 13 Oct | Privacy and Disclaimer copy is draft; the request form with OTP is still to build |
 | Late-payment damages calculator | Done 13 Oct | /tools/khesarat-takhir. Logic and index table supplied by the owner in lib/tadieh/ (replaces content/cpi.json and lib/calculators/damages.ts of CLAUDE.md §5.1); amounts are in rials. Legal notes are draft (content/tadieh.ts) |
+| Court-fee calculator | Done 13 Oct | /tools/hazine-dadresi. Logic and tariffs supplied by the owner in lib/hazine/; every fixed tariff is still marked unverified there. Legal notes are draft (content/hazine.ts) |
+| Rent increase calculator | Removed 13 Oct | Dropped by the owner: no page, no links. The rent part of session 5 below no longer applies |
 | 4–10 | Not started | Calculators postponed by the owner; articles are written by the owner and approved by the lawyer offline |
 
 Still open from "Before session 1": domain, hosting account, SMS provider account and OTP
