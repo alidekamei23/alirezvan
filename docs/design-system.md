@@ -82,9 +82,9 @@ One component per file in `components/`. Each file starts with a usage note.
 | Actions | `Button`, `LinkButton`, `CallButton`, `WhatsAppButton`, `BaleButton` (base: `ContactButton`; classes: `buttonStyles`) |
 | Forms | `TextField`, `PhoneField`, `MoneyField`, `Select`, `Textarea`, `RadioCards`, `DatePicker`, `OtpInput` (shell: `Field`) |
 | Feedback | `Alert`, `EstimateNotice`, `DraftNotice`, `Toast` (`ToastProvider`, `useToast`), `Skeleton`, `EmptyState` |
-| Content | `Card`, `PracticeIndex`, `PracticeCard`, `ToolCard`, `Steps`, `GuideCard`, `Faq`, `Breadcrumbs`, `Badge`, `Table` |
-| Trust | `LicenseStrip`, `LawyerCard`, `AuthorBox`, `ReviewedAt` |
-| Layout | `Header`, `MobileMenu`, `Footer`, `PageHeader`, `ContactCta`, `PracticeHub` (page template), `StickyContactBar`, `SkipLink` |
+| Content | `Card`, `PracticeIndex`, `PracticeCard`, `ToolCard`, `Steps`, `PostCard`, `TopicFilter`, `Pagination`, `ContactBox`, `Faq`, `Breadcrumbs`, `Badge`, `Table` |
+| Trust | `LicenseStrip`, `LawyerCard`, `AuthorBox`, `UpdatedAt` |
+| Layout | `Header`, `MobileMenu`, `Footer`, `PageHeader`, `PageFallback`, `ContactCta`, `PracticeHub` and `BlogIndex` (page templates), `StickyContactBar`, `SkipLink` |
 | Calculator | `ResultCard`, `ShareActions` |
 
 State coverage: buttons have hover, focus-visible, active, disabled and loading; form
@@ -109,7 +109,7 @@ Do
 - Take names, numbers and license details from `content/lawyer.ts`. Never type them
   into a page.
 - Render every calculator result with `ResultCard`; it always shows the estimate notice.
-- Show `ReviewedAt` on every guide.
+- Show `UpdatedAt` on every blog post and post card.
 - Use `lucide-react` icons at the default stroke width, sized with `size-4/5/6`, and
   hide decorative ones with `aria-hidden`.
 

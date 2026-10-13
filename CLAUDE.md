@@ -29,7 +29,9 @@ Always:
 - Show name, license grade, licensing body and license number (from `content/lawyer.ts`)
 - Link to the official license-lookup page of the licensing body
 - Label every calculator result: «این نتیجه تخمینی است و مشاوره حقوقی محسوب نمی‌شود.»
-- Show a «آخرین بازبینی حقوقی» (last legal review) date on every guide
+- Show an «آخرین به‌روزرسانی» (last updated) date on every blog post. (Changed 13 Oct 2026
+  by the site owner: it replaces the earlier «آخرین بازبینی حقوقی» date. The lawyer approves
+  each article offline before it is added; that approval date is not published.)
 
 If a request would break these rules, stop and say so instead of writing the copy.
 
@@ -58,7 +60,7 @@ Global internet access in Iran has been cut several times (most recently Feb–M
 | --- | --- |
 | Framework | Next.js (App Router), TypeScript strict, React Server Components by default |
 | Styling | Tailwind CSS, logical properties, design tokens in `app/globals.css` |
-| Content | MDX files in `content/guides/*.mdx` (frontmatter validated with Zod) |
+| Content | MDX files in `content/blog/*.mdx` (an exported `meta` object validated with Zod) |
 | Database | PostgreSQL with Drizzle ORM (`db/schema.ts`, migrations in `db/migrations`) |
 | Validation | Zod for every form, server action and content file |
 | Dates | `date-fns-jalali` |
@@ -84,8 +86,9 @@ app/
   gharardad/page.tsx         # practice hub: contracts
   tools/khesarat-takhir/     # late-payment damages calculator
   tools/ejare/               # rent increase calculator
-  guides/page.tsx            # guides index
-  guides/[slug]/page.tsx     # guide page (Persian slugs from frontmatter)
+  blog/page.tsx              # blog index (page 1); blog/page/[page] for pages 2..N
+  blog/topic/[area]/         # posts of one practice area, with the same pagination
+  blog/[slug]/page.tsx       # blog post (Persian slug from the post's meta)
   about/ contact/ request/ privacy/ disclaimer/
   admin/                     # leads list (basic auth)
   api/ or actions/           # server actions for request form and OTP
@@ -94,7 +97,7 @@ components/                  # UI components (one per file, Persian-first props)
 content/
   lawyer.ts                  # single source of truth for name, license, address, phones
   practice-areas.ts          # hub data: titles, steps, FAQs
-  guides/*.mdx
+  blog/*.mdx                 # posts; files starting with "_" are dev fixtures
   cpi.json                   # Central Bank monthly price index (see §5.1)
   settings.ts                # rent cap, deposit conversion rate, etc.
 lib/                         # format, jalali, calculators, sms, notify, otp, seo helpers
@@ -102,7 +105,8 @@ db/                          # Drizzle schema and migrations
 tests/
 ```
 
-Practice hubs and fixed pages use the Latin slugs above. Guides use Persian slugs.
+Practice hubs and fixed pages use the Latin slugs above. Blog posts use Persian slugs.
+The public name of the section is «وبلاگ».
 
 ## 5. Feature specs
 
@@ -138,16 +142,19 @@ Practice hubs and fixed pages use the Latin slugs above. Guides use Persian slug
 `/admin` lists leads newest first with status (`new`, `contacted`, `consultation`,
 `retained`, `closed`), source, area and created time (Jalali). Status is editable. No delete.
 
-### 5.5 Guides (MDX)
-Frontmatter (Zod-validated): `title`, `slug` (Persian), `area`, `summary`, `reviewedAt`
-(Jalali date), `faqs` (array of q/a), `relatedTool` (optional), `references` (laws with
-links). Each guide renders an author box, FAQ schema, and contact boxes after section 2
-and at the end.
+### 5.5 Blog (MDX)
+Each post exports `meta` (Zod schema in `lib/blog.ts`): `title`, `slug` (Persian), `area`,
+`summary`, `updatedAt` (Jalali date), `cover` (image with width, height, alt; every post
+has one), `faqs` (array of q/a), `references` (laws with links), `draft`. Each post renders
+an author box, FAQ schema, a `<ContactBox />` after section 2 and the contact band at the
+end. Every post belongs to exactly one practice area and is listed on that area's hub.
+Lists are paginated with real URLs: 10 posts on page 1 (the newest shown large), 9 after.
+Only lawyer-approved articles are added; do not write or publish legal articles yourself.
 
 ## 6. SEO checklist (every page)
 - Unique Persian `<title>` and meta description; canonical URL; Open Graph tags.
 - JSON-LD: `LegalService`/`Attorney` + `LocalBusiness` site-wide (from `content/lawyer.ts`),
-  `Article` + `FAQPage` + `BreadcrumbList` on guides.
+  `Article` + `FAQPage` + `BreadcrumbList` on blog posts.
 - `sitemap.ts` and `robots.ts`; no `noindex` outside `/admin`.
 
 ## 7. Quality bar
