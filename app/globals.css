@@ -131,9 +131,28 @@
   --z-overlay: 50;
   --z-toast: 60;
 
+  /* Page gutter: 16px on phones, 24px from `sm`. Used through the `px-gutter` utility. */
+  --gutter: 1rem;
+
   /* Heights other layout has to reserve space for. */
   --header-height: 4rem;
   --contact-bar-height: 3.75rem;
+}
+
+@media (min-width: 40rem) {
+  :root {
+    --gutter: 1.5rem;
+  }
+}
+
+/*
+ * Side padding of every page band. Physical left/right on purpose: on a notched phone
+ * held sideways the safe-area inset belongs to a side of the device, not to the text
+ * direction. Without a notch this is exactly the gutter.
+ */
+@utility px-gutter {
+  padding-left: max(var(--gutter), env(safe-area-inset-left));
+  padding-right: max(var(--gutter), env(safe-area-inset-right));
 }
 
 @utility z-sticky {
@@ -192,6 +211,17 @@
   }
 }
 
+/* The page behind the open mobile menu must not scroll. */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+/* Keep the sticky contact bar clear of a notch when the phone is held sideways. */
+[data-contact-bar] {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
 /*
  * The sticky contact bar steps aside while the visitor types, so it can never sit on
  * top of a field (including the OTP boxes) when the on-screen keyboard is open.
@@ -204,7 +234,7 @@ body:has(:is(input:not([type="radio"], [type="checkbox"]), textarea):focus)
 /*
  * Home hero dot grid. A decorative layer behind the hero content (the hero itself is
  * `relative isolate`), faded out toward the edges with a radial mask. The mask is
- * centred on phones and shifted toward the portrait side from `lg`.
+ * centred on phones and shifted toward the portrait side from `md`.
  */
 @layer components {
   .hero-dots {
@@ -228,7 +258,7 @@ body:has(:is(input:not([type="radio"], [type="checkbox"]), textarea):focus)
     );
   }
 
-  @media (min-width: 64rem) {
+  @media (min-width: 48rem) {
     .hero-dots {
       --hero-dots-origin: 35% 50%;
     }

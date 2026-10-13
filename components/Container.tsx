@@ -19,7 +19,7 @@ export function Container({
   children: ReactNode;
 }) {
   return (
-    <div className={cn("mx-auto w-full px-4 sm:px-6", widths[width], className)}>
+    <div className={cn("mx-auto w-full px-gutter", widths[width], className)}>
       {children}
     </div>
   );

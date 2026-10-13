@@ -51,8 +51,16 @@ export function Header() {
             <Phone aria-hidden="true" className="size-4" />
             <Ltr>{toPersianDigits(lawyer.phone.display)}</Ltr>
           </a>
-          <LinkButton href={requestNav.href} variant="secondary" size="sm">
-            {requestNav.label}
+          {/* Under 360px the full label does not fit beside the name; show a short one. */}
+          <LinkButton
+            href={requestNav.href}
+            variant="secondary"
+            size="sm"
+            aria-label={requestNav.label}
+            className="whitespace-nowrap max-xs:px-3"
+          >
+            <span className="xs:hidden">مشاوره</span>
+            <span className="hidden xs:inline">{requestNav.label}</span>
           </LinkButton>
           <div className="lg:hidden">
             <MobileMenu groups={mobileGroups} />

@@ -27,6 +27,9 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
+  // Lets the page use the whole screen on notched phones; the gutters and the sticky
+  // bar then add the safe-area insets themselves (see app/globals.css).
+  viewportFit: "cover",
   // emerald-700, the primary token in app/globals.css
   themeColor: "#047857",
 };
@@ -34,7 +37,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="fa" dir="rtl" className={`${vazirmatn.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col pb-(--contact-bar-height) font-sans lg:pb-0">
+      <body className="flex min-h-full flex-col pb-[calc(var(--contact-bar-height)+env(safe-area-inset-bottom))] font-sans lg:pb-0">
         <ToastProvider>
           <SkipLink />
           <Header />

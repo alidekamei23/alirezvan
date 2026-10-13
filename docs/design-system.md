@@ -60,7 +60,9 @@ At most three heading sizes on a page. Weights: 400 body, 600 labels and buttons
 
 ### Space, shape, depth, motion
 
-- Spacing: 4px base (`p-1` = 4px). Sections use `py-12 md:py-16`; gutters `px-4 sm:px-6`.
+- Spacing: 4px base (`p-1` = 4px). Sections use `py-12 md:py-16`. Page gutters come from
+  the `px-gutter` utility (16px, 24px from `sm`), which also clears the notch on phones held
+  sideways; `Container` applies it, so don't add side padding to page bands by hand.
 - Radius: `rounded-sm` 8px (controls, buttons), `rounded-md` 12px (cards),
   `rounded-lg` 16px (large media). `rounded-full` for badges and avatars.
 - Elevation: `shadow-sm` (result card, hovered link card) and `shadow-md` (toast, sticky

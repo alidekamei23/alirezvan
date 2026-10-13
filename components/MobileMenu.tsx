@@ -32,7 +32,7 @@ export function MobileMenu({
         aria-label="فهرست سایت"
         className="fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none flex-col bg-surface text-ink open:flex"
       >
-        <div className="flex min-h-(--header-height) items-center justify-between border-b border-line px-4">
+        <div className="flex min-h-(--header-height) items-center justify-between border-b border-line px-gutter">
           <span className="text-lg font-bold">فهرست</span>
           <button
             type="button"
@@ -43,7 +43,7 @@ export function MobileMenu({
             <X aria-hidden="true" className="size-6" />
           </button>
         </div>
-        <nav aria-label="ناوبری اصلی" className="flex-1 overflow-y-auto px-4 pb-8">
+        <nav aria-label="ناوبری اصلی" className="flex-1 overflow-y-auto px-gutter pb-[max(2rem,env(safe-area-inset-bottom))]">
           {groups.map((group) => (
             <div key={group.title} className="pt-6">
               <p className="text-sm font-semibold text-muted">{group.title}</p>

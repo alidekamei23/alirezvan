@@ -40,30 +40,30 @@ export default async function Home() {
 
   return (
     <>
-      {/* From lg the hero has no block padding: the portrait file carries its own top margin,
+      {/* From md the hero has no block padding: the portrait file carries its own top margin,
           and this keeps the license strip below it inside the first screen on laptops. */}
-      <section className="relative isolate bg-surface py-10 md:py-16 lg:py-0">
+      <section className="relative isolate bg-surface py-10 md:py-0">
         <div aria-hidden="true" className="hero-dots" />
-        <Container className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
-          {/* Phones get the tight crop; from lg the full portrait stands on the strip below. */}
+        <Container className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-10 lg:gap-16">
+          {/* Phones get the tight crop; from md the full portrait stands on the strip below. */}
           <Image
             src={lawyer.avatar.src}
             alt={`تصویر ${lawyer.name}`}
             width={lawyer.avatar.width}
             height={lawyer.avatar.height}
             sizes="7rem"
-            className="size-28 shrink-0 rounded-md border border-line lg:hidden"
+            className="size-28 shrink-0 rounded-md border border-line md:hidden"
           />
           <Image
             src={lawyer.photo.src}
             alt={`تصویر ${lawyer.name}`}
             width={lawyer.photo.width}
             height={lawyer.photo.height}
-            sizes="(min-width: 64rem) 24rem, 1px"
+            sizes="(min-width: 64rem) 24rem, (min-width: 48rem) 16rem, 1px"
             preload
-            className="hero-portrait hidden h-auto w-96 shrink-0 lg:order-last lg:block"
+            className="hero-portrait hidden h-auto w-64 shrink-0 md:order-last md:block lg:w-96"
           />
-          <div className="max-w-reading lg:self-center lg:pb-10">
+          <div className="max-w-reading md:self-center md:py-10 lg:pt-0">
             <h1>
               <span className="block text-3xl font-black text-ink">{lawyer.name}</span>
               <span className="mt-1 block text-xl font-medium text-primary">
