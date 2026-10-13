@@ -172,3 +172,4 @@ Only lawyer-approved articles are added; do not write or publish legal articles 
   up to date.
 - End each session with: what was done, what moved to "after launch", and what the next
   session needs from the human.
+Current task spec: docs/admin-panel-spec.md — progress in docs/admin-progress.md. Re-read both at the start of every phase.
