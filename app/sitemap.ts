@@ -5,8 +5,8 @@ import { jalaliToGregorianISO } from "@/lib/jalali";
 import { absoluteUrl } from "@/lib/seo";
 
 // Fixed pages that exist today. Add a path here when its page is built
-// (request, privacy, disclaimer, the two calculators).
-const STATIC_PATHS = ["/", "/about", "/contact", "/blog"];
+// (the two calculators).
+const STATIC_PATHS = ["/", "/about", "/contact", "/request", "/blog", "/privacy", "/disclaimer"];
 
 // Blog posts and topic pages are added automatically. Paginated list pages are left out
 // on purpose: every post they link to is already listed.

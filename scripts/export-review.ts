@@ -1,9 +1,17 @@
 // Writes review/hubs.md: every piece of draft copy on Home, the four practice hubs,
-// About and Contact, for the lawyer to mark up. Generated from the content files, so it
+// About, Contact, Request, Privacy and Disclaimer, for the lawyer to mark up. Generated from the content files, so it
 // never drifts from the site. Run: npm run review:hubs
 import { mkdirSync, writeFileSync } from "node:fs";
 import { ESTIMATE_DISCLAIMER, SITE_DISCLAIMER } from "../content/legal.ts";
-import { aboutCopy, consultationTypes, contactCopy, homeCopy } from "../content/pages.ts";
+import {
+  aboutCopy,
+  consultationTypes,
+  contactCopy,
+  disclaimerCopy,
+  homeCopy,
+  privacyCopy,
+  requestCopy,
+} from "../content/pages.ts";
 import { practiceAreas } from "../content/practice-areas.ts";
 import { toolList } from "../content/tools.ts";
 import { toPersianDigits } from "../lib/format.ts";
@@ -14,7 +22,7 @@ const add = (...lines: string[]) => out.push(...lines, "");
 add(
   "# متن‌های پیش‌نویس سایت برای بازبینی حقوقی",
   "",
-  "جناب آقای رضوان، این فایل همه متن‌هایی را دارد که در صفحه اصلی، چهار صفحه حوزه کاری، «درباره» و «تماس» نمایش داده می‌شود. هیچ‌کدام بازبینی حقوقی نشده است.",
+  "جناب آقای رضوان، این فایل همه متن‌هایی را دارد که در صفحه اصلی، چهار صفحه حوزه کاری، «درباره»، «تماس»، «درخواست مشاوره»، «حریم خصوصی» و «سلب مسئولیت» نمایش داده می‌شود. هیچ‌کدام بازبینی حقوقی نشده است.",
 );
 add(
   "لطفاً زیر هر مورد یکی از این سه را بنویسید:",
@@ -75,7 +83,20 @@ add("---", "", `## ${toPersianDigits(next + 1)}. صفحه «تماس»`);
 add(`**عنوان صفحه:** ${contactCopy.heading}`, "", "نظر:");
 add("**مقدمه:**", "", `> ${contactCopy.intro}`, "", "نظر:");
 
-add("---", "", `## ${toPersianDigits(next + 2)}. اطلاعاتی که هنوز دریافت نشده است`);
+add("---", "", `## ${toPersianDigits(next + 2)}. صفحه «درخواست مشاوره»`);
+add("**مقدمه:**", "", `> ${requestCopy.lead}`, "", "نظر:");
+add(`**${requestCopy.prepareHeading}:**`, "", ...requestCopy.prepare.map((item) => `- ${item}`));
+add(`> ${requestCopy.note}`, "", "نظر:");
+
+[privacyCopy, disclaimerCopy].forEach((copy, index) => {
+  add("---", "", `## ${toPersianDigits(next + 3 + index)}. صفحه «${copy.heading}»`);
+  add("**مقدمه:**", "", `> ${copy.lead}`, "", "نظر:");
+  for (const section of copy.sections) {
+    add(`**${section.heading}**`, "", ...section.paragraphs.map((p) => `> ${p}`), "", "نظر:");
+  }
+});
+
+add("---", "", `## ${toPersianDigits(next + 5)}. اطلاعاتی که هنوز دریافت نشده است`);
 add(
   "- نشانی اینترنتی صفحه استعلام پروانه در سامانه کانون",
   "- معرفی کوتاه (سوابق کاری) و تحصیلات",

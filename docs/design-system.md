@@ -86,7 +86,7 @@ One component per file in `components/`. Each file starts with a usage note.
 | Feedback | `Alert`, `EstimateNotice`, `DraftNotice`, `Toast` (`ToastProvider`, `useToast`), `Skeleton`, `EmptyState` |
 | Content | `Card`, `PracticeIndex`, `PracticeCard`, `ToolCard`, `Steps`, `PostCard`, `TopicFilter`, `Pagination`, `ContactBox`, `Faq`, `Breadcrumbs`, `Badge`, `Table` |
 | Trust | `LicenseStrip`, `LawyerCard`, `AuthorBox`, `UpdatedAt` |
-| Layout | `Header`, `MobileMenu`, `Footer`, `PageHeader`, `PageFallback`, `ContactCta`, `PracticeHub` and `BlogIndex` (page templates), `StickyContactBar`, `SkipLink` |
+| Layout | `Header`, `MobileMenu`, `Footer`, `PageHeader`, `ContactCta`, `PracticeHub`, `BlogIndex` and `TextPage` (page templates), `StickyContactBar`, `SkipLink` |
 | Calculator | `ResultCard`, `ShareActions` |
 
 State coverage: buttons have hover, focus-visible, active, disabled and loading; form

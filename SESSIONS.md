@@ -13,6 +13,7 @@ Claude Code, and the "done when" check. If a session runs over, the unfinished i
 | 2 Design system and Home | Done 11 Oct | See docs/design-system.md |
 | 3 Practice hubs, About, Contact | Done 11 Oct | Copy is draft; review/hubs.md must go to the lawyer. Map waits for the office address |
 | Blog (replaces the guides system of session 7) | Done 13 Oct | /blog with topics and pagination; dev-only sample posts until real articles arrive |
+| Request (contact-only version), Privacy, Disclaimer, 404, sitemap, robots, favicon | Done 13 Oct | Privacy and Disclaimer copy is draft; the request form with OTP is still to build |
 | 4–10 | Not started | Calculators postponed by the owner; articles are written by the owner and approved by the lawyer offline |
 
 Still open from "Before session 1": domain, hosting account, SMS provider account and OTP
