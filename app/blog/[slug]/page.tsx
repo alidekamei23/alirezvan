@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -10,7 +9,6 @@ import { ContactCta } from "@/components/ContactCta";
 import { Container } from "@/components/Container";
 import { Faq } from "@/components/Faq";
 import { JsonLd } from "@/components/JsonLd";
-import { PageFallback } from "@/components/PageFallback";
 import { PostCard } from "@/components/PostCard";
 import { Prose } from "@/components/Prose";
 import { Section } from "@/components/Section";
@@ -59,17 +57,11 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-// The content waits for the URL params inside <Suspense>, so navigation to this route
-// can show a shell at once (Cache Components). Prebuilt pages are complete HTML.
-export default function BlogPostPage({ params }: Props) {
-  return (
-    <Suspense fallback={<PageFallback />}>
-      <Content params={params} />
-    </Suspense>
-  );
-}
+// The page waits for the URL before rendering, so an unknown address gets a real 404
+// status. `instant = false` tells Next.js that blocking here is intended.
+export const instant = false;
 
-async function Content({ params }: Pick<Props, "params">) {
+export default async function BlogPostPage({ params }: Props) {
   const post = await getPostBySlug(decodeSlug((await params).slug));
   if (!post) notFound();
 

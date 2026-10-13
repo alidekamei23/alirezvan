@@ -1,7 +1,5 @@
-import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { BlogIndex } from "@/components/BlogIndex";
-import { PageFallback } from "@/components/PageFallback";
 import { blogCopy } from "@/content/pages";
 import { getPracticeArea, practiceAreas } from "@/content/practice-areas";
 import { NO_PARAMS, blogHref, getPostsByArea, isAreaSlug } from "@/lib/blog";
@@ -35,17 +33,11 @@ export async function generateMetadata({ params }: Props) {
   });
 }
 
-// The content waits for the URL params inside <Suspense>, so navigation to this route
-// can show a shell at once (Cache Components). Prebuilt pages are complete HTML.
-export default function BlogTopicPagedPage({ params }: Props) {
-  return (
-    <Suspense fallback={<PageFallback />}>
-      <Content params={params} />
-    </Suspense>
-  );
-}
+// The page waits for the URL before rendering, so an unknown address gets a real 404
+// status. `instant = false` tells Next.js that blocking here is intended.
+export const instant = false;
 
-async function Content({ params }: Pick<Props, "params">) {
+export default async function BlogTopicPagedPage({ params }: Props) {
   const { area, page: pageParam } = await params;
   const page = parsePageParam(pageParam);
   if (!isAreaSlug(area) || !page) notFound();
