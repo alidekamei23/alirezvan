@@ -6,7 +6,7 @@ import { SkipLink } from "@/components/SkipLink";
 import { StickyContactBar } from "@/components/StickyContactBar";
 import { ToastProvider } from "@/components/Toast";
 import { lawyer } from "@/content/lawyer";
-import { SITE_URL } from "@/lib/seo";
+import { ALLOW_INDEXING, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 const vazirmatn = localFont({
@@ -24,6 +24,8 @@ export const metadata: Metadata = {
   },
   description:
     "وب‌سایت علی رضوان، وکیل پایه یک دادگستری در تهران؛ چک و سفته، ملکی و اجاره، مطالبه و طلب، قرارداد.",
+  // Test and preview deployments tell search engines to stay away (see app/robots.ts).
+  ...(!ALLOW_INDEXING && { robots: { index: false, follow: false } }),
 };
 
 export const viewport: Viewport = {

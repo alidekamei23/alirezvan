@@ -155,7 +155,9 @@ Only lawyer-approved articles are added; do not write or publish legal articles 
 - Unique Persian `<title>` and meta description; canonical URL; Open Graph tags.
 - JSON-LD: `LegalService`/`Attorney` + `LocalBusiness` site-wide (from `content/lawyer.ts`),
   `Article` + `FAQPage` + `BreadcrumbList` on blog posts.
-- `sitemap.ts` and `robots.ts`; no `noindex` outside `/admin`.
+- `sitemap.ts` and `robots.ts`; no `noindex` outside `/admin` on the live site. Deployments
+  without `NEXT_PUBLIC_ALLOW_INDEXING=true` (local, preview, test) are closed to search
+  engines as a whole; turn it on only on the real domain after the lawyer approves the copy.
 
 ## 7. Quality bar
 - Mobile first. LCP < 2.5 s and CLS < 0.1 on a 4G phone. Tap targets ≥ 44 px.

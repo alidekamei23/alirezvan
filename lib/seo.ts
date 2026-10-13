@@ -7,6 +7,12 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3
   "",
 );
 
+/**
+ * Whether search engines may index this deployment. Off unless explicitly turned on, so a
+ * preview or test deployment can never be indexed by accident.
+ */
+export const ALLOW_INDEXING = process.env.NEXT_PUBLIC_ALLOW_INDEXING === "true";
+
 /** "/blog" → "https://example.ir/blog". */
 export function absoluteUrl(path: string): string {
   return `${SITE_URL}${path}`;
