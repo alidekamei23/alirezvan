@@ -81,7 +81,7 @@ describe("admin guard", () => {
   it("refuses after logout and after the session is revoked", async () => {
     const first = await loginCookie();
     request.cookies.set(SESSION_COOKIE, first);
-    logout(getDb(), testConfig, first);
+    await logout(getDb(), testConfig, first);
     await expect(admin.requireAdminAction()).rejects.toBeInstanceOf(admin.UnauthorizedError);
 
     request.cookies.set(SESSION_COOKIE, await loginCookie());

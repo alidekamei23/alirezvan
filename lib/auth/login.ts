@@ -15,6 +15,7 @@ import {
 import {
   type Session,
   createSession,
+  credentialFingerprint,
   deleteExpiredSessions,
   deleteSession,
   findSession,
@@ -54,7 +55,7 @@ export async function attemptLogin(
   input: { username: unknown; password: unknown; ip: string },
   now = new Date(),
 ): Promise<LoginResult> {
-  const limit = checkRateLimit(db, LOGIN_LIMIT, input.ip, now);
+  const limit = await checkRateLimit(db, LOGIN_LIMIT, input.ip, now);
   if (limit.limited) {
     return { ok: false, reason: "rate_limited", retryAfterMs: limit.retryAfterMs };
   }
@@ -69,36 +70,54 @@ export async function attemptLogin(
   const usernameOk = parsed.success && sameText(parsed.data.username, config.username);
 
   if (!parsed.success || !usernameOk || !passwordOk) {
-    recordRateLimitEvent(db, LOGIN_LIMIT, input.ip, now);
+    await recordRateLimitEvent(db, LOGIN_LIMIT, input.ip, now);
     return { ok: false, reason: "invalid" };
   }
 
-  clearRateLimit(db, LOGIN_LIMIT, input.ip);
+  await clearRateLimit(db, LOGIN_LIMIT, input.ip);
   // A login is a convenient moment to clear out what has expired.
-  deleteExpiredSessions(db, now);
-  pruneRateLimitEvents(db, new Date(now.getTime() - LOGIN_LIMIT.windowMs));
+  await deleteExpiredSessions(db, now);
+  await pruneRateLimitEvents(db, new Date(now.getTime() - LOGIN_LIMIT.windowMs));
 
-  const { token, expiresAt } = createSession(db, config.username, now);
+  const { token, expiresAt } = await createSession(
+    db,
+    { username: config.username, fingerprint: credentialFingerprint(config.passwordHash) },
+    now,
+  );
   return { ok: true, cookieValue: signToken(token, config.sessionSecret), expiresAt };
 }
 
-/** The session behind a cookie value, or null (bad signature, unknown, expired, logged out). */
-export function sessionFromCookie(
+/**
+ * The session behind a cookie value, or null: bad signature, unknown, expired, logged
+ * out, or made under a username or password that has since changed.
+ */
+export async function sessionFromCookie(
   db: Db,
   config: AuthConfig,
   cookieValue: string | undefined,
   now = new Date(),
-): Session | null {
+): Promise<Session | null> {
   const token = readSignedToken(cookieValue, config.sessionSecret);
   if (!token) return null;
-  const session = findSession(db, token, now);
-  // A session of a former admin username stops working when the username changes.
-  if (!session || session.username !== config.username) return null;
+  const session = await findSession(db, token, now);
+  if (!session) return null;
+  if (
+    session.username !== config.username ||
+    session.fingerprint !== credentialFingerprint(config.passwordHash)
+  ) {
+    // The credentials it was made under are gone; so is the session.
+    await deleteSession(db, token);
+    return null;
+  }
   return session;
 }
 
 /** Ends the session on the server. The caller also clears the cookie. */
-export function logout(db: Db, config: AuthConfig, cookieValue: string | undefined): void {
+export async function logout(
+  db: Db,
+  config: AuthConfig,
+  cookieValue: string | undefined,
+): Promise<void> {
   const token = readSignedToken(cookieValue, config.sessionSecret);
-  if (token) deleteSession(db, token);
+  if (token) await deleteSession(db, token);
 }

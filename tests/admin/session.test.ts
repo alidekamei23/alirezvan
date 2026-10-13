@@ -3,6 +3,7 @@ import { sessions } from "@/db/schema";
 import {
   SESSION_TTL_MS,
   createSession,
+  credentialFingerprint,
   deleteAllSessions,
   deleteExpiredSessions,
   deleteSession,
@@ -12,6 +13,7 @@ import {
 } from "@/lib/auth/session";
 import { DAY, MINUTE, testDb } from "./helpers";
 
+const OWNER = { username: "modir", fingerprint: "f".repeat(16) };
 const SECRET = "s".repeat(40);
 const now = new Date("2026-10-13T08:00:00Z");
 const later = (ms: number) => new Date(now.getTime() + ms);
@@ -33,19 +35,28 @@ describe("signed cookie value", () => {
   });
 });
 
+describe("credential fingerprint", () => {
+  it("is short, stable and different for different hashes", () => {
+    const a = credentialFingerprint("$2b$12$" + "a".repeat(53));
+    expect(a).toMatch(/^[0-9a-f]{16}$/);
+    expect(credentialFingerprint("$2b$12$" + "a".repeat(53))).toBe(a);
+    expect(credentialFingerprint("$2b$12$" + "b".repeat(53))).not.toBe(a);
+  });
+});
+
 describe("sessions", () => {
-  it("creates a session that lasts seven days", () => {
+  it("creates a session that lasts seven days", async () => {
     const db = testDb();
-    const { token, expiresAt } = createSession(db, "modir", now);
+    const { token, expiresAt } = await createSession(db, OWNER, now);
     expect(expiresAt.getTime() - now.getTime()).toBe(SESSION_TTL_MS);
     expect(SESSION_TTL_MS).toBe(7 * DAY);
-    expect(findSession(db, token, later(7 * DAY - MINUTE))?.username).toBe("modir");
+    expect(await findSession(db, token, later(7 * DAY - MINUTE))).toMatchObject(OWNER);
   });
 
-  it("gives every login its own token and never stores the token itself", () => {
+  it("gives every login its own token and never stores the token itself", async () => {
     const db = testDb();
-    const first = createSession(db, "modir", now);
-    const second = createSession(db, "modir", now);
+    const first = await createSession(db, OWNER, now);
+    const second = await createSession(db, OWNER, now);
     expect(first.token).not.toBe(second.token);
     const ids = db
       .select()
@@ -56,34 +67,34 @@ describe("sessions", () => {
     expect(ids).not.toContain(first.token);
   });
 
-  it("does not accept an expired session and deletes it", () => {
+  it("does not accept an expired session and deletes it", async () => {
     const db = testDb();
-    const { token } = createSession(db, "modir", now);
-    expect(findSession(db, token, later(7 * DAY))).toBeNull();
+    const { token } = await createSession(db, OWNER, now);
+    expect(await findSession(db, token, later(7 * DAY))).toBeNull();
     expect(db.select().from(sessions).all()).toHaveLength(0);
   });
 
-  it("does not accept an unknown token", () => {
-    expect(findSession(testDb(), "nope", now)).toBeNull();
+  it("does not accept an unknown token", async () => {
+    expect(await findSession(testDb(), "nope", now)).toBeNull();
   });
 
-  it("ends a session when its row is deleted (logout or revocation)", () => {
+  it("ends a session when its row is deleted (logout or revocation)", async () => {
     const db = testDb();
-    const kept = createSession(db, "modir", now);
-    const ended = createSession(db, "modir", now);
-    deleteSession(db, ended.token);
-    expect(findSession(db, ended.token, now)).toBeNull();
-    expect(findSession(db, kept.token, now)).not.toBeNull();
+    const kept = await createSession(db, OWNER, now);
+    const ended = await createSession(db, OWNER, now);
+    await deleteSession(db, ended.token);
+    expect(await findSession(db, ended.token, now)).toBeNull();
+    expect(await findSession(db, kept.token, now)).not.toBeNull();
 
-    expect(deleteAllSessions(db)).toBe(1);
-    expect(findSession(db, kept.token, now)).toBeNull();
+    expect(await deleteAllSessions(db)).toBe(1);
+    expect(await findSession(db, kept.token, now)).toBeNull();
   });
 
-  it("cleans up expired sessions only", () => {
+  it("cleans up expired sessions only", async () => {
     const db = testDb();
-    createSession(db, "modir", now);
-    const fresh = createSession(db, "modir", later(DAY));
-    expect(deleteExpiredSessions(db, later(7 * DAY))).toBe(1);
-    expect(findSession(db, fresh.token, later(7 * DAY))).not.toBeNull();
+    await createSession(db, OWNER, now);
+    const fresh = await createSession(db, OWNER, later(DAY));
+    expect(await deleteExpiredSessions(db, later(7 * DAY))).toBe(1);
+    expect(await findSession(db, fresh.token, later(7 * DAY))).not.toBeNull();
   });
 });

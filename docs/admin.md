@@ -39,10 +39,13 @@ deployment are added in Phases 2 and 3. Spec: `docs/admin-panel-spec.md`.
   file in `db/migrations`; commit it), then `npm run db:migrate`.
 - `npm run db:migrate` is safe to run again; it applies only what is missing.
 - Application code reaches the database only through `lib/db.ts` (server only) and the
-  modules in `lib/auth` and `lib/articles`. Pages and components do not import Drizzle.
-  A move to PostgreSQL would mean rewriting `db/schema.ts`, `db/client.ts` and the
-  queries in those modules, and making their functions asynchronous; it has not been
-  tried.
+  repository modules: `lib/auth/session.ts`, `lib/auth/rate-limit.ts` and, from Phase 2,
+  `lib/articles/repository.ts`. Only those files contain Drizzle queries; pages,
+  components and actions do not import Drizzle.
+- Every repository function is async, although better-sqlite3 itself answers at once.
+  A move to PostgreSQL would then mean rewriting `db/schema.ts`, `db/client.ts` and the
+  query bodies inside the repository files, without touching their callers. It has not
+  been tried.
 
 ## Login and sessions
 
@@ -50,20 +53,34 @@ deployment are added in Phases 2 and 3. Spec: `docs/admin-panel-spec.md`.
 - A successful login creates a row in `sessions` and sets the cookie `admin_session`:
   a random token plus an HMAC signature; HttpOnly, SameSite=Lax, Secure in production,
   7 days. The database stores only the token's SHA-256.
-- Logout deletes the row, so a copied cookie stops working at once. Deleting all rows of
-  `sessions` logs every browser out. Sessions also stop working when `ADMIN_USERNAME` or
-  `SESSION_SECRET` changes. **Changing only the password does not end open sessions**;
-  empty the `sessions` table as well.
+- Logout deletes the row, so a copied cookie stops working at once.
+- Each session also stores a short fingerprint of the password hash it was made under
+  (the first 16 hex characters of its SHA-256). A session whose fingerprint differs from
+  the current `ADMIN_PASSWORD_HASH` is refused and deleted. So **changing the password
+  ends every open session** as soon as the server restarts with the new hash; no extra
+  step is needed.
+- Sessions also stop working when `ADMIN_USERNAME` or `SESSION_SECRET` changes.
+- `npm run revoke-sessions` ends every session by hand (for example if a cookie may
+  have leaked). Run it on the machine that holds the database.
 - Every admin page calls `requireAdminPage()` and every action or route handler calls
   `requireAdminAction()` (`lib/auth/admin.ts`). `proxy.ts` (Phase 2) is only an early
   redirect.
 - Failed logins are limited to 5 per 15 minutes per IP, stored in `rate_limit_events`.
   While limited, even the right password is refused. A wrong username and a wrong
   password give the same answer.
-- The IP comes only from the header named in `TRUSTED_IP_HEADER`. Without it, all
-  visitors share one counter: five wrong passwords from anyone lock the login for
-  everyone for up to 15 minutes. In production the reverse proxy must overwrite that
-  header with the real address.
+- The IP comes only from the header named in `TRUSTED_IP_HEADER`. In production the
+  reverse proxy must overwrite that header with the real address.
+
+### Lockout
+
+Without `TRUSTED_IP_HEADER` the server cannot tell visitors apart, so all of them share
+one counter. Anyone on the internet can then send five wrong passwords and lock the
+admin out for 15 minutes, and keep doing it for as long as they like. This is the normal
+state in local development and is harmless there. In production the server prints a
+warning at startup when the variable is missing (`instrumentation.ts`).
+
+To get back in after a lockout, run `npm run unlock-login` on the machine that holds
+the database. It forgets all failed login attempts and touches nothing else.
 
 ## Slugs
 

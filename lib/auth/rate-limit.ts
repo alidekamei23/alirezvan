@@ -1,8 +1,12 @@
 // Rate limiting that survives restarts: each counted event is a row in the database.
 // A limit is "at most `max` events per `windowMs` for one key" within a scope.
+//
+// Every function is async, so callers stay the same if the database later becomes one
+// that answers asynchronously (PostgreSQL). Imports are relative with extensions because
+// the scripts in scripts/ run this file with plain Node.
 import { and, eq, gt, lte, min, sql } from "drizzle-orm";
-import type { Db } from "@/db/client";
-import { rateLimitEvents } from "@/db/schema";
+import type { Db } from "../../db/client.ts";
+import { rateLimitEvents } from "../../db/schema.ts";
 
 export type RateLimit = { scope: string; max: number; windowMs: number };
 
@@ -15,12 +19,12 @@ export type RateLimitState = {
   retryAfterMs: number;
 };
 
-export function checkRateLimit(
+export async function checkRateLimit(
   db: Db,
   limit: RateLimit,
   key: string,
   now = new Date(),
-): RateLimitState {
+): Promise<RateLimitState> {
   const since = new Date(now.getTime() - limit.windowMs);
   const row = db
     .select({ count: sql<number>`count(*)`, oldest: min(rateLimitEvents.createdAt) })
@@ -42,22 +46,28 @@ export function checkRateLimit(
   };
 }
 
-export function recordRateLimitEvent(
+export async function recordRateLimitEvent(
   db: Db,
   limit: RateLimit,
   key: string,
   now = new Date(),
-): void {
+): Promise<void> {
   db.insert(rateLimitEvents).values({ scope: limit.scope, key, createdAt: now }).run();
 }
 
-export function clearRateLimit(db: Db, limit: RateLimit, key: string): void {
+/** Forgets the events of one key. */
+export async function clearRateLimit(db: Db, limit: RateLimit, key: string): Promise<void> {
   db.delete(rateLimitEvents)
     .where(and(eq(rateLimitEvents.scope, limit.scope), eq(rateLimitEvents.key, key)))
     .run();
 }
 
+/** Forgets every event of a scope, for all keys. Returns how many rows went. */
+export async function clearRateLimitScope(db: Db, limit: RateLimit): Promise<number> {
+  return db.delete(rateLimitEvents).where(eq(rateLimitEvents.scope, limit.scope)).run().changes;
+}
+
 /** Housekeeping: removes events older than `before`. Returns how many. */
-export function pruneRateLimitEvents(db: Db, before: Date): number {
+export async function pruneRateLimitEvents(db: Db, before: Date): Promise<number> {
   return db.delete(rateLimitEvents).where(lte(rateLimitEvents.createdAt, before)).run().changes;
 }

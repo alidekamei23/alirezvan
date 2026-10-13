@@ -4,30 +4,36 @@ Spec: `docs/admin-panel-spec.md`. Re-read both files at the start of every phase
 
 ## Current phase
 
-Phase 1 — Foundation and security: **done 13 Oct 2026, waiting for the owner to approve**.
-Phase 2 has not started.
+Phase 2 — Admin interface and editor: **in progress**.
 
 ## Done
 
 - Phase 0 (audit and plan): approved by the owner on 13 Oct 2026.
-- Phase 1:
+- Phase 1 (foundation and security): approved by the owner.
   - Driver check passed: better-sqlite3 13 installs on this machine with no download
     (prebuilt Windows and Linux binaries are inside the npm package); WAL works.
-  - `db/schema.ts`, `db/client.ts`, `lib/db.ts`, first migration `0000_init`.
+  - `db/schema.ts`, `db/client.ts`, `lib/db.ts`, migrations `0000` and `0001`.
   - `lib/auth/`: config, sessions, rate limit, login/logout, page and action guards.
   - `lib/articles/`: slug rules and the Zod input schema with publish requirements.
-  - `npm run hash-password`, `npm run db:generate`, `npm run db:migrate`.
-  - 79 new tests in `tests/admin` (145 in total). Lint, typecheck, contrast and build pass.
+  - `npm run hash-password`, `db:generate`, `db:migrate`, `unlock-login`,
+    `revoke-sessions`.
   - `docs/admin.md` started.
+- Changes requested with the Phase 1 approval:
+  1. Production startup warning when `TRUSTED_IP_HEADER` is missing
+     (`instrumentation.ts`, checked with `next start`), and `npm run unlock-login`.
+  2. Sessions carry a fingerprint of the password hash, so a password change ends all
+     sessions (migration `0001`). `npm run revoke-sessions` for manual revocation.
+  3. All repository and auth data-access functions are async, and Drizzle queries live
+     only in the repository files.
+- The owner's `.env.local` is complete (username, hash, session secret; never committed)
+  and the local database exists at `data/alirezvan.db`.
 
 ## Approved decisions (owner's answers to the Phase 0 questions, 13 Oct 2026)
 
 1. **Database and hosting.** SQLite + Drizzle ORM, not Prisma (avoids binary downloads
    that may fail from Iran). Hosting target is the owner's own VPS with `next start`;
    local only for now. WAL mode on. Persistence stays isolated in the repository layer so
-   a later move to PostgreSQL is feasible. First step of Phase 1: verify that the SQLite
-   driver installs and works on this Windows machine; if it fails, report options, do not
-   work around it silently.
+   a later move to PostgreSQL is feasible.
 2. **Admin routes and auth.** Articles at `/admin`; leads later at `/admin/leads` under
    the same session auth. HTTP basic auth is dropped. `ADMIN_PASSWORD` becomes
    `ADMIN_PASSWORD_HASH`. The middleware file is `proxy.ts` (Next.js 16).
@@ -79,19 +85,19 @@ built now.
 - Slugs: half-spaces become hyphens and digits are stored as Latin digits.
 - Two dates per article: `updatedAt` (any save, admin only) and `contentUpdatedAt`
   (the public «آخرین به‌روزرسانی»).
+- Repository files (`lib/auth/session.ts`, `lib/auth/rate-limit.ts`) use relative
+  imports with `.ts` extensions so the maintenance scripts can run them with plain Node.
 
 ## Open issues
 
-- The hidden-input prompt of `hash-password` was tested only with piped input; the
-  owner should run it once in a real terminal.
+- The hidden-input prompt of `hash-password` was tested by me only with piped input.
 - `npm audit`: 5 high-severity advisories were there before this task (the ESLint plugin
   chain, through `braces`). Phase 1 added 4 moderate ones, all from the old `esbuild`
   inside `drizzle-kit`. Both are development tools and not part of the running site.
   Nothing was changed for them.
-- `proxy.ts`, the login page and the article repository belong to Phase 2.
 
 ## Next step
 
-Wait for approval of Phase 1. Then Phase 2: move public pages into `app/(site)/`,
-`proxy.ts`, login page, article repository and actions, list, editor with preview,
-uploads, SEO fields.
+Phase 2: move public pages into `app/(site)/`, `proxy.ts`, login page, article
+repository and actions, list, editor with preview, uploads, SEO fields. Then stop and
+report.

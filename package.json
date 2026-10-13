@@ -14,6 +14,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node --experimental-strip-types --no-warnings scripts/migrate.ts",
     "hash-password": "node scripts/hash-password.mjs",
+    "unlock-login": "node --experimental-strip-types --no-warnings scripts/unlock-login.ts",
+    "revoke-sessions": "node --experimental-strip-types --no-warnings scripts/revoke-sessions.ts",
     "review:hubs": "node --experimental-strip-types --no-warnings scripts/export-review.ts"
   },
   "dependencies": {

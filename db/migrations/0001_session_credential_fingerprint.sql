@@ -1,0 +1,1 @@
+ALTER TABLE `sessions` ADD `credential_fingerprint` text DEFAULT '' NOT NULL;

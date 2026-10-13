@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import { describe, expect, it } from "vitest";
 import { rateLimitEvents, sessions } from "@/db/schema";
 import { attemptLogin, logout, sessionFromCookie } from "@/lib/auth/login";
@@ -14,9 +15,8 @@ describe("login", () => {
     const result = await attemptLogin(db, testConfig, good, now);
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(sessionFromCookie(db, testConfig, result.cookieValue, now)?.username).toBe(
-      TEST_USERNAME,
-    );
+    const session = await sessionFromCookie(db, testConfig, result.cookieValue, now);
+    expect(session?.username).toBe(TEST_USERNAME);
   });
 
   it("creates a new session on each login", async () => {
@@ -90,38 +90,58 @@ describe("session from cookie", () => {
   it("rejects no cookie, a forged cookie and a cookie signed with another secret", async () => {
     const { db, cookie } = await login();
     const otherSecret = { ...testConfig, sessionSecret: "another-secret-another-secret-123456" };
-    expect(sessionFromCookie(db, testConfig, undefined, now)).toBeNull();
-    expect(sessionFromCookie(db, testConfig, "forged.value", now)).toBeNull();
-    expect(sessionFromCookie(db, otherSecret, cookie, now)).toBeNull();
+    expect(await sessionFromCookie(db, testConfig, undefined, now)).toBeNull();
+    expect(await sessionFromCookie(db, testConfig, "forged.value", now)).toBeNull();
+    expect(await sessionFromCookie(db, otherSecret, cookie, now)).toBeNull();
   });
 
   it("expires after seven days", async () => {
     const { db, cookie } = await login();
-    expect(sessionFromCookie(db, testConfig, cookie, at(7 * DAY - 1))).not.toBeNull();
-    expect(sessionFromCookie(db, testConfig, cookie, at(7 * DAY))).toBeNull();
+    expect(await sessionFromCookie(db, testConfig, cookie, at(7 * DAY - 1))).not.toBeNull();
+    expect(await sessionFromCookie(db, testConfig, cookie, at(7 * DAY))).toBeNull();
   });
 
   it("stops working after logout, although the browser still has the cookie", async () => {
     const { db, cookie } = await login();
-    logout(db, testConfig, cookie);
-    expect(sessionFromCookie(db, testConfig, cookie, now)).toBeNull();
+    await logout(db, testConfig, cookie);
+    expect(await sessionFromCookie(db, testConfig, cookie, now)).toBeNull();
   });
 
   it("stops working when the session row is removed (revocation)", async () => {
     const { db, cookie } = await login();
     db.delete(sessions).run();
-    expect(sessionFromCookie(db, testConfig, cookie, now)).toBeNull();
+    expect(await sessionFromCookie(db, testConfig, cookie, now)).toBeNull();
+  });
+
+  it("stops working when the admin password changes, and the old session is removed", async () => {
+    const { db, cookie } = await login();
+    const newPassword = { ...testConfig, passwordHash: bcrypt.hashSync("a brand new password", 4) };
+    expect(await sessionFromCookie(db, newPassword, cookie, now)).toBeNull();
+    expect(db.select().from(sessions).all()).toHaveLength(0);
+
+    // A login under the new password works, and only under the new password.
+    const fresh = await attemptLogin(db, newPassword, { ...good, password: "a brand new password" }, now);
+    expect(fresh.ok).toBe(true);
+    if (!fresh.ok) return;
+    expect(await sessionFromCookie(db, newPassword, fresh.cookieValue, now)).not.toBeNull();
+    expect(await sessionFromCookie(db, testConfig, fresh.cookieValue, now)).toBeNull();
+  });
+
+  it("refuses a session stored without a fingerprint (made before the column existed)", async () => {
+    const { db, cookie } = await login();
+    db.update(sessions).set({ credentialFingerprint: "" }).run();
+    expect(await sessionFromCookie(db, testConfig, cookie, now)).toBeNull();
   });
 
   it("stops working when the admin username changes", async () => {
     const { db, cookie } = await login();
-    expect(sessionFromCookie(db, { ...testConfig, username: "new-name" }, cookie, now)).toBeNull();
+    expect(await sessionFromCookie(db, { ...testConfig, username: "new-name" }, cookie, now)).toBeNull();
   });
 
   it("ignores a logout with a bad cookie", async () => {
     const { db, cookie } = await login();
-    logout(db, testConfig, "forged.value");
-    logout(db, testConfig, undefined);
-    expect(sessionFromCookie(db, testConfig, cookie, now)).not.toBeNull();
+    await logout(db, testConfig, "forged.value");
+    await logout(db, testConfig, undefined);
+    expect(await sessionFromCookie(db, testConfig, cookie, now)).not.toBeNull();
   });
 });

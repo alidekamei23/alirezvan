@@ -84,6 +84,12 @@ export const sessions = sqliteTable(
     /** SHA-256 of the random session token; the token itself lives only in the cookie. */
     id: text("id").primaryKey(),
     username: text("username").notNull(),
+    /**
+     * Short fingerprint of the password hash in force at login. A session whose
+     * fingerprint differs from the current one is refused, so a password change ends
+     * every open session.
+     */
+    credentialFingerprint: text("credential_fingerprint").notNull().default(""),
     createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull(),
     expiresAt: integer("expires_at", { mode: "timestamp_ms" }).notNull(),
   },
