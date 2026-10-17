@@ -2,7 +2,8 @@
 // so keyboard users can scroll it); the page itself never scrolls sideways.
 // Usage: <Table caption="شاخص ماهانه" head={["ماه", "شاخص"]} rows={[["مهر ۱۴۰۵", "…"]]} />
 // The first cell of each row is its row header. `selectedRow` highlights one row (say in
-// the cell text which one it is; colour alone is not enough).
+// the cell text which one it is; colour alone is not enough). `mutedRows` greys out rows
+// that are set aside rather than counted (say why in the row text too).
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
@@ -12,6 +13,7 @@ export function Table({
   rows,
   emptyText = "داده‌ای برای نمایش وجود ندارد.",
   selectedRow,
+  mutedRows = [],
 }: {
   caption: string;
   head: string[];
@@ -19,6 +21,8 @@ export function Table({
   emptyText?: string;
   /** Index in `rows`. */
   selectedRow?: number;
+  /** Indexes in `rows`. */
+  mutedRows?: number[];
 }) {
   return (
     <div
@@ -56,6 +60,7 @@ export function Table({
                 className={cn(
                   "border-t border-line",
                   rowIndex === selectedRow && "bg-primary-soft",
+                  mutedRows.includes(rowIndex) && "bg-surface-muted",
                 )}
               >
                 {row.map((cell, cellIndex) =>
@@ -63,12 +68,18 @@ export function Table({
                     <th
                       key={cellIndex}
                       scope="row"
-                      className="px-4 py-3 text-start font-semibold text-ink"
+                      className={cn(
+                        "px-4 py-3 text-start font-semibold",
+                        mutedRows.includes(rowIndex) ? "text-muted" : "text-ink",
+                      )}
                     >
                       {cell}
                     </th>
                   ) : (
-                    <td key={cellIndex} className="px-4 py-3 text-start text-ink">
+                    <td key={cellIndex} className={cn(
+                        "px-4 py-3 text-start",
+                        mutedRows.includes(rowIndex) ? "text-muted" : "text-ink",
+                      )}>
                       {cell}
                     </td>
                   ),

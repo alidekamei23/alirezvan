@@ -5,7 +5,8 @@
 // Usage:
 // `highlight` puts free content right under the title, for a result that is a sentence
 // rather than an amount; `total` can then be left out. A row's `badges` are small status
-// pills beside its amount (e.g. «موقت»).
+// pills beside its amount (e.g. «موقت»). `body` is free content after the amounts (a chart, a
+// table) for a result that does not fit label–value rows.
 // <ResultCard title="نتیجه محاسبه" rows={[{ label: "اصل طلب", value: formatToman(p) }]}
 //   total={{ label: "جمع", value: formatToman(t) }} notes={["شاخص مهر ۱۴۰۴ …"]}>
 //   <ShareActions … />
@@ -29,6 +30,7 @@ export function ResultCard({
   rows,
   total,
   highlight,
+  body,
   notes = [],
   children,
 }: {
@@ -36,6 +38,7 @@ export function ResultCard({
   rows: ResultRow[];
   total?: ResultRow;
   highlight?: ReactNode;
+  body?: ReactNode;
   notes?: string[];
   /** Actions, usually <ShareActions />. */
   children?: ReactNode;
@@ -108,6 +111,7 @@ export function ResultCard({
             )}
           </dl>
         )}
+        {body && <div className="mt-4">{body}</div>}
         {notes.length > 0 && (
           <ul className="mt-4 list-disc ps-5 text-sm text-muted">
             {notes.map((note) => (
