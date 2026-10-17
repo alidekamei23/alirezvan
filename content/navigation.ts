@@ -11,6 +11,7 @@ export const toolsNav: NavItem[] = [
   { href: "/tools/khesarat-takhir", label: "محاسبه خسارت تأخیر تأدیه" },
   { href: "/tools/hazine-dadresi", label: "محاسبه هزینه دادرسی" },
   { href: "/tools/mahrieh", label: "محاسبه مهریه به نرخ روز" },
+  { href: "/tools/dastmozd-karshenasi", label: "محاسبه دستمزد کارشناسی" },
 ];
 
 export const siteNav: NavItem[] = [

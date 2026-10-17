@@ -1,4 +1,8 @@
-export type ToolSlug = "khesarat-takhir" | "hazine-dadresi" | "mahrieh";
+export type ToolSlug =
+  | "khesarat-takhir"
+  | "hazine-dadresi"
+  | "mahrieh"
+  | "dastmozd-karshenasi";
 
 export type Tool = {
   slug: ToolSlug;
@@ -28,6 +32,13 @@ export const tools: Record<ToolSlug, Tool> = {
     title: "محاسبه مهریه به نرخ روز",
     // TODO: lawyer review
     summary: "برآورد مهریه وجه نقد به نرخ روز بر پایه شاخص سالانه بانک مرکزی",
+  },
+  "dastmozd-karshenasi": {
+    slug: "dastmozd-karshenasi",
+    href: "/tools/dastmozd-karshenasi",
+    title: "محاسبه دستمزد کارشناسی",
+    // TODO: lawyer review
+    summary: "برآورد دستمزد کارشناس رسمی دادگستری بر پایه تعرفه ۱۴۰۵",
   },
 };
 
