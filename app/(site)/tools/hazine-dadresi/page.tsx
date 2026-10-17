@@ -3,9 +3,9 @@ import { ContactCta } from "@/components/ContactCta";
 import { Disclosure, DisclosureGroup } from "@/components/Disclosure";
 import { HazineCalculator } from "@/components/HazineCalculator";
 import { PageHeader } from "@/components/PageHeader";
+import { RelatedTools } from "@/components/RelatedTools";
 import { Section } from "@/components/Section";
 import { Table } from "@/components/Table";
-import { ToolCard } from "@/components/ToolCard";
 import { hazineCopy, hazineLegalNotes } from "@/content/hazine";
 import { tools } from "@/content/tools";
 import { FIXED_FEES, STAGES, fixedFeeLabel, type Stage } from "@/lib/hazine/hazine-calc";
@@ -82,11 +82,7 @@ export default function Page() {
         </DisclosureGroup>
       </Section>
 
-      <Section id="related" tone="muted" title="ابزار مرتبط">
-        <div className="max-w-reading">
-          <ToolCard tool={tools["khesarat-takhir"]} />
-        </div>
-      </Section>
+      <RelatedTools current="hazine-dadresi" />
 
       <ContactCta />
     </>

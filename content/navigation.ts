@@ -10,6 +10,7 @@ export const practiceNav: NavItem[] = [
 export const toolsNav: NavItem[] = [
   { href: "/tools/khesarat-takhir", label: "محاسبه خسارت تأخیر تأدیه" },
   { href: "/tools/hazine-dadresi", label: "محاسبه هزینه دادرسی" },
+  { href: "/tools/mahrieh", label: "محاسبه مهریه به نرخ روز" },
 ];
 
 export const siteNav: NavItem[] = [

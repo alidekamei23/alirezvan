@@ -1,4 +1,4 @@
-export type ToolSlug = "khesarat-takhir" | "hazine-dadresi";
+export type ToolSlug = "khesarat-takhir" | "hazine-dadresi" | "mahrieh";
 
 export type Tool = {
   slug: ToolSlug;
@@ -21,6 +21,13 @@ export const tools: Record<ToolSlug, Tool> = {
     title: "محاسبه هزینه دادرسی",
     // TODO: lawyer review
     summary: "برآورد هزینه دادرسی دعاوی مالی در مراحل بدوی، تجدیدنظر و فرجام",
+  },
+  mahrieh: {
+    slug: "mahrieh",
+    href: "/tools/mahrieh",
+    title: "محاسبه مهریه به نرخ روز",
+    // TODO: lawyer review
+    summary: "برآورد مهریه وجه نقد به نرخ روز بر پایه شاخص سالانه بانک مرکزی",
   },
 };
 
