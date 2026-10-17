@@ -383,7 +383,7 @@ export function ErsCalculator() {
             </>
           }
         >
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-3">
+          <div className="grid grid-cols-1 gap-3">
             {SIBLING_SIDES.map(({ side, brothers, sisters }) => (
               <fieldset
                 key={side}
@@ -394,7 +394,7 @@ export function ErsCalculator() {
                   {SIDE_LABELS[side]}
                   <span className="block text-sm font-normal text-muted">{SIDE_HINTS[side]}</span>
                 </p>
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-1">
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                   <Stepper
                     label="برادر"
                     fullLabel={`برادر ${SIDE_LABELS[side]}`}
@@ -512,7 +512,7 @@ export function ErsCalculator() {
           status={classStatus(3, form, result)}
           hint={ersCopy.uncleHint}
         >
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3">
+          <div className="grid grid-cols-1 gap-3">
             {UNCLE_RELATIVES.map(({ name, keys }) => (
               <fieldset
                 key={name}
@@ -522,7 +522,7 @@ export function ErsCalculator() {
                 <p aria-hidden="true" className="font-bold text-ink">
                   {name}
                 </p>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                   {keys.map((key, index) => (
                     <Stepper
                       key={key}

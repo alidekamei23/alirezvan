@@ -63,7 +63,7 @@ export function Stepper({
       {hint && <FieldHint id={hintId}>{hint}</FieldHint>}
       <div
         className={cn(
-          "flex w-fit items-stretch rounded-sm border bg-surface transition-colors",
+          "flex w-full max-w-36 items-stretch rounded-sm border bg-surface transition-colors",
           value > min ? "border-primary" : "border-line-strong",
         )}
       >
@@ -95,7 +95,7 @@ export function Stepper({
             set(digits === "" ? min : Number(digits.slice(-2)));
           }}
           className={cn(
-            "w-12 border-x border-line bg-transparent text-center text-lg font-bold tabular-nums outline-none",
+            "w-full min-w-0 flex-1 border-x border-line bg-transparent text-center text-lg font-bold tabular-nums outline-none",
             "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus",
             value > min ? "text-primary" : "text-muted",
           )}
