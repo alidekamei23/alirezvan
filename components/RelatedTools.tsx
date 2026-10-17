@@ -9,7 +9,8 @@ export function RelatedTools({ current }: { current: ToolSlug }) {
   const others = toolList.filter((tool) => tool.slug !== current);
   return (
     <Section id="related" tone="muted" title="ابزارهای مرتبط">
-      <Grid cols={3}>
+      {/* Three across leaves a lone card when one is left over; two across avoids it. */}
+      <Grid cols={others.length % 3 === 1 ? 2 : 3}>
         {others.map((tool) => (
           <ToolCard key={tool.slug} tool={tool} />
         ))}

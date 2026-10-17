@@ -96,7 +96,7 @@ export default async function Home() {
         title="ابزارهای محاسبه"
         lead="نتیجه این ابزارها تخمینی است و مشاوره حقوقی محسوب نمی‌شود."
       >
-        <Grid cols={2}>
+        <Grid cols={3}>
           {toolList.map((tool) => (
             <ToolCard key={tool.slug} tool={tool} />
           ))}

@@ -2,7 +2,8 @@ export type ToolSlug =
   | "khesarat-takhir"
   | "hazine-dadresi"
   | "mahrieh"
-  | "dastmozd-karshenasi";
+  | "dastmozd-karshenasi"
+  | "sahm-ol-ers";
 
 export type Tool = {
   slug: ToolSlug;
@@ -39,6 +40,13 @@ export const tools: Record<ToolSlug, Tool> = {
     title: "محاسبه دستمزد کارشناسی",
     // TODO: lawyer review
     summary: "برآورد دستمزد کارشناس رسمی دادگستری بر پایه تعرفه ۱۴۰۵",
+  },
+  "sahm-ol-ers": {
+    slug: "sahm-ol-ers",
+    href: "/tools/sahm-ol-ers",
+    title: "محاسبه سهم‌الارث",
+    // TODO: lawyer review
+    summary: "برآورد سهم هر وارث به کسر، درصد و مبلغ بر پایه قانون مدنی",
   },
 };
 
