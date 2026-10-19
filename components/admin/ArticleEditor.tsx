@@ -1,28 +1,14 @@
 "use client";
-// ArticleEditor — the whole create/edit form of an article: fields, Markdown editor with
-// a live preview beside it, cover and inline image upload, FAQs, references, SEO fields
-// with a search-result preview, and the save / publish / unpublish / delete buttons.
-// The preview uses ArticleBody, the same component as the public article page.
+// ArticleEditor — the whole create/edit form of an article: fields, the Markdown editor
+// with a live preview (MarkdownEditor, which renders with ArticleBody like the public
+// page), cover image upload, FAQs, references, SEO fields with a search-result preview,
+// and the save / publish / unpublish / delete buttons.
 // Usage: <ArticleEditor article={editorArticle} areas={areas} siteUrl={SITE_URL} siteName="…" />
-import { useDeferredValue, useEffect, useId, useMemo, useRef, useState, useTransition } from "react";
+import { useEffect, useId, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Bold,
-  Eye,
-  Heading2,
-  ImagePlus,
-  Link2,
-  List,
-  MessageSquareQuote,
-  Plus,
-  Save,
-  Send,
-  Trash2,
-  Undo2,
-} from "lucide-react";
+import { Eye, ImagePlus, Plus, Save, Send, Trash2, Undo2 } from "lucide-react";
 import { deleteArticleAction, saveArticleAction } from "@/app/admin/actions";
 import { Alert } from "@/components/Alert";
-import { ArticleBody, CONTACT_BOX_MARKER } from "@/components/ArticleBody";
 import { Badge } from "@/components/Badge";
 import { Button } from "@/components/Button";
 import { Checkbox } from "@/components/Checkbox";
@@ -31,6 +17,8 @@ import { LinkButton } from "@/components/LinkButton";
 import { Ltr } from "@/components/Ltr";
 import { Select, type SelectOption } from "@/components/Select";
 import { TextField } from "@/components/TextField";
+import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
+import { IMAGE_TYPES, uploadImage } from "@/components/admin/upload";
 import { normalizeSlug } from "@/lib/articles/slug";
 import { toPersianDigits } from "@/lib/format";
 
@@ -57,8 +45,6 @@ export type EditorArticle = {
 type Form = Omit<EditorArticle, "id" | "status" | "everPublished">;
 type SaveAction = "save" | "publish" | "unpublish";
 
-const UPLOAD_MAX_BYTES = 5 * 1024 * 1024;
-const IMAGE_TYPES = "image/jpeg,image/png,image/webp";
 
 // Guidance only, never a limit: roughly what a search result shows.
 const SEO_TITLE_GUIDE = 60;
@@ -82,23 +68,6 @@ function toForm(article: EditorArticle): Form {
   };
 }
 
-async function uploadImage(
-  file: File,
-): Promise<{ ok: true; path: string; width: number; height: number } | { ok: false; error: string }> {
-  if (file.size > UPLOAD_MAX_BYTES) return { ok: false, error: "حجم تصویر بیش از ۵ مگابایت است." };
-  const body = new FormData();
-  body.set("file", file);
-  try {
-    const response = await fetch("/admin/api/upload", { method: "POST", body });
-    const data = await response.json().catch(() => null);
-    if (!response.ok || !data?.path) {
-      return { ok: false, error: data?.error ?? "بارگذاری تصویر انجام نشد." };
-    }
-    return { ok: true, path: data.path, width: data.width, height: data.height };
-  } catch {
-    return { ok: false, error: "ارتباط با سرور برقرار نشد." };
-  }
-}
 
 function CharGuide({ length, guide }: { length: number; guide: number }) {
   return (
@@ -152,14 +121,9 @@ export function ArticleEditor({
   const [pendingAction, setPendingAction] = useState<SaveAction | "delete" | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [uploading, setUploading] = useState<"cover" | "inline" | null>(null);
-  const [imageAlt, setImageAlt] = useState("");
-  const [imagePanel, setImagePanel] = useState(false);
 
-  const contentRef = useRef<HTMLTextAreaElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
-  const inlineInputRef = useRef<HTMLInputElement>(null);
   const contentId = useId();
-  const previewContent = useDeferredValue(form.content);
 
   const dirty = useMemo(
     () => JSON.stringify(form) !== JSON.stringify(savedForm) || lawyerApproved || contentChanged,
@@ -176,54 +140,6 @@ export function ArticleEditor({
 
   const set = <K extends keyof Form>(key: K, value: Form[K]) =>
     setForm((current) => ({ ...current, [key]: value }));
-
-  // ------------------------------------------------------------------ Markdown tools
-
-  /** Wraps the selection, or inserts `placeholder` wrapped, and keeps the focus. */
-  function wrapSelection(before: string, after: string, placeholder: string) {
-    const area = contentRef.current;
-    if (!area) return;
-    const { selectionStart: start, selectionEnd: end, value } = area;
-    const selected = value.slice(start, end) || placeholder;
-    set("content", value.slice(0, start) + before + selected + after + value.slice(end));
-    requestAnimationFrame(() => {
-      area.focus();
-      area.setSelectionRange(start + before.length, start + before.length + selected.length);
-    });
-  }
-
-  /** Inserts a block on its own line(s) at the cursor. */
-  function insertBlock(block: string) {
-    const area = contentRef.current;
-    const value = area?.value ?? form.content;
-    const at = area?.selectionStart ?? value.length;
-    const head = value.slice(0, at).replace(/\n*$/, "");
-    const tail = value.slice(at).replace(/^\n*/, "");
-    const next = `${head}${head ? "\n\n" : ""}${block}${tail ? "\n\n" : "\n"}${tail}`;
-    set("content", next);
-    requestAnimationFrame(() => {
-      const position = head.length + (head ? 2 : 0) + block.length;
-      area?.focus();
-      area?.setSelectionRange(position, position);
-    });
-  }
-
-  async function onInlineImage(file: File | undefined) {
-    if (!file) return;
-    setUploading("inline");
-    setErrors((current) => ({ ...current, content: "" }));
-    const result = await uploadImage(file);
-    setUploading(null);
-    if (!result.ok) {
-      setErrors((current) => ({ ...current, content: result.error }));
-      return;
-    }
-    // Brackets in the alt text would end the image syntax early.
-    const alt = imageAlt.trim().replace(/[[\]]/g, "");
-    insertBlock(`![${alt}](${result.path}#${result.width}x${result.height})`);
-    setImageAlt("");
-    setImagePanel(false);
-  }
 
   async function onCoverImage(file: File | undefined) {
     if (!file) return;
@@ -332,8 +248,6 @@ export function ArticleEditor({
   ].filter((warning): warning is string => Boolean(warning));
 
   const busy = pending || uploading !== null;
-  const toolButton =
-    "inline-flex min-h-11 items-center gap-1.5 rounded-sm border border-line-strong bg-surface px-3 text-sm font-semibold text-ink hover:border-ink disabled:cursor-not-allowed disabled:text-disabled-ink";
 
   return (
     <form
@@ -424,132 +338,17 @@ export function ArticleEditor({
       </Panel>
 
       <Panel title="متن مقاله">
-        <div
-          role="toolbar"
-          aria-label="ابزارهای نگارش"
-          aria-controls={contentId}
-          className="flex flex-wrap gap-2"
-        >
-          <button type="button" className={toolButton} onClick={() => insertBlock("## عنوان بخش")}>
-            <Heading2 aria-hidden="true" className="size-4" />
-            تیتر بخش
-          </button>
-          <button
-            type="button"
-            className={toolButton}
-            onClick={() => wrapSelection("**", "**", "متن پررنگ")}
-          >
-            <Bold aria-hidden="true" className="size-4" />
-            پررنگ
-          </button>
-          <button
-            type="button"
-            className={toolButton}
-            onClick={() => wrapSelection("[", "](https://)", "متن پیوند")}
-          >
-            <Link2 aria-hidden="true" className="size-4" />
-            پیوند
-          </button>
-          <button
-            type="button"
-            className={toolButton}
-            onClick={() => insertBlock("- مورد نخست\n- مورد دوم")}
-          >
-            <List aria-hidden="true" className="size-4" />
-            فهرست
-          </button>
-          <button
-            type="button"
-            className={toolButton}
-            aria-expanded={imagePanel}
-            onClick={() => setImagePanel((open) => !open)}
-          >
-            <ImagePlus aria-hidden="true" className="size-4" />
-            تصویر
-          </button>
-          <button
-            type="button"
-            className={toolButton}
-            onClick={() => insertBlock(CONTACT_BOX_MARKER)}
-          >
-            <MessageSquareQuote aria-hidden="true" className="size-4" />
-            جای کادر تماس
-          </button>
-        </div>
-
-        {imagePanel && (
-          <div className="flex flex-col gap-3 rounded-sm border border-line bg-surface-muted p-4 md:flex-row md:items-end">
-            <div className="flex-1">
-              <TextField
-                label="متن جایگزین تصویر"
-                hint="آنچه در تصویر دیده می‌شود، برای کسانی که تصویر را نمی‌بینند."
-                value={imageAlt}
-                onChange={(event) => setImageAlt(event.target.value)}
-                maxLength={200}
-                optional
-              />
-            </div>
-            <input
-              ref={inlineInputRef}
-              type="file"
-              accept={IMAGE_TYPES}
-              className="sr-only"
-              tabIndex={-1}
-              aria-hidden="true"
-              onChange={(event) => {
-                void onInlineImage(event.target.files?.[0]);
-                event.target.value = "";
-              }}
-            />
-            <Button
-              type="button"
-              variant="secondary"
-              loading={uploading === "inline"}
-              disabled={busy}
-              icon={<ImagePlus />}
-              onClick={() => inlineInputRef.current?.click()}
-            >
-              انتخاب و درج تصویر
-            </Button>
-          </div>
-        )}
-
-        <div className="grid gap-5 lg:grid-cols-2">
-          <div className="flex min-w-0 flex-col gap-1.5">
-            <FieldLabel htmlFor={contentId}>متن (Markdown)</FieldLabel>
-            <FieldHint>
-              کادر تماس خودکار پس از بخش دوم می‌آید؛ با «جای کادر تماس» می‌توانید جای آن را
-              عوض کنید.
-            </FieldHint>
-            <textarea
-              id={contentId}
-              ref={contentRef}
-              name="content"
-              rows={24}
-              value={form.content}
-              onChange={(event) => set("content", event.target.value)}
-              aria-invalid={errors.content ? true : undefined}
-              className={controlClasses(errors.content, "min-h-96 resize-y py-2.5 leading-loose")}
-            />
-            {errors.content && <FieldError>{errors.content}</FieldError>}
-          </div>
-          <div className="flex min-w-0 flex-col gap-1.5">
-            <p className="text-base font-semibold text-ink">پیش‌نمایش زنده</p>
-            <p className="text-sm text-muted">همان چیزی که خواننده در صفحه مقاله می‌بیند.</p>
-            <div
-              aria-label="پیش‌نمایش متن مقاله"
-              role="region"
-              tabIndex={0}
-              className="max-h-[48rem] min-h-96 overflow-y-auto rounded-sm border border-line bg-surface p-4"
-            >
-              {previewContent.trim() ? (
-                <ArticleBody content={previewContent} />
-              ) : (
-                <p className="text-muted">هنوز متنی نوشته نشده است.</p>
-              )}
-            </div>
-          </div>
-        </div>
+        <MarkdownEditor
+          label="متن (Markdown)"
+          hint="کادر تماس خودکار پس از بخش دوم می‌آید؛ با «جای کادر تماس» می‌توانید جای آن را عوض کنید."
+          value={form.content}
+          onChange={(value) => set("content", value)}
+          error={errors.content}
+          disabled={busy}
+          previewLabel="پیش‌نمایش زنده"
+          previewHint="همان چیزی که خواننده در صفحه مقاله می‌بیند."
+          onUploadingChange={(active) => setUploading(active ? "inline" : null)}
+        />
       </Panel>
 
       <Panel title="تصویر شاخص">

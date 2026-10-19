@@ -8,7 +8,8 @@
 //
 // The contact box goes after the second section (CLAUDE.md §5.5): before the third
 // "## " heading, or at the end when there are exactly two. A line containing only
-// [contact-box] puts it there instead.
+// [contact-box] puts it there instead. With contactBox={false} (answers in the Q&A
+// section, which have their own call to action) there is no box and the marker is dropped.
 // Usage: <ArticleBody content={article.content} />
 import type { Element, ElementContent, Root, RootContent } from "hast";
 import Markdown, { type Components } from "react-markdown";
@@ -74,6 +75,13 @@ function placeContactBox() {
   };
 }
 
+/** Removes [contact-box] lines, for text shown without a contact box. */
+function dropContactBoxMarker() {
+  return (tree: Root) => {
+    tree.children = tree.children.filter((node) => !isMarker(node));
+  };
+}
+
 const components = {
   [CONTACT_BOX_TAG]: () => <ContactBox />,
 
@@ -120,12 +128,20 @@ const components = {
   },
 } as Components;
 
-export function ArticleBody({ content, className }: { content: string; className?: string }) {
+export function ArticleBody({
+  content,
+  className,
+  contactBox = true,
+}: {
+  content: string;
+  className?: string;
+  contactBox?: boolean;
+}) {
   return (
     <Prose className={className}>
       <Markdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeSanitize, placeContactBox]}
+        rehypePlugins={[rehypeSanitize, contactBox ? placeContactBox : dropContactBoxMarker]}
         urlTransform={articleUrl}
         components={components}
       >
