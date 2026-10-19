@@ -1,5 +1,5 @@
 /**
- * تست‌های مرجع حق‌الوکاله و تمبر — مبالغ حق‌الوکاله با ابزار مستقل دادحساب تطبیق داده شده‌اند.
+ * تست‌های مرجع حق‌الوکاله و تمبر — مبالغ حق‌الوکاله با یک ابزار مستقل تطبیق داده شده‌اند.
  */
 import { describe, it, expect } from "vitest";
 import { financialFee, calculateVekalat as c } from "./vekalat-calc";
