@@ -16,6 +16,7 @@ const STATIC_PATHS = [
   "/tools/mahrieh",
   "/tools/dastmozd-karshenasi",
   "/tools/sahm-ol-ers",
+  "/tools/haghol-vekale",
   "/privacy",
   "/disclaimer",
 ];

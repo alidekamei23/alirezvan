@@ -3,7 +3,8 @@ export type ToolSlug =
   | "hazine-dadresi"
   | "mahrieh"
   | "dastmozd-karshenasi"
-  | "sahm-ol-ers";
+  | "sahm-ol-ers"
+  | "haghol-vekale";
 
 export type Tool = {
   slug: ToolSlug;
@@ -47,6 +48,13 @@ export const tools: Record<ToolSlug, Tool> = {
     title: "محاسبه سهم‌الارث",
     // TODO: lawyer review
     summary: "برآورد سهم هر وارث به کسر، درصد و مبلغ بر پایه قانون مدنی",
+  },
+  "haghol-vekale": {
+    slug: "haghol-vekale",
+    href: "/tools/haghol-vekale",
+    title: "محاسبه حق‌الوکاله و تمبر وکیل",
+    // TODO: lawyer review
+    summary: "برآورد حق‌الوکاله طبق تعرفه، تمبر مالیاتی و سهم کانون یا مرکز",
   },
 };
 

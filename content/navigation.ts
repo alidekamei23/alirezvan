@@ -13,6 +13,7 @@ export const toolsNav: NavItem[] = [
   { href: "/tools/mahrieh", label: "محاسبه مهریه به نرخ روز" },
   { href: "/tools/dastmozd-karshenasi", label: "محاسبه دستمزد کارشناسی" },
   { href: "/tools/sahm-ol-ers", label: "محاسبه سهم‌الارث" },
+  { href: "/tools/haghol-vekale", label: "محاسبه حق‌الوکاله و تمبر وکیل" },
 ];
 
 export const siteNav: NavItem[] = [

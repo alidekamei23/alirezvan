@@ -83,14 +83,14 @@ One component per file in `components/`. Each file starts with a usage note.
 | --- | --- |
 | Foundations | `Container`, `Section`, `Stack`, `Grid`, `Prose`, `Ltr`, `Divider` |
 | Actions | `Button`, `LinkButton`, `CallButton`, `WhatsAppButton`, `BaleButton` (base: `ContactButton`; classes: `buttonStyles`) |
-| Forms | `TextField`, `PhoneField`, `MoneyField`, `Select`, `Textarea`, `RadioCards`, `Checkbox`, `DatePicker`, `OtpInput` (shell: `Field`) |
+| Forms | `TextField`, `PhoneField`, `MoneyField`, `Select`, `Combobox`, `Textarea`, `RadioCards`, `SegmentedControl`, `Checkbox`, `Stepper`, `DatePicker`, `OtpInput` (shell: `Field`) |
 | Feedback | `Alert`, `EstimateNotice`, `DraftNotice`, `Toast` (`ToastProvider`, `useToast`), `Skeleton`, `EmptyState` |
 | Content | `Card`, `PracticeIndex`, `PracticeCard`, `ToolCard`, `Steps`, `PostCard`, `TopicFilter`, `Pagination`, `ContactBox`, `Faq`, `Disclosure` (`DisclosureGroup`), `Breadcrumbs`, `Badge`, `Table` |
 | Trust | `LicenseStrip`, `LawyerCard`, `AuthorBox`, `UpdatedAt` |
 | Article text | `ArticleBody` (an article's Markdown from the database, rendered inside `Prose`; also the editor preview) |
 | Admin (`components/admin/`) | `LoginForm`, `ArticleEditor`. The admin panel uses the same tokens and form components as the site, with its own plain header instead of `SiteShell` |
 | Layout | `SiteShell` (frame of every public page), `Header`, `MobileMenu`, `Footer`, `PageHeader`, `ContactCta`, `PracticeHub`, `BlogIndex` and `TextPage` (page templates), `StickyContactBar`, `SkipLink` |
-| Calculator | `ResultCard`, `ShareActions`, `CopyButton`, `TadiehCalculator` (late-payment damages) and `HazineCalculator` (court fees), both in rials |
+| Calculator | `ResultCard`, `ShareActions`, `CopyButton`, `ShareBar`, `RelatedTools`; one client component per tool: `TadiehCalculator` (late-payment damages), `HazineCalculator` (court fees), `MahriehCalculator`, `KarshenasiCalculator` (expert fees), `ErsCalculator` (inheritance shares) and `VekalatCalculator` (lawyer fee and stamp) |
 
 State coverage: buttons have hover, focus-visible, active, disabled and loading; form
 controls have hover, focus-visible, disabled and error; link cards have hover, focus and
