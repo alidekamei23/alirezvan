@@ -91,6 +91,7 @@ app/
   tools/dastmozd-karshenasi/ # official-expert fees, 1405 tariff (data and logic in lib/karshenasi)
   tools/sahm-ol-ers/         # inheritance-share calculator (engine in lib/ers)
   tools/haghol-vekale/       # lawyer fee and tax stamp, 1398 tariff (data and logic in lib/vekalat)
+  tools/mohlat/              # legal deadlines with official holidays (data and logic in lib/mohlat)
   blog/page.tsx              # blog index (page 1); blog/page/[page] for pages 2..N
   blog/topic/[area]/         # posts of one practice area, with the same pagination
   blog/[slug]/page.tsx       # blog post (Persian slug from the post's meta)

@@ -90,7 +90,7 @@ One component per file in `components/`. Each file starts with a usage note.
 | Article text | `ArticleBody` (an article's Markdown from the database, rendered inside `Prose`; also the editor preview) |
 | Admin (`components/admin/`) | `LoginForm`, `ArticleEditor`. The admin panel uses the same tokens and form components as the site, with its own plain header instead of `SiteShell` |
 | Layout | `SiteShell` (frame of every public page), `Header`, `MobileMenu`, `Footer`, `PageHeader`, `ContactCta`, `PracticeHub`, `BlogIndex` and `TextPage` (page templates), `StickyContactBar`, `SkipLink` |
-| Calculator | `ResultCard`, `ShareActions`, `CopyButton`, `ShareBar`, `RelatedTools`; one client component per tool: `TadiehCalculator` (late-payment damages), `HazineCalculator` (court fees), `MahriehCalculator`, `KarshenasiCalculator` (expert fees), `ErsCalculator` (inheritance shares) and `VekalatCalculator` (lawyer fee and stamp) |
+| Calculator | `ResultCard`, `ShareActions`, `CopyButton`, `ShareBar`, `RelatedTools`; one client component per tool: `TadiehCalculator` (late-payment damages), `HazineCalculator` (court fees), `MahriehCalculator`, `KarshenasiCalculator` (expert fees), `ErsCalculator` (inheritance shares), `VekalatCalculator` (lawyer fee and stamp) and `MohlatCalculator` (legal deadlines, with a month calendar) |
 
 State coverage: buttons have hover, focus-visible, active, disabled and loading; form
 controls have hover, focus-visible, disabled and error; link cards have hover, focus and

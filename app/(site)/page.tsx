@@ -19,7 +19,7 @@ import { lawyer } from "@/content/lawyer";
 import { requestNav } from "@/content/navigation";
 import { blogCopy, homeCopy } from "@/content/pages";
 import { practiceAreas } from "@/content/practice-areas";
-import { TOOLS_INDEX_HREF, toolList } from "@/content/tools";
+import { TOOLS_INDEX_HREF, homeTools } from "@/content/tools";
 import { pageMetadata } from "@/lib/seo";
 import { blogHref, getAllPosts } from "@/lib/blog";
 import { toPersianDigits } from "@/lib/format";
@@ -97,7 +97,7 @@ export default async function Home() {
         lead="نتیجه این ابزارها تخمینی است و مشاوره حقوقی محسوب نمی‌شود."
       >
         <Grid cols={3}>
-          {toolList.map((tool) => (
+          {homeTools.map((tool) => (
             <ToolCard key={tool.slug} tool={tool} />
           ))}
         </Grid>

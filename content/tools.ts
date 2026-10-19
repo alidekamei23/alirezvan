@@ -4,10 +4,12 @@ export type ToolSlug =
   | "mahrieh"
   | "dastmozd-karshenasi"
   | "sahm-ol-ers"
-  | "haghol-vekale";
+  | "haghol-vekale"
+  | "mohlat";
 
 /** Sections of the /tools page, in display order. */
 export const toolGroups = [
+  { id: "procedure", title: "دادرسی و مهلت‌ها" },
   { id: "debt", title: "طلب و دعاوی مالی" },
   { id: "family", title: "خانواده و ارث" },
   { id: "fees", title: "هزینه وکیل و کارشناس" },
@@ -71,9 +73,22 @@ export const tools: Record<ToolSlug, Tool> = {
     // TODO: lawyer review
     summary: "برآورد حق‌الوکاله طبق تعرفه، تمبر مالیاتی و سهم کانون یا مرکز",
   },
+  mohlat: {
+    slug: "mohlat",
+    href: "/tools/mohlat",
+    group: "procedure",
+    title: "محاسبه مهلت‌های قانونی",
+    // TODO: lawyer review
+    summary: "آخرین روز مهلت تجدیدنظر، واخواهی، فرجام و اعتراض با لحاظ تعطیلات رسمی",
+  },
 };
 
 export const toolList: Tool[] = Object.values(tools);
+
+/** The six shown on Home (three by two); every tool is on the /tools page. */
+export const homeTools: Tool[] = (
+  ["mohlat", "khesarat-takhir", "hazine-dadresi", "mahrieh", "sahm-ol-ers", "haghol-vekale"] as const
+).map((slug) => tools[slug]);
 
 /** The page that lists every tool. */
 export const TOOLS_INDEX_HREF = "/tools";

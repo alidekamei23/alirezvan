@@ -6,6 +6,7 @@
 import Link from "next/link";
 import {
   Briefcase,
+  CalendarClock,
   ChevronLeft,
   ClipboardCheck,
   Gem,
@@ -23,6 +24,7 @@ const ICONS: Record<ToolSlug, LucideIcon> = {
   "sahm-ol-ers": Users,
   "haghol-vekale": Briefcase,
   "dastmozd-karshenasi": ClipboardCheck,
+  mohlat: CalendarClock,
 };
 
 export function ToolIndex({ tools }: { tools: Tool[] }) {
