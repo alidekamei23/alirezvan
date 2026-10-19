@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { FilePlus2, Search } from "lucide-react";
 import { Alert } from "@/components/Alert";
@@ -9,6 +10,7 @@ import { FieldLabel, controlClasses } from "@/components/Field";
 import { LinkButton } from "@/components/LinkButton";
 import { Pagination } from "@/components/Pagination";
 import { Table } from "@/components/Table";
+import { PendingQuestionsCard } from "@/components/admin/PendingQuestions";
 import { practiceAreas } from "@/content/practice-areas";
 import { adminListHref, formatAdminDate, parseListParams } from "@/lib/articles/admin-view";
 import { ADMIN_PAGE_SIZE, listArticles } from "@/lib/articles/repository";
@@ -41,6 +43,10 @@ export default async function AdminArticlesPage({ searchParams }: PageProps<"/ad
           مقاله تازه
         </LinkButton>
       </div>
+
+      <Suspense fallback={null}>
+        <PendingQuestionsCard />
+      </Suspense>
 
       {raw.deleted === "1" && (
         <Alert tone="success" className="mt-6" live>

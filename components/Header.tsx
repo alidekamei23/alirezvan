@@ -11,6 +11,8 @@ import { contactLinks, lawyer } from "@/content/lawyer";
 import { practiceNav, requestNav, siteNav } from "@/content/navigation";
 import { toPersianDigits } from "@/lib/format";
 
+// Nine links: kept on one line each, with tight padding, so they fit beside the name and
+// the request button from `lg` (and beside the phone number from `xl`).
 const desktopNav = [...practiceNav, ...siteNav];
 
 const mobileGroups = [
@@ -33,7 +35,7 @@ export function Header() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="flex min-h-11 items-center rounded-sm px-3 text-sm font-semibold text-ink transition-colors hover:bg-primary-soft hover:text-primary"
+                  className="flex min-h-11 items-center rounded-sm px-2 text-sm font-semibold whitespace-nowrap text-ink transition-colors hover:bg-primary-soft hover:text-primary"
                 >
                   {item.label}
                 </Link>

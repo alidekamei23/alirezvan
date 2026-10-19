@@ -106,6 +106,9 @@ the database. It forgets all failed login attempts and touches nothing else.
 | `/admin/articles/new` | Editor for a new article |
 | `/admin/articles/<id>/edit` | Editor for an existing article, with its dates, the private approval record and its old addresses |
 | `/admin/articles/<id>/preview` | The saved version as a page, drafts included; admin only, never cached |
+| `/admin/questions` | Q&A: status tabs with counts (default «در انتظار»), search, category filter. See `docs/qa-spec.md` |
+| `/admin/questions/new` | Add a question and its answer by hand |
+| `/admin/questions/<id>` | Review and answer: the visitor's original beside the editable copy, answer editor, SEO, status actions |
 | `POST /admin/api/upload` | Image upload (admin session and same-origin request required) |
 | `/uploads/<name>` | Serves an uploaded image (public) |
 
@@ -115,7 +118,8 @@ the database. It forgets all failed login attempts and touches nothing else.
   the pages and actions are.
 - The admin pages are outside the `(site)` route group, so they have no public header,
   footer or contact bar, and they are not in the sitemap. `robots.txt` disallows `/admin`.
-- All Server Actions are in `app/admin/actions.ts`. Each checks the session, parses its
+- The Server Actions are in `app/admin/actions.ts` (login, articles) and
+  `app/admin/question-actions.ts` (Q&A). Each checks the session, parses its
   input with Zod (`lib/articles/schema.ts`) and answers with a Persian message; causes go
   to the server log only.
 - CSRF: Server Actions rely on the Origin check built into Next.js. The upload route

@@ -92,11 +92,12 @@ app/
   tools/sahm-ol-ers/         # inheritance-share calculator (engine in lib/ers)
   tools/haghol-vekale/       # lawyer fee and tax stamp, 1398 tariff (data and logic in lib/vekalat)
   tools/mohlat/              # legal deadlines with official holidays (data and logic in lib/mohlat)
+  porsesh/                   # Q&A: list, [slug] question, bepors (ask), peygiri (track; noindex)
   blog/page.tsx              # blog index (page 1); blog/page/[page] for pages 2..N
   blog/topic/[area]/         # posts of one practice area, with the same pagination
   blog/[slug]/page.tsx       # blog post (Persian slug from the post's meta)
   about/ contact/ request/ privacy/ disclaimer/
-  admin/                     # login, articles; leads later at admin/leads (session auth)
+  admin/                     # login, articles, questions (Q&A); leads later at admin/leads (session auth)
   api/ or actions/           # server actions for request form and OTP
   sitemap.ts robots.ts
 components/                  # UI components (one per file, Persian-first props)
@@ -164,7 +165,8 @@ Only lawyer-approved articles are added; do not write or publish legal articles 
 ## 7. Quality bar
 - Mobile first. LCP < 2.5 s and CLS < 0.1 on a 4G phone. Tap targets ≥ 44 px.
 - WCAG 2.1 AA contrast; every input has a visible label.
-- Collect only the fields above. No document uploads.
+- Collect only the fields above, and in the Q&A form: optional display name, category, title,
+  question text (plus an IP hash for spam limits). No contact details there. No document uploads.
 - UI is built only from the tokens and components in `docs/design-system.md`.
 - `npm run lint`, `npm run typecheck`, `npm test` and `npm run check:contrast` pass before a
   session ends.
@@ -179,3 +181,4 @@ Only lawyer-approved articles are added; do not write or publish legal articles 
 - End each session with: what was done, what moved to "after launch", and what the next
   session needs from the human.
 Current task spec: docs/admin-panel-spec.md — progress in docs/admin-progress.md. Re-read both at the start of every phase.
+Q&A section: docs/qa-spec.md — progress and decisions in docs/qa-progress.md.

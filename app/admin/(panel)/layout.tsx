@@ -1,9 +1,11 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { ExternalLink, LogOut } from "lucide-react";
 import { logoutAction } from "@/app/admin/actions";
 import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
 import { SkipLink } from "@/components/SkipLink";
+import { PendingQuestionsBadge } from "@/components/admin/PendingQuestions";
 import { lawyer } from "@/content/lawyer";
 
 // The frame of the admin pages behind the login. It shows nothing private itself; each
@@ -23,6 +25,15 @@ export default function AdminPanelLayout({ children }: LayoutProps<"/admin">) {
               className="flex min-h-11 items-center rounded-sm px-3 font-semibold text-primary hover:bg-primary-soft"
             >
               مقاله‌ها
+            </Link>
+            <Link
+              href="/admin/questions"
+              className="flex min-h-11 items-center gap-2 rounded-sm px-3 font-semibold text-primary hover:bg-primary-soft"
+            >
+              پرسش و پاسخ
+              <Suspense fallback={null}>
+                <PendingQuestionsBadge />
+              </Suspense>
             </Link>
             <a
               href="/"

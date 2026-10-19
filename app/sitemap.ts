@@ -1,8 +1,11 @@
 import type { MetadataRoute } from "next";
 import { practiceAreas } from "@/content/practice-areas";
+import { QUESTIONS_HREF } from "@/content/questions";
 import { TOOLS_INDEX_HREF, toolList } from "@/content/tools";
 import { blogHref, getAllPosts, postHref } from "@/lib/blog";
 import { jalaliToGregorianISO } from "@/lib/jalali";
+import { cachedQuestionSitemap } from "@/lib/questions/cached";
+import { questionHref } from "@/lib/questions/view";
 import { absoluteUrl } from "@/lib/seo";
 
 // Fixed pages that exist today. Add a path here when its page is built.
@@ -12,16 +15,17 @@ const STATIC_PATHS = [
   "/contact",
   "/request",
   "/blog",
+  QUESTIONS_HREF,
   TOOLS_INDEX_HREF,
   ...toolList.map((tool) => tool.href),
   "/privacy",
   "/disclaimer",
 ];
 
-// Blog posts and topic pages are added automatically. Paginated list pages are left out
+// Blog posts, topic pages and published questions are added automatically. Paginated list pages are left out
 // on purpose: every post they link to is already listed.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = await getAllPosts();
+  const [posts, questions] = await Promise.all([getAllPosts(), cachedQuestionSitemap()]);
   const topicsWithPosts = practiceAreas.filter((area) =>
     posts.some((post) => post.area === area.slug),
   );
@@ -33,6 +37,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...posts.map((post) => ({
       url: absoluteUrl(postHref(post)),
       lastModified: jalaliToGregorianISO(post.updatedAt) ?? undefined,
+    })),
+    ...questions.map((question) => ({
+      url: absoluteUrl(encodeURI(questionHref(question.slug))),
+      lastModified: new Date(question.updatedAt).toISOString(),
     })),
   ];
 }

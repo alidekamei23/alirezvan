@@ -12,6 +12,7 @@ export const toolsIndexNav: NavItem = { href: "/tools", label: "ابزارهای
 
 export const siteNav: NavItem[] = [
   toolsIndexNav,
+  { href: "/porsesh", label: "پرسش و پاسخ" },
   { href: "/blog", label: "وبلاگ" },
   { href: "/about", label: "درباره وکیل" },
   { href: "/contact", label: "تماس" },
