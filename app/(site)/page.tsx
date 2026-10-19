@@ -19,7 +19,7 @@ import { lawyer } from "@/content/lawyer";
 import { requestNav } from "@/content/navigation";
 import { blogCopy, homeCopy } from "@/content/pages";
 import { practiceAreas } from "@/content/practice-areas";
-import { toolList } from "@/content/tools";
+import { TOOLS_INDEX_HREF, toolList } from "@/content/tools";
 import { pageMetadata } from "@/lib/seo";
 import { blogHref, getAllPosts } from "@/lib/blog";
 import { toPersianDigits } from "@/lib/format";
@@ -101,6 +101,11 @@ export default async function Home() {
             <ToolCard key={tool.slug} tool={tool} />
           ))}
         </Grid>
+        <div className="mt-6">
+          <LinkButton href={TOOLS_INDEX_HREF} variant="secondary">
+            همه ابزارهای محاسبه
+          </LinkButton>
+        </div>
       </Section>
 
       <Section id="blog" title="تازه‌ترین مقاله‌های وبلاگ">

@@ -6,7 +6,7 @@ import { RelatedTools } from "@/components/RelatedTools";
 import { Section } from "@/components/Section";
 import { Table } from "@/components/Table";
 import { karshenasiCopy, karshenasiLegalNotes } from "@/content/karshenasi";
-import { tools } from "@/content/tools";
+import { TOOLS_INDEX_HREF, tools } from "@/content/tools";
 import { formatRial } from "@/lib/karshenasi/karshenasi-calc";
 import {
   ARZYABI_CAP,
@@ -31,7 +31,7 @@ export default function Page() {
       <PageHeader
         title={karshenasiCopy.heading}
         lead={karshenasiCopy.lead}
-        crumbs={[{ label: tool.title }]}
+        crumbs={[{ label: "ابزارهای محاسبه", href: TOOLS_INDEX_HREF }, { label: tool.title }]}
       >
         <div className="mt-6 border-s-4 border-primary-line ps-4">
           <p className="font-semibold text-ink">

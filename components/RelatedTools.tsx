@@ -1,9 +1,10 @@
 // RelatedTools — the band at the end of a calculator page that links to the other
 // calculators. Usage: <RelatedTools current="mahrieh" />
 import { Grid } from "@/components/Grid";
+import { LinkButton } from "@/components/LinkButton";
 import { Section } from "@/components/Section";
 import { ToolCard } from "@/components/ToolCard";
-import { toolList, type ToolSlug } from "@/content/tools";
+import { TOOLS_INDEX_HREF, toolList, type ToolSlug } from "@/content/tools";
 
 export function RelatedTools({ current }: { current: ToolSlug }) {
   const others = toolList.filter((tool) => tool.slug !== current);
@@ -15,6 +16,11 @@ export function RelatedTools({ current }: { current: ToolSlug }) {
           <ToolCard key={tool.slug} tool={tool} />
         ))}
       </Grid>
+      <div className="mt-6">
+        <LinkButton href={TOOLS_INDEX_HREF} variant="ghost">
+          همه ابزارهای محاسبه
+        </LinkButton>
+      </div>
     </Section>
   );
 }

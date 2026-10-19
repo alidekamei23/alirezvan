@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { practiceAreas } from "@/content/practice-areas";
+import { TOOLS_INDEX_HREF, toolList } from "@/content/tools";
 import { blogHref, getAllPosts, postHref } from "@/lib/blog";
 import { jalaliToGregorianISO } from "@/lib/jalali";
 import { absoluteUrl } from "@/lib/seo";
@@ -11,12 +12,8 @@ const STATIC_PATHS = [
   "/contact",
   "/request",
   "/blog",
-  "/tools/khesarat-takhir",
-  "/tools/hazine-dadresi",
-  "/tools/mahrieh",
-  "/tools/dastmozd-karshenasi",
-  "/tools/sahm-ol-ers",
-  "/tools/haghol-vekale",
+  TOOLS_INDEX_HREF,
+  ...toolList.map((tool) => tool.href),
   "/privacy",
   "/disclaimer",
 ];

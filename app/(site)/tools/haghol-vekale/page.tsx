@@ -5,7 +5,7 @@ import { RelatedTools } from "@/components/RelatedTools";
 import { Section } from "@/components/Section";
 import { Table } from "@/components/Table";
 import { VekalatCalculator } from "@/components/VekalatCalculator";
-import { tools } from "@/content/tools";
+import { TOOLS_INDEX_HREF, tools } from "@/content/tools";
 import { vekalatCopy, vekalatLegalNotes, vekalatTableNotes } from "@/content/vekalat";
 import { pageMetadata } from "@/lib/seo";
 import {
@@ -27,7 +27,11 @@ export const metadata = pageMetadata({
 export default function Page() {
   return (
     <>
-      <PageHeader title={vekalatCopy.heading} lead={vekalatCopy.lead} crumbs={[{ label: tool.title }]}>
+      <PageHeader
+        title={vekalatCopy.heading}
+        lead={vekalatCopy.lead}
+        crumbs={[{ label: "ابزارهای محاسبه", href: TOOLS_INDEX_HREF }, { label: tool.title }]}
+      >
         <div className="mt-6 border-s-4 border-primary-line ps-4">
           <p className="font-semibold text-ink">{REGULATION}</p>
           <p className="mt-1 text-sm text-muted">

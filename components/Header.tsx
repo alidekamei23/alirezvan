@@ -8,14 +8,13 @@ import { LinkButton } from "@/components/LinkButton";
 import { Ltr } from "@/components/Ltr";
 import { MobileMenu } from "@/components/MobileMenu";
 import { contactLinks, lawyer } from "@/content/lawyer";
-import { practiceNav, requestNav, siteNav, toolsNav } from "@/content/navigation";
+import { practiceNav, requestNav, siteNav } from "@/content/navigation";
 import { toPersianDigits } from "@/lib/format";
 
 const desktopNav = [...practiceNav, ...siteNav];
 
 const mobileGroups = [
   { title: "حوزه‌های کاری", items: practiceNav },
-  { title: "ابزارهای محاسبه", items: toolsNav },
   { title: "سایت", items: [...siteNav, requestNav] },
 ];
 

@@ -10,7 +10,6 @@ import {
   legalNav,
   practiceNav,
   siteNav,
-  toolsNav,
   type NavItem,
 } from "@/content/navigation";
 import { toPersianDigits } from "@/lib/format";
@@ -60,7 +59,7 @@ export function Footer() {
         </div>
 
         <FooterList title="حوزه‌های کاری" items={practiceNav} />
-        <FooterList title="ابزارها و صفحه‌ها" items={[...toolsNav, ...siteNav]} />
+        <FooterList title="صفحه‌ها" items={siteNav} />
 
         <div className="text-sm text-muted">
           <h2 className="mb-1 text-sm font-bold text-ink">دفتر</h2>

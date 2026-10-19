@@ -7,16 +7,11 @@ export const practiceNav: NavItem[] = [
   { href: "/gharardad", label: "قرارداد" },
 ];
 
-export const toolsNav: NavItem[] = [
-  { href: "/tools/khesarat-takhir", label: "محاسبه خسارت تأخیر تأدیه" },
-  { href: "/tools/hazine-dadresi", label: "محاسبه هزینه دادرسی" },
-  { href: "/tools/mahrieh", label: "محاسبه مهریه به نرخ روز" },
-  { href: "/tools/dastmozd-karshenasi", label: "محاسبه دستمزد کارشناسی" },
-  { href: "/tools/sahm-ol-ers", label: "محاسبه سهم‌الارث" },
-  { href: "/tools/haghol-vekale", label: "محاسبه حق‌الوکاله و تمبر وکیل" },
-];
+/** The calculators are listed on their own page, not one by one in menus. */
+export const toolsIndexNav: NavItem = { href: "/tools", label: "ابزارهای محاسبه" };
 
 export const siteNav: NavItem[] = [
+  toolsIndexNav,
   { href: "/blog", label: "وبلاگ" },
   { href: "/about", label: "درباره وکیل" },
   { href: "/contact", label: "تماس" },

@@ -84,6 +84,7 @@ app/
   melki-ejare/page.tsx       # practice hub: real estate and leases
   motalebe/page.tsx          # practice hub: debt claims
   gharardad/page.tsx         # practice hub: contracts
+  tools/page.tsx             # index of every calculator, grouped (registry: content/tools.ts)
   tools/khesarat-takhir/     # late-payment damages calculator
   tools/hazine-dadresi/      # court-fee calculator
   tools/mahrieh/             # mahr at today's value (annual index; logic in lib/mahrieh)

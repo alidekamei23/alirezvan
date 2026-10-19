@@ -6,7 +6,7 @@ import { Section } from "@/components/Section";
 import { Table } from "@/components/Table";
 import { TadiehCalculator } from "@/components/TadiehCalculator";
 import { tadiehCopy, tadiehLegalNotes } from "@/content/tadieh";
-import { tools } from "@/content/tools";
+import { TOOLS_INDEX_HREF, tools } from "@/content/tools";
 import { toPersianDigits } from "@/lib/format";
 import { pageMetadata } from "@/lib/seo";
 import { formatIndex, periodLabel } from "@/lib/tadieh/present";
@@ -29,7 +29,7 @@ export default function Page() {
       <PageHeader
         title={tadiehCopy.heading}
         lead={tadiehCopy.lead}
-        crumbs={[{ label: tool.title }]}
+        crumbs={[{ label: "ابزارهای محاسبه", href: TOOLS_INDEX_HREF }, { label: tool.title }]}
       >
         <div className="mt-6 border-s-4 border-primary-line ps-4">
           {tadiehCopy.formula.map((line) => (

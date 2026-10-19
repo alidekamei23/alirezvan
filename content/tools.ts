@@ -6,17 +6,27 @@ export type ToolSlug =
   | "sahm-ol-ers"
   | "haghol-vekale";
 
+/** Sections of the /tools page, in display order. */
+export const toolGroups = [
+  { id: "debt", title: "طلب و دعاوی مالی" },
+  { id: "family", title: "خانواده و ارث" },
+  { id: "fees", title: "هزینه وکیل و کارشناس" },
+] as const;
+export type ToolGroup = (typeof toolGroups)[number]["id"];
+
 export type Tool = {
   slug: ToolSlug;
   href: string;
   title: string;
   summary: string;
+  group: ToolGroup;
 };
 
 export const tools: Record<ToolSlug, Tool> = {
   "khesarat-takhir": {
     slug: "khesarat-takhir",
     href: "/tools/khesarat-takhir",
+    group: "debt",
     title: "محاسبه خسارت تأخیر تأدیه",
     // TODO: lawyer review
     summary: "برآورد خسارت تأخیر بر پایه شاخص قیمت بانک مرکزی",
@@ -24,6 +34,7 @@ export const tools: Record<ToolSlug, Tool> = {
   "hazine-dadresi": {
     slug: "hazine-dadresi",
     href: "/tools/hazine-dadresi",
+    group: "debt",
     title: "محاسبه هزینه دادرسی",
     // TODO: lawyer review
     summary: "برآورد هزینه دادرسی دعاوی مالی در مراحل بدوی، تجدیدنظر و فرجام",
@@ -31,6 +42,7 @@ export const tools: Record<ToolSlug, Tool> = {
   mahrieh: {
     slug: "mahrieh",
     href: "/tools/mahrieh",
+    group: "family",
     title: "محاسبه مهریه به نرخ روز",
     // TODO: lawyer review
     summary: "برآورد مهریه وجه نقد به نرخ روز بر پایه شاخص سالانه بانک مرکزی",
@@ -38,6 +50,7 @@ export const tools: Record<ToolSlug, Tool> = {
   "dastmozd-karshenasi": {
     slug: "dastmozd-karshenasi",
     href: "/tools/dastmozd-karshenasi",
+    group: "fees",
     title: "محاسبه دستمزد کارشناسی",
     // TODO: lawyer review
     summary: "برآورد دستمزد کارشناس رسمی دادگستری بر پایه تعرفه ۱۴۰۵",
@@ -45,6 +58,7 @@ export const tools: Record<ToolSlug, Tool> = {
   "sahm-ol-ers": {
     slug: "sahm-ol-ers",
     href: "/tools/sahm-ol-ers",
+    group: "family",
     title: "محاسبه سهم‌الارث",
     // TODO: lawyer review
     summary: "برآورد سهم هر وارث به کسر، درصد و مبلغ بر پایه قانون مدنی",
@@ -52,6 +66,7 @@ export const tools: Record<ToolSlug, Tool> = {
   "haghol-vekale": {
     slug: "haghol-vekale",
     href: "/tools/haghol-vekale",
+    group: "fees",
     title: "محاسبه حق‌الوکاله و تمبر وکیل",
     // TODO: lawyer review
     summary: "برآورد حق‌الوکاله طبق تعرفه، تمبر مالیاتی و سهم کانون یا مرکز",
@@ -59,3 +74,6 @@ export const tools: Record<ToolSlug, Tool> = {
 };
 
 export const toolList: Tool[] = Object.values(tools);
+
+/** The page that lists every tool. */
+export const TOOLS_INDEX_HREF = "/tools";

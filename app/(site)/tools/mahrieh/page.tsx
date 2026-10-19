@@ -6,7 +6,7 @@ import { RelatedTools } from "@/components/RelatedTools";
 import { Section } from "@/components/Section";
 import { Table } from "@/components/Table";
 import { mahriehCopy, mahriehLegalNotes } from "@/content/mahrieh";
-import { tools } from "@/content/tools";
+import { TOOLS_INDEX_HREF, tools } from "@/content/tools";
 import { toPersianDigits } from "@/lib/format";
 import { ANNUAL_YEARS, annualIndex } from "@/lib/mahrieh/mahrieh-calc";
 import { pageMetadata } from "@/lib/seo";
@@ -27,7 +27,7 @@ export default function Page() {
       <PageHeader
         title={mahriehCopy.heading}
         lead={mahriehCopy.lead}
-        crumbs={[{ label: tool.title }]}
+        crumbs={[{ label: "ابزارهای محاسبه", href: TOOLS_INDEX_HREF }, { label: tool.title }]}
       >
         <div className="mt-6 border-s-4 border-primary-line ps-4">
           <p className="font-semibold text-ink">{mahriehCopy.formula}</p>

@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { RelatedTools } from "@/components/RelatedTools";
 import { Section } from "@/components/Section";
 import { ersCopy, ersLegalNotes, ersRules } from "@/content/ers";
-import { tools } from "@/content/tools";
+import { TOOLS_INDEX_HREF, tools } from "@/content/tools";
 import { pageMetadata } from "@/lib/seo";
 
 const tool = tools["sahm-ol-ers"];
@@ -19,7 +19,11 @@ export const metadata = pageMetadata({
 export default function Page() {
   return (
     <>
-      <PageHeader title={ersCopy.heading} lead={ersCopy.lead} crumbs={[{ label: tool.title }]} />
+      <PageHeader
+        title={ersCopy.heading}
+        lead={ersCopy.lead}
+        crumbs={[{ label: "ابزارهای محاسبه", href: TOOLS_INDEX_HREF }, { label: tool.title }]}
+      />
 
       <Section>
         <ErsCalculator />

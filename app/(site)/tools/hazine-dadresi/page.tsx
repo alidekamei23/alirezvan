@@ -7,7 +7,7 @@ import { RelatedTools } from "@/components/RelatedTools";
 import { Section } from "@/components/Section";
 import { Table } from "@/components/Table";
 import { hazineCopy, hazineLegalNotes } from "@/content/hazine";
-import { tools } from "@/content/tools";
+import { TOOLS_INDEX_HREF, tools } from "@/content/tools";
 import { FIXED_FEES, STAGES, fixedFeeLabel, type Stage } from "@/lib/hazine/hazine-calc";
 import { CATEGORY_LABELS, TARIFF_SOURCE_NOTE, type FixedFee } from "@/lib/hazine/hazine-tariff";
 import { TARIFF_YEAR_LABEL } from "@/lib/hazine/present";
@@ -29,7 +29,7 @@ export default function Page() {
       <PageHeader
         title={hazineCopy.heading}
         lead={hazineCopy.lead}
-        crumbs={[{ label: tool.title }]}
+        crumbs={[{ label: "ابزارهای محاسبه", href: TOOLS_INDEX_HREF }, { label: tool.title }]}
       >
         <div className="mt-6 border-s-4 border-primary-line ps-4">
           {(Object.keys(STAGES) as Stage[]).map((stage) => (
