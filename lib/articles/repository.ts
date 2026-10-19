@@ -5,7 +5,7 @@
 import { randomUUID } from "node:crypto";
 import { and, asc, desc, eq, ne, sql, type SQL } from "drizzle-orm";
 import { isUniqueViolation, type Db } from "../../db/client.ts";
-import { articles, slugRedirects, type ArticleStatus } from "../../db/schema.ts";
+import { articles, questions, slugRedirects, type ArticleStatus } from "../../db/schema.ts";
 import { normalizePersian } from "../format.ts";
 import { publishProblems, type ArticleInput, type PublishProblem } from "./schema.ts";
 import { nextFreeSlug, slugFromTitle } from "./slug.ts";
@@ -198,6 +198,18 @@ export async function deleteArticle(db: Db, id: string): Promise<boolean> {
   return db.delete(articles).where(eq(articles.id, id)).run().changes > 0;
 }
 
+/** Every article's id, title and status, newest first (for pickers such as related articles). */
+export async function listArticleOptions(
+  db: Db,
+): Promise<{ id: string; title: string; published: boolean }[]> {
+  return db
+    .select({ id: articles.id, title: articles.title, status: articles.status })
+    .from(articles)
+    .orderBy(desc(articles.updatedAt))
+    .all()
+    .map((row) => ({ id: row.id, title: row.title, published: row.status === "published" }));
+}
+
 /** Whether another article already uses this slug. */
 export async function slugIsTaken(db: Db, slug: string, exceptId?: string): Promise<boolean> {
   const row = db
@@ -221,7 +233,8 @@ export async function listRedirectsTo(db: Db, articleId: string): Promise<string
 
 /**
  * File names under /uploads/ that some article still uses, as its cover or inside its
- * text. Anything else in the upload folder is abandoned.
+ * text, or that an answer in the Q&A section shows. Anything else in the upload folder
+ * is abandoned.
  */
 export async function referencedUploads(db: Db): Promise<Set<string>> {
   const names = new Set<string>();
@@ -229,10 +242,15 @@ export async function referencedUploads(db: Db): Promise<Set<string>> {
     .select({ coverImage: articles.coverImage, content: articles.content })
     .from(articles)
     .all();
-  for (const row of rows) {
-    for (const text of [row.coverImage ?? "", row.content]) {
-      for (const match of text.matchAll(/\/uploads\/([a-f0-9]{32}\.webp)/g)) names.add(match[1]);
-    }
+  // Answers count even when deleted: a deleted question can still be looked at in the
+  // database, and its images are few.
+  const answers = db.select({ answer: questions.answer }).from(questions).all();
+  const texts = [
+    ...rows.flatMap((row) => [row.coverImage ?? "", row.content]),
+    ...answers.map((row) => row.answer),
+  ];
+  for (const text of texts) {
+    for (const match of text.matchAll(/\/uploads\/([a-f0-9]{32}\.webp)/g)) names.add(match[1]);
   }
   return names;
 }

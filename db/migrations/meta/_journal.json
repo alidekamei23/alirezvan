@@ -15,6 +15,13 @@
       "when": 1791918129978,
       "tag": "0001_session_credential_fingerprint",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792417456858,
+      "tag": "0002_questions",
+      "breakpoints": true
     }
   ]
 }
