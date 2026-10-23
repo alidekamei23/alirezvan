@@ -12,6 +12,7 @@
 // section, which have their own call to action) there is no box and the marker is dropped.
 // Usage: <ArticleBody content={article.content} />
 import type { Element, ElementContent, Root, RootContent } from "hast";
+import type { ReactNode } from "react";
 import Markdown, { type Components } from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
@@ -82,19 +83,27 @@ function dropContactBoxMarker() {
   };
 }
 
+/** "/blog/<slug>" → "<slug>"; null for list pages and every other address. */
+function blogPostSlug(href: string): string | null {
+  const match = /^\/blog\/([^/?#]+)\/?(?:[?#].*)?$/.exec(href);
+  return match && match[1] !== "page" && match[1] !== "topic" ? match[1] : null;
+}
+
+function renderLink(href: string | undefined, children: ReactNode) {
+  // A link whose address was refused is shown as plain text.
+  if (!href) return <>{children}</>;
+  const external = /^https?:\/\//i.test(href);
+  return (
+    <a href={href} {...(external && { target: "_blank", rel: "noopener noreferrer" })}>
+      {children}
+    </a>
+  );
+}
+
 const components = {
   [CONTACT_BOX_TAG]: () => <ContactBox />,
 
-  a({ href, children }) {
-    // A link whose address was refused is shown as plain text.
-    if (!href) return <>{children}</>;
-    const external = /^https?:\/\//i.test(href);
-    return (
-      <a href={href} {...(external && { target: "_blank", rel: "noopener noreferrer" })}>
-        {children}
-      </a>
-    );
-  },
+  a: ({ href, children }) => renderLink(href, children),
 
   img({ src, alt }) {
     if (typeof src !== "string" || src === "") return null;
@@ -132,18 +141,36 @@ export function ArticleBody({
   content,
   className,
   contactBox = true,
+  linkableSlugs,
 }: {
   content: string;
   className?: string;
   contactBox?: boolean;
+  /**
+   * Blog posts that exist. When given, a link to any other /blog/<slug> is shown as
+   * plain text, so a post can link ahead to one that is not published yet without a 404;
+   * the link turns on by itself once that post is published.
+   */
+  linkableSlugs?: ReadonlySet<string>;
 }) {
+  const used: Components = linkableSlugs
+    ? {
+        ...components,
+        a: ({ href, children }) => {
+          const slug = href ? blogPostSlug(href) : null;
+          if (slug && !linkableSlugs.has(decodeURIComponent(slug))) return <>{children}</>;
+          return renderLink(href, children);
+        },
+      }
+    : components;
+
   return (
     <Prose className={className}>
       <Markdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeSanitize, contactBox ? placeContactBox : dropContactBoxMarker]}
         urlTransform={articleUrl}
-        components={components}
+        components={used}
       >
         {content}
       </Markdown>

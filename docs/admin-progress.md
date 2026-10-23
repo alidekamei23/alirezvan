@@ -121,6 +121,9 @@ built now.
   previous page alive in the background.
 
 ## Open issues
+- 23 Oct 2026: the public blog now reads `content/blog/<slug>.md` (YAML frontmatter, see
+  `docs/blog.md`) instead of MDX, and `content/blog/_sample.mdx` and the sample images are
+  gone. The Phase 3 importer must be built against these real posts, not the sample.
 
 - The hidden-input prompt of `hash-password` was tested by me only with piped input.
 - The public blog still reads MDX; panel articles are not public until Phase 3. The list

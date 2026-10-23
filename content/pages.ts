@@ -61,6 +61,14 @@ export const blogCopy = {
   lead: "مقاله‌های حقوقی درباره چک و سفته، ملکی و اجاره، مطالبه طلب و قرارداد. مطالب کلی است و جایگزین مشاوره حقوقی نیست.",
   emptyTitle: "هنوز مقاله‌ای منتشر نشده است",
   emptyText: "مقاله‌ها پس از آماده شدن در همین صفحه منتشر می‌شوند.",
+  relatedHeading: "مطالب مرتبط",
+  faqHeading: "پرسش‌های پرتکرار",
+  /** Development only: on a post whose status is not "approved". */
+  unpublishedBanner: {
+    title: "پیش‌نویس — منتشر نشده",
+    text: "این مقاله فقط در محیط توسعه دیده می‌شود و در سایت منتشرشده نشانی آن ۴۰۴ است.",
+  },
+  rssTitle: "وبلاگ علی رضوان",
 };
 
 export const requestCopy = {

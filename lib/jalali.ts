@@ -57,6 +57,25 @@ export function jalaliToGregorianISO(value: string): string | null {
   return `${g.getFullYear()}-${pad(g.getMonth() + 1)}-${pad(g.getDate())}`;
 }
 
+/** "2026-10-11" → "1405-07-19". Returns null if it is not a real Gregorian date. */
+export function gregorianISOToJalali(value: string): string | null {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return null;
+  const [year, month, day] = match.slice(1).map(Number);
+  const date = new Date(year, month - 1, day);
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
+    return null;
+  }
+  const parts = new Intl.DateTimeFormat("en-US-u-ca-persian-nu-latn", {
+    timeZone: "UTC",
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  }).formatToParts(Date.UTC(year, month - 1, day));
+  const get = (type: string) => Number(parts.find((part) => part.type === type)?.value);
+  return toJalaliString({ year: get("year"), month: get("month"), day: get("day") });
+}
+
 /** Today's Jalali date in Tehran, whatever the server's own time zone is. */
 export function todayJalali(now: Date = new Date()): JalaliDate {
   const parts = new Intl.DateTimeFormat("en-US-u-ca-persian-nu-latn", {

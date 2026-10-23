@@ -71,9 +71,9 @@ export function PostCard({
             featured ? "text-base" : "hidden text-sm sm:line-clamp-3 sm:block",
           )}
         >
-          {post.summary}
+          {post.description}
         </p>
-        <UpdatedAt date={post.updatedAt} short className="mt-auto pt-1" />
+        <UpdatedAt date={post.updatedJalali} short className="mt-auto pt-1" />
       </div>
     </article>
   );

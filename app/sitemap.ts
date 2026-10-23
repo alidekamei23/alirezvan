@@ -3,7 +3,6 @@ import { practiceAreas } from "@/content/practice-areas";
 import { QUESTIONS_HREF } from "@/content/questions";
 import { TOOLS_INDEX_HREF, toolList } from "@/content/tools";
 import { blogHref, getAllPosts, postHref } from "@/lib/blog";
-import { jalaliToGregorianISO } from "@/lib/jalali";
 import { cachedQuestionSitemap } from "@/lib/questions/cached";
 import { questionHref } from "@/lib/questions/view";
 import { absoluteUrl } from "@/lib/seo";
@@ -22,7 +21,7 @@ const STATIC_PATHS = [
   "/disclaimer",
 ];
 
-// Blog posts, topic pages and published questions are added automatically. Paginated list pages are left out
+// Published blog posts (status "approved"), topic pages and published questions are added automatically. Paginated list pages are left out
 // on purpose: every post they link to is already listed.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [posts, questions] = await Promise.all([getAllPosts(), cachedQuestionSitemap()]);
@@ -36,7 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...topicsWithPosts.map((area) => ({ url: absoluteUrl(blogHref(area.slug)) })),
     ...posts.map((post) => ({
       url: absoluteUrl(postHref(post)),
-      lastModified: jalaliToGregorianISO(post.updatedAt) ?? undefined,
+      lastModified: post.updatedAt,
     })),
     ...questions.map((question) => ({
       url: absoluteUrl(encodeURI(questionHref(question.slug))),

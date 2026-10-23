@@ -1,7 +1,10 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Clock } from "lucide-react";
+import { Clock, ShieldCheck } from "lucide-react";
+import { Alert } from "@/components/Alert";
+import { ArticleBody } from "@/components/ArticleBody";
 import { AuthorBox } from "@/components/AuthorBox";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ContactBox } from "@/components/ContactBox";
@@ -10,10 +13,10 @@ import { Container } from "@/components/Container";
 import { Faq } from "@/components/Faq";
 import { JsonLd } from "@/components/JsonLd";
 import { PostCard } from "@/components/PostCard";
-import { Prose } from "@/components/Prose";
 import { Section } from "@/components/Section";
 import { UpdatedAt } from "@/components/UpdatedAt";
 import { lawyer } from "@/content/lawyer";
+import { LAWYER_REVIEWED_LABEL } from "@/content/legal";
 import { blogCopy } from "@/content/pages";
 import { getPracticeArea } from "@/content/practice-areas";
 import {
@@ -21,14 +24,14 @@ import {
   blogHref,
   decodeSlug,
   getAllPosts,
-  getPostBody,
+  getLinkableSlugs,
   getPostBySlug,
   getRelatedPosts,
+  isPublished,
   postHref,
 } from "@/lib/blog";
 import { toPersianDigits } from "@/lib/format";
-import { jalaliToGregorianISO } from "@/lib/jalali";
-import { pageMetadata } from "@/lib/seo";
+import { ALLOW_INDEXING, absoluteUrl } from "@/lib/seo";
 
 type Props = PageProps<"/blog/[slug]">;
 
@@ -39,20 +42,40 @@ export async function generateStaticParams() {
     : [{ slug: NO_PARAMS }];
 }
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPostBySlug(decodeSlug((await params).slug));
   if (!post) return {};
-  const base = pageMetadata({
-    title: post.title,
-    description: post.summary,
-    path: postHref(post),
-  });
+  const title = post.seoTitle || post.title;
+  const url = absoluteUrl(postHref(post));
+  const image = {
+    url: absoluteUrl(post.ogImage.url),
+    width: post.ogImage.width,
+    height: post.ogImage.height,
+    alt: post.cover.alt,
+  };
   return {
-    ...base,
+    title,
+    description: post.description,
+    keywords: [post.keyword, ...post.secondaryKeywords],
+    alternates: { canonical: url },
+    // Only where the whole site may be indexed; elsewhere the layout's noindex stays.
+    ...(ALLOW_INDEXING && isPublished(post) && { robots: { index: true, follow: true } }),
     openGraph: {
-      ...base.openGraph,
       type: "article",
-      images: [{ url: post.cover.src, width: post.cover.width, height: post.cover.height }],
+      title,
+      description: post.description,
+      url,
+      siteName: lawyer.name,
+      locale: "fa_IR",
+      images: [image],
+      publishedTime: post.publishedAt,
+      modifiedTime: post.updatedAt,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: post.description,
+      images: [image.url],
     },
   };
 }
@@ -66,8 +89,13 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) notFound();
 
   const area = getPracticeArea(post.area);
-  const [Body, related] = await Promise.all([getPostBody(post), getRelatedPosts(post)]);
-  const isoDate = jalaliToGregorianISO(post.updatedAt);
+  const [related, linkableSlugs] = await Promise.all([getRelatedPosts(post), getLinkableSlugs()]);
+  const crumbs = [
+    { name: "خانه", href: "/" },
+    { name: blogCopy.heading, href: blogHref() },
+    { name: area.title, href: blogHref(area.slug) },
+    { name: post.title, href: postHref(post) },
+  ];
 
   return (
     <>
@@ -75,18 +103,28 @@ export default async function BlogPostPage({ params }: Props) {
         <div className="border-b border-line bg-surface pt-3 pb-8 md:pb-10">
           <Container>
             <Breadcrumbs
-              items={[
-                { label: "خانه", href: "/" },
-                { label: blogCopy.heading, href: blogHref() },
-                { label: area.title, href: blogHref(area.slug) },
-                { label: post.title },
-              ]}
+              items={crumbs.map((crumb, index) =>
+                index === crumbs.length - 1
+                  ? { label: crumb.name }
+                  : { label: crumb.name, href: crumb.href },
+              )}
             />
             <div className="mt-4 max-w-reading">
+              {!isPublished(post) && (
+                <Alert tone="warning" title={blogCopy.unpublishedBanner.title} className="mb-4">
+                  {blogCopy.unpublishedBanner.text}
+                </Alert>
+              )}
               <h1 className="text-3xl font-black text-ink">{post.title}</h1>
-              <p className="mt-4 text-lg text-ink">{post.summary}</p>
+              <p className="mt-4 text-lg text-ink">{post.description}</p>
               <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-1">
-                <UpdatedAt date={post.updatedAt} />
+                <UpdatedAt date={post.updatedJalali} />
+                {isPublished(post) && (
+                  <span className="inline-flex items-center gap-1.5 text-sm text-muted">
+                    <ShieldCheck aria-hidden="true" className="size-4 shrink-0" />
+                    {LAWYER_REVIEWED_LABEL}
+                  </span>
+                )}
                 <span className="inline-flex items-center gap-1.5 text-sm text-muted">
                   <Clock aria-hidden="true" className="size-4 shrink-0" />
                   زمان مطالعه: {toPersianDigits(post.readingMinutes)} دقیقه
@@ -103,21 +141,20 @@ export default async function BlogPostPage({ params }: Props) {
               alt={post.cover.alt}
               width={post.cover.width}
               height={post.cover.height}
-              sizes="(min-width: 48rem) 42rem, 100vw"
+              sizes="(min-width: 48rem) 42rem, calc(100vw - 2rem)"
               preload
-              className="mb-8 aspect-[16/10] w-full rounded-lg border border-line bg-surface-muted object-cover"
+              fetchPriority="high"
+              className="mb-8 aspect-video w-full rounded-lg border border-line bg-surface-muted object-cover object-center"
             />
 
-            <Prose>
-              <Body />
-            </Prose>
+            <ArticleBody content={post.body} linkableSlugs={linkableSlugs} />
 
-            {post.faqs.length > 0 && (
+            {post.faq.length > 0 && (
               <section aria-labelledby="post-faq" className="mt-12">
                 <h2 id="post-faq" className="mb-4 text-2xl font-bold text-ink">
-                  پرسش‌های پرتکرار
+                  {blogCopy.faqHeading}
                 </h2>
-                <Faq items={post.faqs} schema />
+                <Faq items={post.faq.map((item) => ({ q: item.question, a: item.answer }))} schema />
               </section>
             )}
 
@@ -146,6 +183,14 @@ export default async function BlogPostPage({ params }: Props) {
                 </ul>
               </section>
             )}
+
+            {post.disclaimer && (
+              <ArticleBody
+                content={post.disclaimer}
+                contactBox={false}
+                className="mt-12 border-t border-line pt-6 text-sm text-muted"
+              />
+            )}
           </div>
 
           <aside aria-label="درباره نویسنده و راه تماس" className="min-w-0">
@@ -164,7 +209,7 @@ export default async function BlogPostPage({ params }: Props) {
       </article>
 
       {related.length > 0 && (
-        <Section id="related" tone="surface" title={`مقاله‌های دیگر ${area.title}`}>
+        <Section id="related" tone="surface" title={blogCopy.relatedHeading}>
           <ul className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((item) => (
               <li key={item.slug}>
@@ -182,33 +227,31 @@ export default async function BlogPostPage({ params }: Props) {
           "@context": "https://schema.org",
           "@type": "Article",
           headline: post.title,
-          description: post.summary,
-          image: post.cover.src,
-          inLanguage: "fa",
-          ...(isoDate && { dateModified: isoDate }),
-          author: {
-            "@type": "Person",
-            name: lawyer.name,
-            jobTitle: lawyer.grade,
-            url: "/about",
+          description: post.description,
+          image: [post.ogImage.url, post.cover.src],
+          datePublished: post.publishedAt,
+          dateModified: post.updatedAt,
+          inLanguage: "fa-IR",
+          keywords: [post.keyword, ...post.secondaryKeywords].join("، "),
+          articleSection: area.title,
+          publisher: {
+            "@type": "Organization",
+            name: `${lawyer.name}، ${lawyer.grade}`,
+            url: "/",
+            logo: { "@type": "ImageObject", url: "/icon.png", width: 512, height: 512 },
           },
-          mainEntityOfPage: postHref(post),
+          mainEntityOfPage: { "@type": "WebPage", "@id": postHref(post) },
         }}
       />
       <JsonLd
         data={{
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
-          itemListElement: [
-            { name: "خانه", item: "/" },
-            { name: blogCopy.heading, item: blogHref() },
-            { name: area.title, item: blogHref(area.slug) },
-            { name: post.title, item: postHref(post) },
-          ].map((crumb, index) => ({
+          itemListElement: crumbs.map((crumb, index) => ({
             "@type": "ListItem",
             position: index + 1,
             name: crumb.name,
-            item: crumb.item,
+            item: crumb.href,
           })),
         }}
       />

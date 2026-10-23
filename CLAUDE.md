@@ -60,7 +60,7 @@ Global internet access in Iran has been cut several times (most recently Feb–M
 | --- | --- |
 | Framework | Next.js (App Router), TypeScript strict, React Server Components by default |
 | Styling | Tailwind CSS, logical properties, design tokens in `app/globals.css` |
-| Content | MDX files in `content/blog/*.mdx` (an exported `meta` object validated with Zod) |
+| Content | Markdown files in `content/blog/<slug>.md` with YAML frontmatter validated with Zod (`docs/blog.md`) |
 | Database | SQLite (WAL mode) with Drizzle ORM (`db/schema.ts`, migrations in `db/migrations`); all access through the repository layer in `lib/`, so a later move to PostgreSQL stays feasible |
 | Validation | Zod for every form, server action and content file |
 | Dates | `date-fns-jalali` |
@@ -95,7 +95,8 @@ app/
   porsesh/                   # Q&A: list, [slug] question, bepors (ask), peygiri (track; noindex)
   blog/page.tsx              # blog index (page 1); blog/page/[page] for pages 2..N
   blog/topic/[area]/         # posts of one practice area, with the same pagination
-  blog/[slug]/page.tsx       # blog post (Persian slug from the post's meta)
+  blog/[slug]/page.tsx       # blog post (English slug from the post's frontmatter)
+  blog/rss.xml/route.ts      # RSS feed of published posts
   about/ contact/ request/ privacy/ disclaimer/
   admin/                     # login, articles, questions (Q&A); leads later at admin/leads (session auth)
   api/ or actions/           # server actions for request form and OTP
@@ -104,14 +105,15 @@ components/                  # UI components (one per file, Persian-first props)
 content/
   lawyer.ts                  # single source of truth for name, license, address, phones
   practice-areas.ts          # hub data: titles, steps, FAQs
-  blog/*.mdx                 # posts; files starting with "_" are dev fixtures
+  blog/<slug>.md             # posts (format in docs/blog.md)
   cpi.json                   # Central Bank monthly price index (see §5.1)
 lib/                         # format, jalali, calculators, sms, notify, otp, seo helpers
 db/                          # Drizzle schema and migrations
 tests/
 ```
 
-Practice hubs and fixed pages use the Latin slugs above. Blog posts use Persian slugs.
+Practice hubs and fixed pages use the Latin slugs above. Blog posts use English slugs
+(changed 23 Oct 2026 by the site owner; a published slug never changes).
 The public name of the section is «وبلاگ».
 
 ## 5. Feature specs
@@ -145,12 +147,16 @@ Removed by the site owner on 13 Oct 2026. Do not build it or link to it unless a
 `/admin` lists leads newest first with status (`new`, `contacted`, `consultation`,
 `retained`, `closed`), source, area and created time (Jalali). Status is editable. No delete.
 
-### 5.5 Blog (MDX)
-Each post exports `meta` (Zod schema in `lib/blog.ts`): `title`, `slug` (Persian), `area`,
-`summary`, `updatedAt` (Jalali date), `cover` (image with width, height, alt; every post
-has one), `faqs` (array of q/a), `references` (laws with links), `draft`. Each post renders
-an author box, FAQ schema, a `<ContactBox />` after section 2 and the contact band at the
-end. Every post belongs to exactly one practice area and is listed on that area's hub.
+### 5.5 Blog
+Each post is `content/blog/<slug>.md` with YAML frontmatter (Zod schema in `lib/blog.ts`,
+format in `docs/blog.md`): `title`, `seoTitle`, `description`, `slug` (English),
+`keyword`, `secondaryKeywords`, `category` (maps to the practice area), `cluster`, `type`
+(pillar/cluster), `pillar`, `relatedSlugs`, `publishedAt`, `updatedAt` (ISO, shown in
+Jalali), `status`, `cover`, `faq`. Only `status: "approved"` is public; other posts are 404
+outside `npm run dev`. Each post renders «بازبینی‌شده توسط وکیل» under the title (no name or
+date), an author box, the FAQ accordion with FAQPage schema before the closing disclaimer,
+a contact box after section 2, «مطالب مرتبط» and the contact band at the end. Links to
+unpublished posts render as plain text. Cover images go through `npm run blog:cover`. Every post belongs to exactly one practice area and is listed on that area's hub.
 Lists are paginated with real URLs: 10 posts on page 1 (the newest shown large), 9 after.
 Only lawyer-approved articles are added; do not write or publish legal articles yourself.
 
