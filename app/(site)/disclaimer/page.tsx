@@ -9,6 +9,5 @@ export const metadata = pageMetadata({
 });
 
 export default function DisclaimerPage() {
-  // TODO: lawyer review. Set reviewed to true once the copy is approved.
-  return <TextPage copy={disclaimerCopy} crumb={disclaimerCopy.heading} reviewed={false} />;
+  return <TextPage copy={disclaimerCopy} crumb={disclaimerCopy.heading} />;
 }

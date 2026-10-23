@@ -1,7 +1,6 @@
-// TextPage — the template for a plain text page (privacy, disclaimer): page header, a
-// draft notice while the copy is unreviewed, and titled sections in the reading column.
-// Usage: <TextPage copy={privacyCopy} crumb="حریم خصوصی" reviewed={false} />
-import { DraftNotice } from "@/components/DraftNotice";
+// TextPage — the template for a plain text page (privacy, disclaimer): page header and
+// titled sections in the reading column.
+// Usage: <TextPage copy={privacyCopy} crumb="حریم خصوصی" />
 import { PageHeader } from "@/components/PageHeader";
 import { Section } from "@/components/Section";
 import type { TextSection } from "@/content/pages";
@@ -9,18 +8,13 @@ import type { TextSection } from "@/content/pages";
 export function TextPage({
   copy,
   crumb,
-  reviewed,
 }: {
   copy: { heading: string; lead: string; sections: TextSection[] };
   crumb: string;
-  /** false shows the draft notice; set true once the lawyer has approved the copy. */
-  reviewed: boolean;
 }) {
   return (
     <>
-      <PageHeader title={copy.heading} lead={copy.lead} crumbs={[{ label: crumb }]}>
-        {!reviewed && <DraftNotice className="mt-6" />}
-      </PageHeader>
+      <PageHeader title={copy.heading} lead={copy.lead} crumbs={[{ label: crumb }]} />
       <Section>
         <div className="flex max-w-reading flex-col gap-8">
           {copy.sections.map((section) => (

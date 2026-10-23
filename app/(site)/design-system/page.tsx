@@ -14,7 +14,6 @@ import { Card } from "@/components/Card";
 import { Container } from "@/components/Container";
 import { DatePicker } from "@/components/DatePicker";
 import { Divider } from "@/components/Divider";
-import { DraftNotice } from "@/components/DraftNotice";
 import { EmptyState } from "@/components/EmptyState";
 import { EstimateNotice } from "@/components/EstimateNotice";
 import { Faq } from "@/components/Faq";
@@ -317,7 +316,6 @@ export default async function DesignSystemPage() {
             چند دقیقه دیگر دوباره تلاش کنید یا با دفتر تماس بگیرید.
           </Alert>
           <EstimateNotice />
-          <DraftNotice />
         </div>
         <Sub title="Toast">
           <ToastDemo />

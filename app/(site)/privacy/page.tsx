@@ -9,6 +9,5 @@ export const metadata = pageMetadata({
 });
 
 export default function PrivacyPage() {
-  // TODO: lawyer review. Set reviewed to true once the copy is approved.
-  return <TextPage copy={privacyCopy} crumb={privacyCopy.heading} reviewed={false} />;
+  return <TextPage copy={privacyCopy} crumb={privacyCopy.heading} />;
 }

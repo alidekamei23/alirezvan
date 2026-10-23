@@ -1,6 +1,4 @@
-import { Alert } from "@/components/Alert";
 import { ContactCta } from "@/components/ContactCta";
-import { DraftNotice } from "@/components/DraftNotice";
 import { LawyerCard } from "@/components/LawyerCard";
 import { PageHeader } from "@/components/PageHeader";
 import { PracticeIndex } from "@/components/PracticeIndex";
@@ -24,10 +22,7 @@ export default function AboutPage() {
         title={aboutCopy.heading}
         lead={aboutCopy.intro}
         crumbs={[{ label: "درباره وکیل" }]}
-      >
-        {/* TODO: lawyer review */}
-        <DraftNotice className="mt-6" />
-      </PageHeader>
+      />
 
       <Section id="license" title="مشخصات پروانه وکالت">
         <div className="max-w-reading">
@@ -35,8 +30,9 @@ export default function AboutPage() {
         </div>
       </Section>
 
-      <Section id="bio" tone="surface" title="سوابق و تحصیلات">
-        {lawyer.bio || lawyer.education.length > 0 ? (
+      {/* TODO(lawyer): bio and education. The section is hidden until they arrive. */}
+      {(lawyer.bio || lawyer.education.length > 0) && (
+        <Section id="bio" tone="surface" title="سوابق و تحصیلات">
           <div className="max-w-reading">
             {lawyer.bio && <p>{lawyer.bio}</p>}
             {lawyer.education.length > 0 && (
@@ -47,13 +43,8 @@ export default function AboutPage() {
               </ul>
             )}
           </div>
-        ) : (
-          // TODO(lawyer): bio and education. Remove this notice when they arrive.
-          <Alert tone="info" title="این بخش در حال تکمیل است" className="max-w-reading">
-            سوابق کاری و تحصیلات پس از دریافت از آقای رضوان در این بخش قرار می‌گیرد.
-          </Alert>
-        )}
-      </Section>
+        </Section>
+      )}
 
       <Section id="practice" title="حوزه‌های کاری">
         <PracticeIndex areas={practiceAreas} />

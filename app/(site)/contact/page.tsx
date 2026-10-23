@@ -2,7 +2,6 @@ import { ExternalLink, MapPin, Phone } from "lucide-react";
 import { BaleButton } from "@/components/BaleButton";
 import { CallButton } from "@/components/CallButton";
 import { Card } from "@/components/Card";
-import { EmptyState } from "@/components/EmptyState";
 import { Grid } from "@/components/Grid";
 import { LawyerCard } from "@/components/LawyerCard";
 import { LinkButton } from "@/components/LinkButton";
@@ -66,16 +65,10 @@ export default function ContactPage() {
             </address>
           </Card>
 
-          {/* TODO(lawyer): office location. Replace with a Neshan embed or a static map
-              image served from our own domain (CLAUDE.md §2.2). */}
-          <div className="flex flex-col gap-4">
-            <EmptyState
-              Icon={MapPin}
-              className="flex-1 justify-center"
-              title="نقشه دفتر به‌زودی اضافه می‌شود"
-              description="نقشه پس از ثبت نشانی دقیق دفتر در این بخش قرار می‌گیرد."
-            />
-            {lawyer.googleMapsUrl && (
+          {/* TODO(lawyer): office location. Add a Neshan embed or a static map image served
+              from our own domain (CLAUDE.md §2.2); until then only the outbound link shows. */}
+          {lawyer.googleMapsUrl && (
+            <div className="flex flex-col gap-4">
               <LinkButton
                 href={lawyer.googleMapsUrl}
                 external
@@ -84,8 +77,8 @@ export default function ContactPage() {
               >
                 مسیریابی در Google Maps
               </LinkButton>
-            )}
-          </div>
+            </div>
+          )}
         </Grid>
       </Section>
 

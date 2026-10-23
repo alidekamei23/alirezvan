@@ -4,7 +4,6 @@
 // contact band.
 // Usage (in app/<slug>/page.tsx): <PracticeHub area={getPracticeArea("check-safte")} />
 import { ContactCta } from "@/components/ContactCta";
-import { DraftNotice } from "@/components/DraftNotice";
 import { EmptyState } from "@/components/EmptyState";
 import { LinkButton } from "@/components/LinkButton";
 import { PostCard } from "@/components/PostCard";
@@ -32,7 +31,6 @@ export async function PracticeHub({ area }: { area: PracticeArea }) {
             {paragraph}
           </p>
         ))}
-        {!area.reviewed && <DraftNotice className="mt-6" />}
       </PageHeader>
 
       <Section id="route" title="مسیر حقوقی">

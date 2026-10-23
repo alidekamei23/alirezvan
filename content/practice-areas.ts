@@ -24,11 +24,6 @@ export type PracticeArea = {
   steps: PracticeStep[];
   faqs: PracticeFaq[];
   relatedTool?: ToolSlug;
-  /**
-   * false until the lawyer has reviewed intro, steps and faqs. While false, the hub
-   * shows a visible "draft" notice. Session 10 requires every area to be true.
-   */
-  reviewed: boolean;
 };
 
 /*
@@ -99,7 +94,6 @@ export const practiceAreas: PracticeArea[] = [
       },
     ],
     relatedTool: "khesarat-takhir",
-    reviewed: false,
   },
   {
     slug: "melki-ejare",
@@ -161,7 +155,6 @@ export const practiceAreas: PracticeArea[] = [
         a: "گاهی با مذاکره یا ارسال اظهارنامه اختلاف حل می‌شود. اگر توافق حاصل نشود، مراجعه به مرجع قانونی لازم است.",
       },
     ],
-    reviewed: false,
   },
   {
     slug: "motalebe",
@@ -224,7 +217,6 @@ export const practiceAreas: PracticeArea[] = [
       },
     ],
     relatedTool: "khesarat-takhir",
-    reviewed: false,
   },
   {
     slug: "gharardad",
@@ -286,7 +278,6 @@ export const practiceAreas: PracticeArea[] = [
         a: "مطالبه خسارت به شروط قرارداد، اثبات ورود خسارت و رابطه آن با تخلف طرف مقابل بستگی دارد.",
       },
     ],
-    reviewed: false,
   },
 ];
 
