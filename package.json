@@ -16,7 +16,7 @@
     "hash-password": "node scripts/hash-password.mjs",
     "unlock-login": "node --experimental-strip-types --no-warnings scripts/unlock-login.ts",
     "uploads:clean": "node --experimental-strip-types --no-warnings scripts/clean-uploads.ts",
-    "revoke-sessions":"node --experimental-strip-types --no-warnings scripts/revoke-sessions.ts",
+    "revoke-sessions": "node --experimental-strip-types --no-warnings scripts/revoke-sessions.ts",
     "review:hubs": "node --experimental-strip-types --no-warnings scripts/export-review.ts"
   },
   "dependencies": {
@@ -27,6 +27,7 @@
     "better-sqlite3": "^13.0.3",
     "date-fns-jalali": "^4.4.0-0",
     "drizzle-orm": "^0.45.4",
+    "js-yaml": "^4.3.2",
     "lucide-react": "^1.55.0",
     "next": "16.4.0",
     "react": "19.3.0",
@@ -40,6 +41,7 @@
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
     "@types/better-sqlite3": "^9.6.0",
+    "@types/js-yaml": "^4.0.9",
     "@types/mdx": "^2.0.14",
     "@types/node": "^22.20.5",
     "@types/react": "^19",
