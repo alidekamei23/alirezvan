@@ -1,0 +1,17 @@
+{
+  "app": "alirezvan",
+  "platform": "next",
+  "port": 3000,
+  "build": {
+    "location": "iran"
+  },
+  "next": {
+    "nodeVersion": "22"
+  },
+  "disks": [
+    {
+      "name": "data",
+      "mountTo": "data"
+    }
+  ]
+}
