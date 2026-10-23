@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props) {
   const title = getPracticeArea(area).title;
   return pageMetadata({
     title: `${blogCopy.heading}: ${title}، صفحه ${toPersianDigits(page)}`,
-    description: `مقاله‌های حقوقی درباره ${title}، نوشته علی رضوان، وکیل پایه یک دادگستری.`,
+    description: `مقاله‌های حقوقی درباره ${title}، نوشته علی رضوان، عضو کانون وکلای دادگستری مرکز.`,
     path: blogHref(area, page),
   });
 }

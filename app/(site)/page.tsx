@@ -28,7 +28,7 @@ export const metadata = {
   ...pageMetadata({
     title: `${lawyer.name} | ${lawyer.grade}`,
     description:
-      "وب‌سایت علی رضوان، وکیل پایه یک دادگستری در تهران؛ چک و سفته، ملکی و اجاره، مطالبه و طلب، قرارداد.",
+      "وب‌سایت علی رضوان، عضو کانون وکلای دادگستری مرکز، در تهران؛ چک و سفته، ملکی و اجاره، مطالبه و طلب، قرارداد.",
     path: "/",
   }),
   // The root layout appends the lawyer's name to titles; Home already contains it.

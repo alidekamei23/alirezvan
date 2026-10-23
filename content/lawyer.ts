@@ -6,7 +6,7 @@
  */
 export const lawyer = {
   name: "علی رضوان",
-  grade: "وکیل پایه یک دادگستری",
+  grade: "عضو کانون وکلای دادگستری مرکز",
 
   licensingBody: "کانون وکلای دادگستری مرکز",
   /** Emblem of the licensing body, on a white background. */

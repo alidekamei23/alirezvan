@@ -41,7 +41,6 @@ export function Footer() {
         <div className="text-sm text-muted">
           <p className="text-lg font-bold text-ink">{lawyer.name}</p>
           <p>{lawyer.grade}</p>
-          <p>{lawyer.licensingBody}</p>
           <p>
             شماره پروانه: <Ltr>{toPersianDigits(lawyer.licenseNumber)}</Ltr>
           </p>

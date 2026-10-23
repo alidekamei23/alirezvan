@@ -6,7 +6,7 @@ that cannot be broken, and how the code is organised. The full strategy and PRD 
 
 ## 1. Project in one paragraph
 
-A Persian-only (RTL) website for **Ali Rezvan (علی رضوان), grade-one attorney (وکیل پایه یک)**
+A Persian-only (RTL) website for **Ali Rezvan (علی رضوان)**, currently a trainee lawyer (کارآموز وکالت), presented on the site as «عضو کانون وکلای دادگستری مرکز» (owner's decision, 23 Oct 2026; never «وکیل پایه یک»)
 in Tehran. Practice areas: checks and promissory notes (چک و سفته), real estate and leases
 (ملکی و اجاره), debt claims (مطالبه و طلب), contracts (قرارداد). The site's one job is lead
 generation: phone calls, WhatsApp/Bale chats and consultation requests. Launch date:

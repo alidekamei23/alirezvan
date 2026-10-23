@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     template: `%s | ${lawyer.name}`,
   },
   description:
-    "وب‌سایت علی رضوان، وکیل پایه یک دادگستری در تهران؛ چک و سفته، ملکی و اجاره، مطالبه و طلب، قرارداد.",
+    "وب‌سایت علی رضوان، عضو کانون وکلای دادگستری مرکز، در تهران؛ چک و سفته، ملکی و اجاره، مطالبه و طلب، قرارداد.",
   // Test and preview deployments tell search engines to stay away (see app/robots.ts).
   ...(!ALLOW_INDEXING && { robots: { index: false, follow: false } }),
 };
