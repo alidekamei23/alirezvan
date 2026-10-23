@@ -11,6 +11,11 @@ const eslintConfig = defineConfig([
     files: ["lib/ers/ers-calc.ts"],
     rules: { "prefer-const": "off" },
   },
+  {
+    // CommonJS so Liara's build can use it (see the file).
+    files: ["next.config.js"],
+    rules: { "@typescript-eslint/no-require-imports": "off" },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
