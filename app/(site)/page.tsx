@@ -1,23 +1,20 @@
-import Image from "next/image";
 import { MapPin, Phone } from "lucide-react";
-import { BaleButton } from "@/components/BaleButton";
-import { CallButton } from "@/components/CallButton";
 import { Card } from "@/components/Card";
-import { Container } from "@/components/Container";
 import { EmptyState } from "@/components/EmptyState";
 import { Grid } from "@/components/Grid";
+import { HomeHero } from "@/components/HomeHero";
 import { LawyerCard } from "@/components/LawyerCard";
 import { LinkButton } from "@/components/LinkButton";
 import { Ltr } from "@/components/Ltr";
 import { LicenseStrip } from "@/components/LicenseStrip";
 import { PostCard } from "@/components/PostCard";
 import { PracticeIndex } from "@/components/PracticeIndex";
+import { PracticeTiles } from "@/components/PracticeTiles";
+import { ScrollCue } from "@/components/ScrollCue";
 import { Section } from "@/components/Section";
 import { ToolCard } from "@/components/ToolCard";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { lawyer } from "@/content/lawyer";
-import { requestNav } from "@/content/navigation";
-import { blogCopy, homeCopy } from "@/content/pages";
+import { blogCopy } from "@/content/pages";
 import { practiceAreas } from "@/content/practice-areas";
 import { TOOLS_INDEX_HREF, homeTools } from "@/content/tools";
 import { pageMetadata } from "@/lib/seo";
@@ -40,54 +37,18 @@ export default async function Home() {
 
   return (
     <>
-      {/* From md the hero has no block padding: the portrait file carries its own top margin,
-          and this keeps the license strip below it inside the first screen on laptops. */}
-      <section className="relative isolate bg-surface py-10 md:py-0">
-        <div aria-hidden="true" className="hero-dots" />
-        <Container className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-10 lg:gap-16">
-          {/* Phones get the tight crop; from md the full portrait stands on the strip below. */}
-          <Image
-            src={lawyer.avatar.src}
-            alt={`تصویر ${lawyer.name}`}
-            width={lawyer.avatar.width}
-            height={lawyer.avatar.height}
-            sizes="7rem"
-            className="size-28 shrink-0 rounded-md border border-line md:hidden"
-          />
-          <Image
-            src={lawyer.photo.src}
-            alt={`تصویر ${lawyer.name}`}
-            width={lawyer.photo.width}
-            height={lawyer.photo.height}
-            sizes="(min-width: 64rem) 24rem, (min-width: 48rem) 16rem, 1px"
-            preload
-            className="hero-portrait hidden h-auto w-64 shrink-0 md:order-last md:block lg:w-96"
-          />
-          <div className="max-w-reading md:self-center md:py-10 lg:pt-0">
-            <h1>
-              <span className="block text-3xl font-black text-ink">{lawyer.name}</span>
-              <span className="mt-1 block text-xl font-medium text-primary">
-                {lawyer.grade}
-              </span>
-            </h1>
-            <p className="mt-5 text-lg text-ink">{homeCopy.lead}</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <LinkButton href={requestNav.href} size="lg">
-                {requestNav.label}
-              </LinkButton>
-              <CallButton size="lg" />
-            </div>
-            <div className="mt-2 flex flex-wrap gap-x-2">
-              <WhatsAppButton variant="ghost" size="sm" />
-              <BaleButton variant="ghost" size="sm" />
-            </div>
-          </div>
-        </Container>
-      </section>
+      <HomeHero />
       <LicenseStrip />
 
-      <Section id="practice" title="حوزه‌های کاری">
-        <PracticeIndex areas={practiceAreas} />
+      {/* Phones: tiles and a cue to the rest of the page, kept close to the first screen. */}
+      <Section id="practice" title="حوزه‌های کاری" className="max-md:pt-8 max-md:pb-4">
+        <div className="md:hidden">
+          <PracticeTiles areas={practiceAreas} />
+          <ScrollCue href="#tools" label="ابزارهای محاسبه و بیشتر" className="mt-8" />
+        </div>
+        <div className="max-md:hidden">
+          <PracticeIndex areas={practiceAreas} />
+        </div>
       </Section>
 
       <Section

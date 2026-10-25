@@ -1,7 +1,9 @@
 // LicenseStrip — the lawyer's license particulars as one ruled row, like the head of an
 // official document: licensing body (with its emblem), license number, city, and the
-// lookup link when it is known. Sits directly under the Home hero. On phones the
-// licensing body takes the full width and the other two share the row below it.
+// lookup link when it is known. Sits directly under the Home hero. On phones the three
+// share one row, centred, with the value above its label; the licensing body's emblem
+// stands above its name there, and its label is left to screen readers.
+// Every phone-only style is a `max-md:` addition; from `md` the strip is unchanged.
 // For a boxed version use LawyerCard. Usage: <LicenseStrip />
 import { ExternalLink } from "lucide-react";
 import { Container } from "@/components/Container";
@@ -15,32 +17,47 @@ export function LicenseStrip() {
   const items = [
     {
       label: "مرجع صدور پروانه",
-      value: <LicensingBody />,
-      className: "col-span-2 border-b md:col-span-1 md:border-b-0 md:border-e md:ps-0",
+      value: <LicensingBody className="max-md:flex-col max-md:gap-1" />,
+      className: "border-e md:ps-0",
+      labelClassName: "max-md:sr-only",
+      valueClassName: "max-md:text-sm max-md:font-normal max-md:text-muted",
     },
     {
       label: "شماره پروانه",
       value: <Ltr>{toPersianDigits(lawyer.licenseNumber)}</Ltr>,
       className: "border-e pe-4",
+      valueClassName: "max-md:text-lg",
     },
-    { label: "محل فعالیت", value: lawyer.city, className: "ps-4" },
+    {
+      label: "محل فعالیت",
+      value: lawyer.city,
+      className: "ps-4",
+      valueClassName: "max-md:text-lg",
+    },
   ];
 
   return (
     <div className="border-y border-line bg-surface">
       <Container className="flex flex-col md:flex-row md:items-stretch">
-        <dl className="grid flex-1 grid-cols-2 md:grid-cols-[auto_1fr_1fr]">
+        <dl className="grid flex-1 grid-cols-3 md:grid-cols-[auto_1fr_1fr]">
           {items.map((item) => (
             <div
               key={item.label}
               className={cn(
                 "flex flex-col gap-0.5 border-line py-3 md:px-8",
+                "max-md:flex-col-reverse max-md:justify-center max-md:px-2 max-md:text-center",
                 item.className,
               )}
             >
-              <dt className="text-sm text-muted">{item.label}</dt>
+              <dt className={cn("text-sm text-muted", item.labelClassName)}>{item.label}</dt>
               {/* One fixed row height (the emblem's) so labels and values line up across columns. */}
-              <dd className="flex items-center font-semibold text-ink md:min-h-11">
+              <dd
+                className={cn(
+                  "flex items-center font-semibold text-ink md:min-h-11",
+                  "max-md:justify-center",
+                  item.valueClassName,
+                )}
+              >
                 {item.value}
               </dd>
             </div>
