@@ -24,7 +24,9 @@ export function Header() {
   return (
     <header className="sticky top-0 z-sticky border-b border-line bg-surface">
       <Container className="flex min-h-(--header-height) items-center justify-between gap-3">
-        <Link href="/" className="flex min-h-11 shrink-0 flex-col justify-center">
+        {/* Below lg the name block may shrink: on the narrowest phones the grade wraps
+            instead of pushing the menu button off the screen. From lg it keeps its width. */}
+        <Link href="/" className="flex min-h-11 min-w-0 flex-col justify-center lg:shrink-0">
           <span className="text-lg font-bold leading-tight text-ink">{lawyer.name}</span>
           <span className="text-sm leading-tight text-muted">{lawyer.grade}</span>
         </Link>
@@ -52,7 +54,8 @@ export function Header() {
             <Phone aria-hidden="true" className="size-4" />
             <Ltr>{toPersianDigits(lawyer.phone.display)}</Ltr>
           </a>
-          {/* Under 360px the full label does not fit beside the name; show a short one. */}
+          {/* On phones the full label does not fit beside the name and grade; show a short
+              one. The accessible name stays the full label. */}
           <LinkButton
             href={requestNav.href}
             variant="secondary"
@@ -60,8 +63,8 @@ export function Header() {
             aria-label={requestNav.label}
             className="whitespace-nowrap max-xs:px-3"
           >
-            <span className="xs:hidden">مشاوره</span>
-            <span className="hidden xs:inline">{requestNav.label}</span>
+            <span className="sm:hidden">مشاوره</span>
+            <span className="hidden sm:inline">{requestNav.label}</span>
           </LinkButton>
           <div className="lg:hidden">
             <MobileMenu groups={mobileGroups} />
