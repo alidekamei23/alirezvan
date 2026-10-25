@@ -24,11 +24,13 @@ export function Header() {
   return (
     <header className="sticky top-0 z-sticky border-b border-line bg-surface">
       <Container className="flex min-h-(--header-height) items-center justify-between gap-3">
-        {/* Below lg the name block may shrink: on the narrowest phones the grade wraps
-            instead of pushing the menu button off the screen. From lg it keeps its width. */}
-        <Link href="/" className="flex min-h-11 min-w-0 flex-col justify-center lg:shrink-0">
+        {/* The name block may shrink, so the grade wraps instead of pushing the other items
+            off the screen: on the narrowest phones, and always from lg, where the grade sits
+            on two lines to leave room for the navigation. Two short lines still fit the
+            header height. */}
+        <Link href="/" className="flex min-h-11 min-w-0 flex-col justify-center lg:max-w-28">
           <span className="text-lg font-bold leading-tight text-ink">{lawyer.name}</span>
-          <span className="text-sm leading-tight text-muted">{lawyer.grade}</span>
+          <span className="text-sm leading-tight text-muted lg:text-balance">{lawyer.grade}</span>
         </Link>
 
         <nav aria-label="ناوبری اصلی" className="hidden lg:block">
