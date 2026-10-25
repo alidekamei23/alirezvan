@@ -94,7 +94,7 @@ One component per file in `components/`. Each file starts with a usage note.
 | Article text | `ArticleBody` (an article's Markdown from the database, rendered inside `Prose`; also the editor preview) |
 | Q&A (`components/questions/`) | `QuestionArticle` (one question and its answer; also the admin preview), `QuestionIndex` (ruled list), `AskForm`, `TrackPanel`, `ViewCounter` |
 | Admin (`components/admin/`) | `LoginForm`, `ArticleEditor`, `QuestionEditor`, `MarkdownEditor` (toolbar, text and live preview; shared by both editors), `PendingQuestions`. The admin panel uses the same tokens and form components as the site, with its own plain header instead of `SiteShell` |
-| Layout | `SiteShell` (frame of every public page), `HomeHero`, `Header`, `NavDisclosure` (the practice areas in the desktop navigation), `MobileMenu`, `Footer`, `PageHeader`, `ContactCta`, `PracticeHub`, `BlogIndex` and `TextPage` (page templates), `StickyContactBar`, `SkipLink` |
+| Layout | `SiteShell` (frame of every public page), `HomeHero`, `Header`, `HeaderRequestLink`, `NavDisclosure` (the practice areas in the desktop navigation), `MobileMenu`, `Footer`, `PageHeader`, `ContactCta`, `PracticeHub`, `BlogIndex` and `TextPage` (page templates), `StickyContactBar`, `SkipLink` |
 | Calculator | `ResultCard`, `ShareActions`, `CopyButton`, `ShareBar`, `RelatedTools`; one client component per tool: `TadiehCalculator` (late-payment damages), `HazineCalculator` (court fees), `MahriehCalculator`, `KarshenasiCalculator` (expert fees), `ErsCalculator` (inheritance shares), `VekalatCalculator` (lawyer fee and stamp) and `MohlatCalculator` (legal deadlines, with a month calendar) |
 
 State coverage: buttons have hover, focus-visible, active, disabled and loading; form
@@ -123,7 +123,9 @@ way: add phone styles with `max-md:`, don't edit the base classes for them.
 Do
 - Use one primary (filled) button per screen. Everything else is secondary or ghost.
 - Keep the three exits reachable on every page: call, WhatsApp/Bale (sticky bar on
-  phones, contact buttons on desktop) and «درخواست مشاوره» (header).
+  phones, contact buttons on desktop) and «درخواست مشاوره» (header,
+  `HeaderRequestLink`). One exception: on Home below `md` the header link is hidden,
+  because the hero's request button sits right under it; the mobile menu still lists it.
 - Take names, numbers and license details from `content/lawyer.ts`. Never type them
   into a page.
 - Render every calculator result with `ResultCard`; it always shows the estimate notice.

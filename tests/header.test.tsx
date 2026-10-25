@@ -3,12 +3,23 @@
 // even where only the short one is shown, and the phone number in Persian digits.
 // Whether it fits the screen is a layout question, checked in the browser at 320–1280px.
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { Header } from "@/components/Header";
+import { HeaderRequestLink } from "@/components/HeaderRequestLink";
 import { NavDisclosure } from "@/components/NavDisclosure";
 import { lawyer } from "@/content/lawyer";
 import { practiceNav, practiceNavTitle, requestNav, siteNav } from "@/content/navigation";
 import { toPersianDigits } from "@/lib/format";
+
+// The header reads the current path (Home hides its request link on phones).
+const route = vi.hoisted(() => ({ pathname: "/about" }));
+vi.mock("next/navigation", () => ({ usePathname: () => route.pathname }));
+
+/** The opening tag of the first link to the request page. */
+function requestLinkTag(html: string) {
+  const start = html.indexOf(`href="${requestNav.href}"`);
+  return html.slice(html.lastIndexOf("<a", start), html.indexOf(">", start) + 1);
+}
 
 describe("Header", () => {
   const html = renderToStaticMarkup(<Header />);
@@ -63,5 +74,28 @@ describe("NavDisclosure", () => {
     expect([...html.matchAll(/<a[^>]*href="([^"]+)"/g)].map((m) => m[1])).toEqual(
       items.map((item) => item.href),
     );
+  });
+});
+
+describe("HeaderRequestLink", () => {
+  const render = (pathname: string) => {
+    route.pathname = pathname;
+    return requestLinkTag(renderToStaticMarkup(<HeaderRequestLink />));
+  };
+
+  it("is hidden on phones on Home, where the hero has the request button", () => {
+    expect(render("/")).toContain("max-md:hidden");
+  });
+
+  it("stays visible on phones on every other page", () => {
+    for (const path of ["/about", "/check-safte", "/blog", "/tools/mohlat", "/request"]) {
+      expect(render(path)).not.toContain("max-md:hidden");
+    }
+  });
+
+  it("keeps the full accessible name on every page", () => {
+    for (const path of ["/", "/about"]) {
+      expect(render(path)).toContain(`aria-label="${requestNav.label}"`);
+    }
   });
 });

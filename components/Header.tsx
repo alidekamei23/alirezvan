@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { Phone } from "lucide-react";
 import { Container } from "@/components/Container";
-import { LinkButton } from "@/components/LinkButton";
+import { HeaderRequestLink } from "@/components/HeaderRequestLink";
 import { Ltr } from "@/components/Ltr";
 import { MobileMenu } from "@/components/MobileMenu";
 import { NavDisclosure } from "@/components/NavDisclosure";
@@ -56,18 +56,7 @@ export function Header() {
             <Phone aria-hidden="true" className="size-4" />
             <Ltr>{toPersianDigits(lawyer.phone.display)}</Ltr>
           </a>
-          {/* On phones the full label does not fit beside the name and grade; show a short
-              one. The accessible name stays the full label. */}
-          <LinkButton
-            href={requestNav.href}
-            variant="secondary"
-            size="sm"
-            aria-label={requestNav.label}
-            className="whitespace-nowrap max-xs:px-3"
-          >
-            <span className="sm:hidden">مشاوره</span>
-            <span className="hidden sm:inline">{requestNav.label}</span>
-          </LinkButton>
+          <HeaderRequestLink />
           <div className="lg:hidden">
             <MobileMenu groups={mobileGroups} />
           </div>
