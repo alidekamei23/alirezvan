@@ -2,7 +2,7 @@
 // element looks and behaves the same. Every size keeps a 44px minimum tap target.
 import { cn } from "@/lib/cn";
 
-export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
+export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "inverse";
 export type ButtonSize = "sm" | "md" | "lg";
 
 const base =
@@ -17,6 +17,9 @@ const variants: Record<ButtonVariant, string> = {
     "border border-primary bg-surface text-primary hover:bg-primary-soft active:bg-primary-soft-strong",
   ghost: "text-primary hover:bg-primary-soft active:bg-primary-soft-strong",
   danger: "bg-danger text-on-primary hover:bg-danger-hover active:bg-danger-active",
+  // The filled button on the dark inverse surface (Home hero on phones) only.
+  inverse:
+    "bg-surface text-primary-active hover:bg-primary-soft active:bg-primary-soft-strong",
 };
 
 const sizes: Record<ButtonSize, string> = {

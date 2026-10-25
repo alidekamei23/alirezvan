@@ -42,6 +42,12 @@
   --color-on-primary: var(--color-white);
   --color-focus: var(--color-emerald-700);
 
+  /* The one dark surface: the Home hero band on phones (docs/design-system.md). */
+  --color-inverse-surface: var(--color-emerald-900);
+  --color-on-inverse: var(--color-white);
+  --color-on-inverse-muted: var(--color-emerald-200);
+  --color-focus-inverse: var(--color-white);
+
   --color-success-surface: var(--color-emerald-50);
   --color-success-line: var(--color-emerald-200);
   --color-success-ink: var(--color-emerald-900);
@@ -153,6 +159,13 @@
 @utility px-gutter {
   padding-left: max(var(--gutter), env(safe-area-inset-left));
   padding-right: max(var(--gutter), env(safe-area-inset-right));
+}
+
+/* On the dark inverse surface the emerald focus ring would vanish; it turns white there. */
+@utility focus-inverse {
+  & :focus-visible {
+    outline-color: var(--color-focus-inverse);
+  }
 }
 
 @utility z-sticky {

@@ -69,6 +69,12 @@ const pairs = [
   ["danger-ink", "danger-surface", TEXT],
   ["info-ink", "info-surface", TEXT],
   ["estimate-ink", "estimate-surface", TEXT],
+  // Home hero on phones: the dark band and the light button on it
+  ["on-inverse", "inverse-surface", TEXT],
+  ["on-inverse-muted", "inverse-surface", TEXT],
+  ["primary-active", "surface", TEXT],
+  ["primary-active", "primary-soft-strong", TEXT],
+  ["surface", "inverse-surface", UI],
   // Non-text: control borders and the focus ring
   ["line-strong", "surface", UI],
   ["line-strong", "page", UI],
@@ -76,6 +82,7 @@ const pairs = [
   ["focus", "surface", UI],
   ["focus", "page", UI],
   ["focus", "surface-muted", UI],
+  ["focus-inverse", "inverse-surface", UI],
 ];
 
 let failed = 0;
