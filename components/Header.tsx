@@ -7,16 +7,13 @@ import { Container } from "@/components/Container";
 import { LinkButton } from "@/components/LinkButton";
 import { Ltr } from "@/components/Ltr";
 import { MobileMenu } from "@/components/MobileMenu";
+import { NavDisclosure } from "@/components/NavDisclosure";
 import { contactLinks, lawyer } from "@/content/lawyer";
-import { practiceNav, requestNav, siteNav } from "@/content/navigation";
+import { practiceNav, practiceNavTitle, requestNav, siteNav } from "@/content/navigation";
 import { toPersianDigits } from "@/lib/format";
 
-// Nine links: kept on one line each, with tight padding, so they fit beside the name and
-// the request button from `lg` (and beside the phone number from `xl`).
-const desktopNav = [...practiceNav, ...siteNav];
-
 const mobileGroups = [
-  { title: "حوزه‌های کاری", items: practiceNav },
+  { title: practiceNavTitle, items: practiceNav },
   { title: "سایت", items: [...siteNav, requestNav] },
 ];
 
@@ -24,18 +21,21 @@ export function Header() {
   return (
     <header className="sticky top-0 z-sticky border-b border-line bg-surface">
       <Container className="flex min-h-(--header-height) items-center justify-between gap-3">
-        {/* The name block may shrink, so the grade wraps instead of pushing the other items
-            off the screen: on the narrowest phones, and always from lg, where the grade sits
-            on two lines to leave room for the navigation. Two short lines still fit the
-            header height. */}
-        <Link href="/" className="flex min-h-11 min-w-0 flex-col justify-center lg:max-w-28">
+        {/* Below lg the name block may shrink: on the narrowest phones the grade wraps
+            instead of pushing the menu button off the screen. From lg it keeps its width. */}
+        <Link href="/" className="flex min-h-11 min-w-0 flex-col justify-center lg:shrink-0">
           <span className="text-lg font-bold leading-tight text-ink">{lawyer.name}</span>
-          <span className="text-sm leading-tight text-muted lg:text-balance">{lawyer.grade}</span>
+          <span className="text-sm leading-tight text-muted">{lawyer.grade}</span>
         </Link>
 
+        {/* The four practice areas share one disclosure, so the links, the name and grade on
+            one line, and the request button fit from `lg` (and the phone number from `xl`). */}
         <nav aria-label="ناوبری اصلی" className="hidden lg:block">
           <ul className="flex items-center">
-            {desktopNav.map((item) => (
+            <li>
+              <NavDisclosure label={practiceNavTitle} items={practiceNav} />
+            </li>
+            {siteNav.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}

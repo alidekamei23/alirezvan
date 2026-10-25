@@ -1,5 +1,8 @@
 export type NavItem = { href: string; label: string };
 
+/** Heading of the practice areas in menus. */
+export const practiceNavTitle = "حوزه‌های کاری";
+
 export const practiceNav: NavItem[] = [
   { href: "/check-safte", label: "چک و سفته" },
   { href: "/melki-ejare", label: "ملکی و اجاره" },

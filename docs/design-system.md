@@ -71,12 +71,12 @@ At most three heading sizes on a page. Weights: 400 body, 600 labels and buttons
 - Radius: `rounded-sm` 8px (controls, buttons), `rounded-md` 12px (cards),
   `rounded-lg` 16px (large media). `rounded-full` for badges and avatars.
 - Elevation: `shadow-sm` (result card, hovered link card) and `shadow-md` (toast, sticky
-  bar). Nothing else has a shadow.
+  bar, the open `NavDisclosure` panel). Nothing else has a shadow.
 - Breakpoints: `xs` 360, `sm` 640, `md` 768, `lg` 1024, `xl` 1280.
 - Widths: `max-w-page` 72rem, `max-w-reading` 42rem, `max-w-form` 32rem.
 - z-index: `z-sticky` (header) < `z-bar` (contact bar) < `z-overlay` < `z-toast`.
 - Motion: colour and border transitions only, 150ms (`--duration-base` 200ms for the FAQ
-  chevron), ease-out. All motion is switched off under `prefers-reduced-motion`.
+  and `NavDisclosure` chevrons), ease-out. All motion is switched off under `prefers-reduced-motion`.
 - Focus: 2px emerald outline with a 2px gap, set once globally. Never remove it.
 
 ## 2. Components
@@ -94,7 +94,7 @@ One component per file in `components/`. Each file starts with a usage note.
 | Article text | `ArticleBody` (an article's Markdown from the database, rendered inside `Prose`; also the editor preview) |
 | Q&A (`components/questions/`) | `QuestionArticle` (one question and its answer; also the admin preview), `QuestionIndex` (ruled list), `AskForm`, `TrackPanel`, `ViewCounter` |
 | Admin (`components/admin/`) | `LoginForm`, `ArticleEditor`, `QuestionEditor`, `MarkdownEditor` (toolbar, text and live preview; shared by both editors), `PendingQuestions`. The admin panel uses the same tokens and form components as the site, with its own plain header instead of `SiteShell` |
-| Layout | `SiteShell` (frame of every public page), `HomeHero`, `Header`, `MobileMenu`, `Footer`, `PageHeader`, `ContactCta`, `PracticeHub`, `BlogIndex` and `TextPage` (page templates), `StickyContactBar`, `SkipLink` |
+| Layout | `SiteShell` (frame of every public page), `HomeHero`, `Header`, `NavDisclosure` (the practice areas in the desktop navigation), `MobileMenu`, `Footer`, `PageHeader`, `ContactCta`, `PracticeHub`, `BlogIndex` and `TextPage` (page templates), `StickyContactBar`, `SkipLink` |
 | Calculator | `ResultCard`, `ShareActions`, `CopyButton`, `ShareBar`, `RelatedTools`; one client component per tool: `TadiehCalculator` (late-payment damages), `HazineCalculator` (court fees), `MahriehCalculator`, `KarshenasiCalculator` (expert fees), `ErsCalculator` (inheritance shares), `VekalatCalculator` (lawyer fee and stamp) and `MohlatCalculator` (legal deadlines, with a month calendar) |
 
 State coverage: buttons have hover, focus-visible, active, disabled and loading; form

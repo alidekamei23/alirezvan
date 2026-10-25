@@ -5,8 +5,9 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { Header } from "@/components/Header";
+import { NavDisclosure } from "@/components/NavDisclosure";
 import { lawyer } from "@/content/lawyer";
-import { requestNav } from "@/content/navigation";
+import { practiceNav, practiceNavTitle, requestNav, siteNav } from "@/content/navigation";
 import { toPersianDigits } from "@/lib/format";
 
 describe("Header", () => {
@@ -28,5 +29,39 @@ describe("Header", () => {
 
   it("shows the office phone in Persian digits", () => {
     expect(html).toContain(toPersianDigits(lawyer.phone.display));
+  });
+
+  describe("desktop navigation", () => {
+    const nav = html.slice(html.indexOf('<nav aria-label="ناوبری اصلی"'), html.indexOf("</nav>"));
+
+    it("groups the practice areas behind one closed disclosure button", () => {
+      const button = /<button[^>]*aria-expanded="false"[^>]*aria-controls="([^"]+)"[^>]*>(.*?)<\/button>/.exec(nav);
+      expect(button).not.toBeNull();
+      expect(button![2]).toContain(practiceNavTitle);
+      const panel = new RegExp(`<ul[^>]*id="${button![1]}"[^>]*>`).exec(nav);
+      expect(panel?.[0]).toContain("hidden");
+    });
+
+    it("keeps every practice hub and site page as a real link in the HTML", () => {
+      for (const item of [...practiceNav, ...siteNav]) {
+        expect(nav).toContain(`href="${item.href}"`);
+        expect(nav).toContain(item.label);
+      }
+    });
+  });
+});
+
+describe("NavDisclosure", () => {
+  const items = practiceNav;
+  const html = renderToStaticMarkup(<NavDisclosure label="عنوان" items={items} />);
+
+  it("is a button that controls a hidden list of the given links", () => {
+    const id = /aria-controls="([^"]+)"/.exec(html)?.[1];
+    expect(id).toBeTruthy();
+    expect(html).toMatch(/<button[^>]*type="button"/);
+    expect(html).toMatch(new RegExp(`<ul[^>]*id="${id}"[^>]*hidden`));
+    expect([...html.matchAll(/<a[^>]*href="([^"]+)"/g)].map((m) => m[1])).toEqual(
+      items.map((item) => item.href),
+    );
   });
 });
