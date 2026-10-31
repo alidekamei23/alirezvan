@@ -23,7 +23,11 @@ export type PracticeArea = {
   /** The usual legal route, in order. */
   steps: PracticeStep[];
   faqs: PracticeFaq[];
-  relatedTool?: ToolSlug;
+  /**
+   * Calculators used in this area's cases, most relevant first. The hub lists them and
+   * each calculator page links back to the hub (lib/links.ts).
+   */
+  relatedTools: ToolSlug[];
 };
 
 /*
@@ -93,7 +97,7 @@ export const practiceAreas: PracticeArea[] = [
         a: "راه‌هایی مانند استعلام و شناسایی اموال و توقیف مطالبات بدهکار وجود دارد. نتیجه به وضعیت مالی بدهکار بستگی دارد و از پیش قابل تعیین نیست.",
       },
     ],
-    relatedTool: "khesarat-takhir",
+    relatedTools: ["khesarat-takhir", "hazine-dadresi", "mohlat"],
   },
   {
     slug: "melki-ejare",
@@ -155,6 +159,7 @@ export const practiceAreas: PracticeArea[] = [
         a: "گاهی با مذاکره یا ارسال اظهارنامه اختلاف حل می‌شود. اگر توافق حاصل نشود، مراجعه به مرجع قانونی لازم است.",
       },
     ],
+    relatedTools: ["dastmozd-karshenasi", "hazine-dadresi", "mohlat"],
   },
   {
     slug: "motalebe",
@@ -216,7 +221,7 @@ export const practiceAreas: PracticeArea[] = [
         a: "هزینه‌ها ابتدا از سوی خواهان پرداخت می‌شود و می‌توان آن را همراه با اصل طلب از طرف مقابل مطالبه کرد.",
       },
     ],
-    relatedTool: "khesarat-takhir",
+    relatedTools: ["khesarat-takhir", "hazine-dadresi", "mohlat"],
   },
   {
     slug: "gharardad",
@@ -278,6 +283,7 @@ export const practiceAreas: PracticeArea[] = [
         a: "مطالبه خسارت به شروط قرارداد، اثبات ورود خسارت و رابطه آن با تخلف طرف مقابل بستگی دارد.",
       },
     ],
+    relatedTools: ["khesarat-takhir", "hazine-dadresi", "mohlat"],
   },
 ];
 

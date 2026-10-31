@@ -89,7 +89,7 @@ One component per file in `components/`. Each file starts with a usage note.
 | Actions | `Button`, `LinkButton` (variants: primary, secondary, ghost, danger, and inverse for the dark band only), `CallButton`, `WhatsAppButton`, `BaleButton` (base: `ContactButton`; classes: `buttonStyles`) |
 | Forms | `TextField`, `PhoneField`, `MoneyField`, `Select`, `Combobox`, `Textarea`, `RadioCards`, `SegmentedControl`, `Checkbox`, `Stepper`, `DatePicker`, `OtpInput` (shell: `Field`) |
 | Feedback | `Alert`, `EstimateNotice`, `DraftNotice`, `Toast` (`ToastProvider`, `useToast`), `Skeleton`, `EmptyState` |
-| Content | `Card`, `PracticeIndex`, `PracticeTiles` (phones), `PracticeCard`, `ScrollCue`, `ToolIndex`, `ToolCard`, `Steps`, `PostCard`, `TopicFilter`, `Pagination`, `ContactBox`, `Faq`, `Disclosure` (`DisclosureGroup`), `Breadcrumbs`, `Badge`, `Table` |
+| Content | `Card`, `PracticeIndex`, `PracticeTiles` (phones), `PracticeCard`, `ScrollCue`, `ToolIndex`, `ToolCard`, `ToolLinks` (calculator links in a sidebar), `Steps`, `PostCard`, `TopicFilter`, `Pagination`, `ContactBox`, `Faq`, `Disclosure` (`DisclosureGroup`), `Breadcrumbs`, `Badge`, `Table` |
 | Trust | `LicenseStrip`, `LawyerCard`, `AuthorBox`, `UpdatedAt` |
 | Article text | `ArticleBody` (an article's Markdown from the database, rendered inside `Prose`; also the editor preview) |
 | Q&A (`components/questions/`) | `QuestionArticle` (one question and its answer; also the admin preview), `QuestionIndex` (ruled list), `AskForm`, `TrackPanel`, `ViewCounter` |

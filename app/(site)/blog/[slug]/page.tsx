@@ -11,9 +11,11 @@ import { ContactBox } from "@/components/ContactBox";
 import { ContactCta } from "@/components/ContactCta";
 import { Container } from "@/components/Container";
 import { Faq } from "@/components/Faq";
+import { Grid } from "@/components/Grid";
 import { JsonLd } from "@/components/JsonLd";
 import { PostCard } from "@/components/PostCard";
 import { Section } from "@/components/Section";
+import { ToolCard } from "@/components/ToolCard";
 import { UpdatedAt } from "@/components/UpdatedAt";
 import { lawyer } from "@/content/lawyer";
 import { LAWYER_REVIEWED_LABEL } from "@/content/legal";
@@ -31,6 +33,7 @@ import {
   postHref,
 } from "@/lib/blog";
 import { toPersianDigits } from "@/lib/format";
+import { toolsForArea } from "@/lib/links";
 import { articleSchema, breadcrumbSchema } from "@/lib/schema";
 import { ALLOW_INDEXING, absoluteUrl } from "@/lib/seo";
 
@@ -90,6 +93,7 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) notFound();
 
   const area = getPracticeArea(post.area);
+  const tools = toolsForArea(area.slug);
   const [related, linkableSlugs] = await Promise.all([getRelatedPosts(post), getLinkableSlugs()]);
   const crumbs = [
     { name: "خانه", href: "/" },
@@ -208,6 +212,18 @@ export default async function BlogPostPage({ params }: Props) {
           </aside>
         </Container>
       </article>
+
+      {/* Below the article, not in the sticky sidebar, which would no longer fit on a
+          short screen. «مطالب مرتبط» and the contact band still close the page. */}
+      {tools.length > 0 && (
+        <Section id="tools" tone="muted" title="ابزارهای محاسبه مرتبط">
+          <Grid cols={tools.length % 3 === 1 ? 2 : 3}>
+            {tools.map((tool) => (
+              <ToolCard key={tool.slug} tool={tool} />
+            ))}
+          </Grid>
+        </Section>
+      )}
 
       {related.length > 0 && (
         <Section id="related" tone="surface" title={blogCopy.relatedHeading}>

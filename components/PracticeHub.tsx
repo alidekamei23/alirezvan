@@ -1,10 +1,12 @@
 // PracticeHub — the full page template for a practice area, driven by one entry of
 // content/practice-areas.ts: problem summary, the legal route as steps, the related
-// calculator, FAQs (with FAQPage schema), the newest blog posts of the area, and the
-// contact band.
+// calculators, FAQs (with FAQPage schema), the newest blog posts of the area, links to the
+// area's questions in the Q&A section, and the contact band.
 // Usage (in app/<slug>/page.tsx): <PracticeHub area={getPracticeArea("check-safte")} />
+import { MessageCircleQuestion } from "lucide-react";
 import { ContactCta } from "@/components/ContactCta";
 import { EmptyState } from "@/components/EmptyState";
+import { Grid } from "@/components/Grid";
 import { LinkButton } from "@/components/LinkButton";
 import { PostCard } from "@/components/PostCard";
 import { Faq } from "@/components/Faq";
@@ -13,15 +15,16 @@ import { Section } from "@/components/Section";
 import { Steps } from "@/components/Steps";
 import { ToolCard } from "@/components/ToolCard";
 import type { PracticeArea } from "@/content/practice-areas";
-import { tools } from "@/content/tools";
+import { ASK_HREF, questionsCopy } from "@/content/questions";
 import { blogHref, getPostsByArea } from "@/lib/blog";
+import { questionCategoryHref, toolsForArea } from "@/lib/links";
 
 const POSTS_ON_HUB = 3;
 
 export async function PracticeHub({ area }: { area: PracticeArea }) {
   const posts = await getPostsByArea(area.slug);
   const [lead, ...rest] = area.intro;
-  const tool = area.relatedTool ? tools[area.relatedTool] : null;
+  const tools = toolsForArea(area.slug);
 
   return (
     <>
@@ -37,11 +40,13 @@ export async function PracticeHub({ area }: { area: PracticeArea }) {
         <Steps items={area.steps} />
       </Section>
 
-      {tool && (
-        <Section id="tool" tone="muted" title="ابزار مرتبط">
-          <div className="max-w-reading">
-            <ToolCard tool={tool} />
-          </div>
+      {tools.length > 0 && (
+        <Section id="tool" tone="muted" title="ابزارهای مرتبط">
+          <Grid cols={tools.length % 3 === 1 ? 2 : 3}>
+            {tools.map((tool) => (
+              <ToolCard key={tool.slug} tool={tool} />
+            ))}
+          </Grid>
         </Section>
       )}
 
@@ -74,6 +79,21 @@ export async function PracticeHub({ area }: { area: PracticeArea }) {
             )}
           </>
         )}
+      </Section>
+
+      <Section id="questions" tone="surface" title={`پرسش و پاسخ ${area.title}`}>
+        <p className="max-w-reading text-ink">
+          پرسش‌هایی که دیگران در این حوزه پرسیده‌اند و پاسخ وکیل را بخوانید، یا سؤال خود را
+          بدون ثبت‌نام بپرسید.
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <LinkButton href={questionCategoryHref(area.slug)} variant="secondary">
+            پرسش‌های {area.title}
+          </LinkButton>
+          <LinkButton href={ASK_HREF} variant="ghost" icon={<MessageCircleQuestion />}>
+            {questionsCopy.askButton}
+          </LinkButton>
+        </div>
       </Section>
 
       <ContactCta />

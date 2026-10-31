@@ -6,6 +6,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Container } from "@/components/Container";
 import { JsonLd } from "@/components/JsonLd";
 import { LinkButton } from "@/components/LinkButton";
+import { ToolLinks } from "@/components/ToolLinks";
 import { QuestionArticle } from "@/components/questions/QuestionArticle";
 import { QuestionIndex } from "@/components/questions/QuestionIndex";
 import { ViewCounter } from "@/components/questions/ViewCounter";
@@ -13,6 +14,7 @@ import { questionCategoryTitle } from "@/content/question-categories";
 import { ASK_HREF, QUESTIONS_HREF, questionsCopy } from "@/content/questions";
 import { NO_PARAMS, decodeSlug } from "@/lib/blog";
 import { cachedQuestionPage } from "@/lib/questions/cached";
+import { areaForQuestionCategory, questionCategoryHref, toolsForQuestionCategory } from "@/lib/links";
 import { excerpt, markdownToPlain } from "@/lib/questions/core";
 import { displayNameOf, isoDate, questionHref } from "@/lib/questions/view";
 import { breadcrumbSchema, qaPageSchema } from "@/lib/schema";
@@ -52,7 +54,8 @@ export default async function QuestionPage({ params }: Props) {
 
   const { question, sameCategory, relatedArticles } = page;
   const categoryTitle = questionCategoryTitle(question.category);
-  const categoryHref = `${QUESTIONS_HREF}?dasteh=${question.category}`;
+  const categoryHref = questionCategoryHref(question.category);
+  const area = areaForQuestionCategory(question.category);
   const url = questionHref(question.slug);
 
   return (
@@ -117,6 +120,17 @@ export default async function QuestionPage({ params }: Props) {
                 ))}
               </ul>
             </section>
+          )}
+
+          <ToolLinks tools={toolsForQuestionCategory(question.category)} />
+
+          {area && (
+            <Link
+              href={area.href}
+              className="inline-flex min-h-11 items-center font-semibold text-primary underline underline-offset-4 hover:text-primary-hover"
+            >
+              مسیر حقوقی و پرسش‌های پرتکرار {area.title}
+            </Link>
           )}
         </aside>
       </Container>
