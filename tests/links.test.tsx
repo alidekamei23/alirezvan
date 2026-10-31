@@ -2,7 +2,7 @@
 // every calculator page sends in its first HTML: metadata, schema, hub links and the
 // legal notes.
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { practiceAreas } from "@/content/practice-areas";
 import { questionCategories } from "@/content/question-categories";
 import { toolList, tools, type ToolSlug } from "@/content/tools";
@@ -79,9 +79,15 @@ describe("Q&A links", () => {
 });
 
 describe("practice hubs", () => {
+  // The first import pulls in the blog loader; under a full parallel run it alone can take
+  // longer than one test's time limit, so it is loaded once, outside the tests.
+  let PracticeHub: (typeof import("@/components/PracticeHub"))["PracticeHub"];
+  beforeAll(async () => {
+    ({ PracticeHub } = await import("@/components/PracticeHub"));
+  }, 30_000);
+
   for (const area of practiceAreas) {
     it(`links ${area.slug} to its calculators and its questions`, async () => {
-      const { PracticeHub } = await import("@/components/PracticeHub");
       const html = renderToStaticMarkup(await PracticeHub({ area }));
       for (const tool of toolsForArea(area.slug)) {
         expect(html).toContain(`href="${tool.href}"`);
@@ -106,7 +112,8 @@ const pages: Record<ToolSlug, () => Promise<{ default: () => React.ReactNode; me
   diyeh: () => import("@/app/(site)/tools/diyeh/page"),
 };
 
-describe("calculator pages", () => {
+// Each test imports and renders a whole page; the first imports are slow under a full run.
+describe("calculator pages", { timeout: 30_000 }, () => {
   it("has a page module for every calculator", () => {
     expect(Object.keys(pages).sort()).toEqual(toolList.map((tool) => tool.slug).sort());
   });
