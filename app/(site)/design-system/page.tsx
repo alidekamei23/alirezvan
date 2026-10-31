@@ -50,7 +50,7 @@ import { getAllPosts } from "@/lib/blog";
 import { formatToman, toPersianDigits } from "@/lib/format";
 import { ToastDemo } from "./ToastDemo";
 
-export const metadata = { title: "سیستم طراحی (داخلی)" };
+export const metadata = { title: "سیستم طراحی (داخلی)", robots: { index: false, follow: false } };
 
 const emerald = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
 

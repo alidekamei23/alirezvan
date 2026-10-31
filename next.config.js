@@ -12,6 +12,19 @@ const nextConfig = {
   },
   cacheComponents: true,
   partialPrefetching: true,
+  // Page 1 of a list lives at the list's own URL. Redirecting here, before rendering, is
+  // what sends the Location header: a redirect from the prerendered page is served from
+  // cache with a 308 status but no Location.
+  async redirects() {
+    return [
+      { source: "/blog/page/1", destination: "/blog", permanent: true },
+      {
+        source: "/blog/topic/:area/page/1",
+        destination: "/blog/topic/:area",
+        permanent: true,
+      },
+    ];
+  },
   turbopack: {
     rules: {
       "*.css": {

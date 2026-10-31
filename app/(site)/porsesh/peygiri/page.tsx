@@ -2,13 +2,12 @@ import { PageHeader } from "@/components/PageHeader";
 import { Section } from "@/components/Section";
 import { TrackPanel } from "@/components/questions/TrackPanel";
 import { QUESTIONS_HREF, TRACK_HREF, questionsCopy, trackCopy } from "@/content/questions";
-import { ALLOW_INDEXING, pageMetadata } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 
-// A personal tool, not content: kept out of search results. (Links are followed only where
-// the deployment may be indexed at all; elsewhere the root layout's nofollow stands.)
+// A personal tool, not content: kept out of search results, and its links are not followed.
 export const metadata = {
   ...pageMetadata({ title: trackCopy.metaTitle, description: trackCopy.metaDescription, path: TRACK_HREF }),
-  robots: { index: false, follow: ALLOW_INDEXING },
+  robots: { index: false, follow: false },
 };
 
 export default function TrackPage() {

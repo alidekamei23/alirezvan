@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { BlogIndex } from "@/components/BlogIndex";
 import { blogCopy } from "@/content/pages";
 import { NO_PARAMS, blogHref, getAllPosts } from "@/lib/blog";
@@ -30,7 +30,10 @@ export async function generateMetadata({ params }: Props) {
 export const instant = false;
 
 export default async function BlogPagedPage({ params }: Props) {
-  const page = parsePageParam((await params).page);
+  const { page: pageParam } = await params;
+  // /blog/page/1 would duplicate /blog. next.config.js redirects it first; this is the fallback.
+  if (pageParam === "1") permanentRedirect(blogHref(null));
+  const page = parsePageParam(pageParam);
   if (!page) notFound();
   return <BlogIndex area={null} page={page} />;
 }

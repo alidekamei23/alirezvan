@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { BlogIndex } from "@/components/BlogIndex";
 import { blogCopy } from "@/content/pages";
 import { getPracticeArea, practiceAreas } from "@/content/practice-areas";
@@ -39,7 +39,10 @@ export const instant = false;
 
 export default async function BlogTopicPagedPage({ params }: Props) {
   const { area, page: pageParam } = await params;
+  if (!isAreaSlug(area)) notFound();
+  // Page 1 would duplicate /blog/topic/<area>. next.config.js redirects it first; this is the fallback.
+  if (pageParam === "1") permanentRedirect(blogHref(area));
   const page = parsePageParam(pageParam);
-  if (!isAreaSlug(area) || !page) notFound();
+  if (!page) notFound();
   return <BlogIndex area={area} page={page} />;
 }
