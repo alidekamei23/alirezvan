@@ -38,7 +38,8 @@ describe("robots", () => {
     }
   });
 
-  it("marks those pages noindex, nofollow instead", async () => {
+  // Imports two whole pages; under a full parallel run that can pass five seconds.
+  it("marks those pages noindex, nofollow instead", { timeout: 30_000 }, async () => {
     const pages = [
       await import("@/app/(site)/porsesh/peygiri/page"),
       await import("@/app/(site)/design-system/page"),
