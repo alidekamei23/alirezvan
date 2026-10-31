@@ -18,7 +18,8 @@ const ILLUSTRATION = { src: "/images/not-found.webp", width: 640, height: 485 };
 
 export function NotFoundContent() {
   return (
-    <div className="border-b border-line bg-surface py-16 md:py-24">
+    // Less room on top than below: the illustration already opens the page.
+    <div className="border-b border-line bg-surface pt-8 pb-16 md:pt-12 md:pb-24">
       <Container>
         <div className="max-w-reading">
           {/* Decorative: the heading says it all, so the image has an empty alt. Above the
