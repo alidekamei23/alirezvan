@@ -13,8 +13,8 @@ export function ContactBox() {
     >
       <p className="font-bold text-ink">پرونده شما شرایط خودش را دارد</p>
       <p className="mt-1 text-sm text-ink">
-        این مقاله کلی است. برای بررسی مدارک و شرایط خودتان می‌توانید درخواست مشاوره ثبت
-        کنید یا با دفتر تماس بگیرید.
+        مطالب این مقاله جنبه عمومی دارد و جایگزین مشاوره نیست. برای بررسی مدارک و شرایط
+        پرونده خود، می‌توانید درخواست مشاوره ثبت کنید یا با دفتر تماس بگیرید.
       </p>
       <div className="mt-4 flex flex-col gap-3 sm:flex-row">
         <LinkButton href={requestNav.href} variant="secondary" size="sm">
