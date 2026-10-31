@@ -1,5 +1,6 @@
 import { ContactCta } from "@/components/ContactCta";
 import { Disclosure, DisclosureGroup } from "@/components/Disclosure";
+import { JsonLd } from "@/components/JsonLd";
 import { MahriehCalculator } from "@/components/MahriehCalculator";
 import { PageHeader } from "@/components/PageHeader";
 import { RelatedTools } from "@/components/RelatedTools";
@@ -9,6 +10,7 @@ import { mahriehCopy, mahriehLegalNotes } from "@/content/mahrieh";
 import { TOOLS_INDEX_HREF, tools } from "@/content/tools";
 import { toPersianDigits } from "@/lib/format";
 import { ANNUAL_YEARS, annualIndex } from "@/lib/mahrieh/mahrieh-calc";
+import { toolSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 import { formatIndex } from "@/lib/tadieh/present";
 import { INDEX_SOURCE } from "@/lib/tadieh/tadieh-index";
@@ -67,6 +69,8 @@ export default function Page() {
       <RelatedTools current="mahrieh" />
 
       <ContactCta />
+
+      <JsonLd data={toolSchema(tool)} />
     </>
   );
 }

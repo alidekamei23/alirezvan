@@ -9,13 +9,13 @@ import { LinkButton } from "@/components/LinkButton";
 import { QuestionArticle } from "@/components/questions/QuestionArticle";
 import { QuestionIndex } from "@/components/questions/QuestionIndex";
 import { ViewCounter } from "@/components/questions/ViewCounter";
-import { lawyer } from "@/content/lawyer";
 import { questionCategoryTitle } from "@/content/question-categories";
 import { ASK_HREF, QUESTIONS_HREF, questionsCopy } from "@/content/questions";
 import { NO_PARAMS, decodeSlug } from "@/lib/blog";
 import { cachedQuestionPage } from "@/lib/questions/cached";
 import { excerpt, markdownToPlain } from "@/lib/questions/core";
 import { displayNameOf, isoDate, questionHref } from "@/lib/questions/view";
+import { qaPageSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
 type Props = PageProps<"/porsesh/[slug]">;
@@ -124,25 +124,15 @@ export default async function QuestionPage({ params }: Props) {
       <ViewCounter slug={question.slug} />
 
       <JsonLd
-        data={{
-          "@context": "https://schema.org",
-          "@type": "QAPage",
-          mainEntity: {
-            "@type": "Question",
-            name: question.title,
-            text: question.body,
-            answerCount: 1,
-            datePublished: isoDate(question.publishedAt),
-            author: { "@type": "Person", name: displayNameOf(question.displayName) },
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: markdownToPlain(question.answer),
-              datePublished: isoDate(question.answeredAt ?? question.publishedAt),
-              url,
-              author: { "@type": "Person", name: lawyer.name, jobTitle: lawyer.grade, url: "/about" },
-            },
-          },
-        }}
+        data={qaPageSchema({
+          title: question.title,
+          body: question.body,
+          href: url,
+          askedBy: displayNameOf(question.displayName),
+          publishedAt: isoDate(question.publishedAt),
+          answer: markdownToPlain(question.answer),
+          answeredAt: isoDate(question.answeredAt ?? question.publishedAt),
+        })}
       />
       <JsonLd
         data={{

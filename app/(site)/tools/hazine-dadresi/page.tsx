@@ -2,6 +2,7 @@ import { Badge } from "@/components/Badge";
 import { ContactCta } from "@/components/ContactCta";
 import { Disclosure, DisclosureGroup } from "@/components/Disclosure";
 import { HazineCalculator } from "@/components/HazineCalculator";
+import { JsonLd } from "@/components/JsonLd";
 import { PageHeader } from "@/components/PageHeader";
 import { RelatedTools } from "@/components/RelatedTools";
 import { Section } from "@/components/Section";
@@ -11,6 +12,7 @@ import { TOOLS_INDEX_HREF, tools } from "@/content/tools";
 import { FIXED_FEES, STAGES, fixedFeeLabel, type Stage } from "@/lib/hazine/hazine-calc";
 import { CATEGORY_LABELS, TARIFF_SOURCE_NOTE, type FixedFee } from "@/lib/hazine/hazine-tariff";
 import { TARIFF_YEAR_LABEL } from "@/lib/hazine/present";
+import { toolSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
 const tool = tools["hazine-dadresi"];
@@ -85,6 +87,8 @@ export default function Page() {
       <RelatedTools current="hazine-dadresi" />
 
       <ContactCta />
+
+      <JsonLd data={toolSchema(tool)} />
     </>
   );
 }

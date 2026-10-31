@@ -31,6 +31,7 @@ import {
   postHref,
 } from "@/lib/blog";
 import { toPersianDigits } from "@/lib/format";
+import { articleSchema } from "@/lib/schema";
 import { ALLOW_INDEXING, absoluteUrl } from "@/lib/seo";
 
 type Props = PageProps<"/blog/[slug]">;
@@ -223,25 +224,16 @@ export default async function BlogPostPage({ params }: Props) {
       <ContactCta />
 
       <JsonLd
-        data={{
-          "@context": "https://schema.org",
-          "@type": "Article",
-          headline: post.title,
+        data={articleSchema({
+          title: post.title,
           description: post.description,
-          image: [post.ogImage.url, post.cover.src],
-          datePublished: post.publishedAt,
-          dateModified: post.updatedAt,
-          inLanguage: "fa-IR",
-          keywords: [post.keyword, ...post.secondaryKeywords].join("، "),
-          articleSection: area.title,
-          publisher: {
-            "@type": "Organization",
-            name: `${lawyer.name}، ${lawyer.grade}`,
-            url: "/",
-            logo: { "@type": "ImageObject", url: "/icon.png", width: 512, height: 512 },
-          },
-          mainEntityOfPage: { "@type": "WebPage", "@id": postHref(post) },
-        }}
+          href: postHref(post),
+          images: [post.ogImage.url, post.cover.src],
+          publishedAt: post.publishedAt,
+          updatedAt: post.updatedAt,
+          keywords: [post.keyword, ...post.secondaryKeywords],
+          section: area.title,
+        })}
       />
       <JsonLd
         data={{

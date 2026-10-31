@@ -1,11 +1,13 @@
 import { ContactCta } from "@/components/ContactCta";
 import { Disclosure, DisclosureGroup } from "@/components/Disclosure";
 import { ErsCalculator } from "@/components/ErsCalculator";
+import { JsonLd } from "@/components/JsonLd";
 import { PageHeader } from "@/components/PageHeader";
 import { RelatedTools } from "@/components/RelatedTools";
 import { Section } from "@/components/Section";
 import { ersCopy, ersLegalNotes, ersRules } from "@/content/ers";
 import { TOOLS_INDEX_HREF, tools } from "@/content/tools";
+import { toolSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
 const tool = tools["sahm-ol-ers"];
@@ -58,6 +60,8 @@ export default function Page() {
       <RelatedTools current="sahm-ol-ers" />
 
       <ContactCta />
+
+      <JsonLd data={toolSchema(tool)} />
     </>
   );
 }

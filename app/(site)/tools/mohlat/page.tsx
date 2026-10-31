@@ -1,5 +1,6 @@
 import { ContactCta } from "@/components/ContactCta";
 import { Disclosure, DisclosureGroup } from "@/components/Disclosure";
+import { JsonLd } from "@/components/JsonLd";
 import { MohlatCalculator } from "@/components/MohlatCalculator";
 import { PageHeader } from "@/components/PageHeader";
 import { RelatedTools } from "@/components/RelatedTools";
@@ -15,6 +16,7 @@ import { TOOLS_INDEX_HREF, tools } from "@/content/tools";
 import { toPersianDigits } from "@/lib/format";
 import { COMPLETE_YEARS, HOLIDAYS, MONTHS, WEEKDAYS } from "@/lib/mohlat/mohlat-calc";
 import { parseKey, weekdayOf } from "@/lib/mohlat/present";
+import { toolSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
 const tool = tools.mohlat;
@@ -102,6 +104,8 @@ export default function Page() {
       <RelatedTools current="mohlat" />
 
       <ContactCta />
+
+      <JsonLd data={toolSchema(tool)} />
     </>
   );
 }

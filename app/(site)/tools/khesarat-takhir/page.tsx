@@ -1,5 +1,6 @@
 import { ContactCta } from "@/components/ContactCta";
 import { Disclosure, DisclosureGroup } from "@/components/Disclosure";
+import { JsonLd } from "@/components/JsonLd";
 import { PageHeader } from "@/components/PageHeader";
 import { RelatedTools } from "@/components/RelatedTools";
 import { Section } from "@/components/Section";
@@ -8,6 +9,7 @@ import { TadiehCalculator } from "@/components/TadiehCalculator";
 import { tadiehCopy, tadiehLegalNotes } from "@/content/tadieh";
 import { TOOLS_INDEX_HREF, tools } from "@/content/tools";
 import { toPersianDigits } from "@/lib/format";
+import { toolSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 import { formatIndex, periodLabel } from "@/lib/tadieh/present";
 import { MONTH_NAMES, YEARS, latestAvailable } from "@/lib/tadieh/tadieh-calc";
@@ -77,6 +79,8 @@ export default function Page() {
       <RelatedTools current="khesarat-takhir" />
 
       <ContactCta />
+
+      <JsonLd data={toolSchema(tool)} />
     </>
   );
 }

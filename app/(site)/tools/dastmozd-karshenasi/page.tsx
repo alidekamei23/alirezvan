@@ -1,5 +1,6 @@
 import { ContactCta } from "@/components/ContactCta";
 import { Disclosure, DisclosureGroup } from "@/components/Disclosure";
+import { JsonLd } from "@/components/JsonLd";
 import { KarshenasiCalculator } from "@/components/KarshenasiCalculator";
 import { PageHeader } from "@/components/PageHeader";
 import { RelatedTools } from "@/components/RelatedTools";
@@ -15,6 +16,7 @@ import {
   TARIFF_TITLE,
 } from "@/lib/karshenasi/karshenasi-tariff";
 import { tierRows } from "@/lib/karshenasi/present";
+import { toolSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
 const tool = tools["dastmozd-karshenasi"];
@@ -84,6 +86,8 @@ export default function Page() {
       <RelatedTools current="dastmozd-karshenasi" />
 
       <ContactCta />
+
+      <JsonLd data={toolSchema(tool)} />
     </>
   );
 }

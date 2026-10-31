@@ -3,8 +3,10 @@
 // Usage: <Faq items={[{ q: "…", a: "…" }]} schema /> — `schema` also emits FAQPage JSON-LD
 // (use it once per page).
 import { ChevronDown } from "lucide-react";
+import { JsonLd } from "@/components/JsonLd";
+import { type FaqEntry, faqPageSchema } from "@/lib/schema";
 
-export type FaqItem = { q: string; a: string };
+export type FaqItem = FaqEntry;
 
 export function Faq({ items, schema = false }: { items: FaqItem[]; schema?: boolean }) {
   return (
@@ -21,22 +23,7 @@ export function Faq({ items, schema = false }: { items: FaqItem[]; schema?: bool
           <p className="pb-5 text-ink">{item.a}</p>
         </details>
       ))}
-      {schema && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              mainEntity: items.map((item) => ({
-                "@type": "Question",
-                name: item.q,
-                acceptedAnswer: { "@type": "Answer", text: item.a },
-              })),
-            }).replace(/</g, "\\u003c"),
-          }}
-        />
-      )}
+      {schema && <JsonLd data={faqPageSchema(items)} />}
     </div>
   );
 }
