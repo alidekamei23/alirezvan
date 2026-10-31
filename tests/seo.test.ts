@@ -27,15 +27,25 @@ describe("robots", () => {
     const result = robots.default();
     const rules = Array.isArray(result.rules) ? result.rules[0] : result.rules;
     expect(rules.allow).toBe("/");
-    expect(rules.disallow).toEqual(
-      expect.arrayContaining(["/admin", "/admin/", "/api/", "/design-system", "/porsesh/peygiri"]),
-    );
+    expect(rules.disallow).toEqual(["/admin", "/admin/", "/api/"]);
     expect(result.sitemap).toBe("https://example.ir/sitemap.xml");
   });
 
-  it("keeps the tracking page out of search", async () => {
+  it("leaves noindex pages crawlable, so search engines can read their noindex", async () => {
     const { robots } = await load({ indexing: "true" });
-    expect(robots.DISALLOWED_PATHS).toContain(TRACK_HREF);
+    for (const path of [TRACK_HREF, "/design-system"]) {
+      expect(robots.DISALLOWED_PATHS.some((d) => path.startsWith(d))).toBe(false);
+    }
+  });
+
+  it("marks those pages noindex, nofollow instead", async () => {
+    const pages = [
+      await import("@/app/(site)/porsesh/peygiri/page"),
+      await import("@/app/(site)/design-system/page"),
+    ];
+    for (const page of pages) {
+      expect(page.metadata.robots).toEqual({ index: false, follow: false });
+    }
   });
 
   it("does not block public sections", async () => {
