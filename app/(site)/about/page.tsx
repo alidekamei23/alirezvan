@@ -1,4 +1,5 @@
 import { ContactCta } from "@/components/ContactCta";
+import { JsonLd } from "@/components/JsonLd";
 import { LawyerCard } from "@/components/LawyerCard";
 import { PageHeader } from "@/components/PageHeader";
 import { PracticeIndex } from "@/components/PracticeIndex";
@@ -7,6 +8,7 @@ import { Steps } from "@/components/Steps";
 import { lawyer } from "@/content/lawyer";
 import { aboutCopy, consultationTypes } from "@/content/pages";
 import { practiceAreas } from "@/content/practice-areas";
+import { profilePageSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -64,6 +66,8 @@ export default function AboutPage() {
       </Section>
 
       <ContactCta />
+
+      <JsonLd data={profilePageSchema()} />
     </>
   );
 }

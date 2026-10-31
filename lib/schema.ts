@@ -8,7 +8,9 @@
  *
  * Every fact comes from content/lawyer.ts. Fields that are not known there are left out,
  * never guessed: no `geo` (coordinates are not known yet), no `openingHours` (the owner
- * chose not to publish working hours) and no `priceRange`.
+ * chose not to publish working hours) and no `priceRange`. Calculators carry no `offers`
+ * or "free" flag either: search engines can show it as «رایگان», which the site treats
+ * as promotional wording (CLAUDE.md §2.1, see tests/home.test.tsx).
  */
 import { lawyer } from "@/content/lawyer";
 import { practiceAreas } from "@/content/practice-areas";
@@ -99,6 +101,40 @@ export function siteGraph(): JsonLdData {
   return { "@context": CONTEXT, "@graph": [practice, person, licensingBody, website] };
 }
 
+export type BreadcrumbEntry = { name: string; href?: string };
+
+/** The trail at the top of a page. The last item is the page itself and may have no link. */
+export function breadcrumbSchema(items: readonly BreadcrumbEntry[]): JsonLdData {
+  return {
+    "@context": CONTEXT,
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      ...(item.href && { item: item.href }),
+    })),
+  };
+}
+
+/** The About page: the profile of the lawyer described in siteGraph. */
+export function profilePageSchema(): JsonLdData {
+  return {
+    "@context": CONTEXT,
+    "@type": "ProfilePage",
+    "@id": "/about#profile",
+    url: "/about",
+    inLanguage: "fa-IR",
+    isPartOf: { "@id": WEBSITE_ID },
+    mainEntity: {
+      ...lawyerRef,
+      jobTitle: lawyer.grade,
+      image: lawyer.photo.src,
+      ...(lawyer.bio && { description: lawyer.bio }),
+    },
+  };
+}
+
 export type FaqEntry = { q: string; a: string };
 
 function faqNode(items: readonly FaqEntry[]): JsonLdData {
@@ -131,8 +167,6 @@ export function toolSchema(tool: Tool, faq: readonly FaqEntry[] = []): JsonLdDat
     operatingSystem: "All",
     browserRequirements: "Requires JavaScript",
     inLanguage: "fa-IR",
-    isAccessibleForFree: true,
-    offers: { "@type": "Offer", price: "0", priceCurrency: "IRR" },
     provider: practiceRef,
     isPartOf: { "@id": WEBSITE_ID },
   };

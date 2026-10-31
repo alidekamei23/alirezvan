@@ -31,7 +31,7 @@ import {
   postHref,
 } from "@/lib/blog";
 import { toPersianDigits } from "@/lib/format";
-import { articleSchema } from "@/lib/schema";
+import { articleSchema, breadcrumbSchema } from "@/lib/schema";
 import { ALLOW_INDEXING, absoluteUrl } from "@/lib/seo";
 
 type Props = PageProps<"/blog/[slug]">;
@@ -235,18 +235,7 @@ export default async function BlogPostPage({ params }: Props) {
           section: area.title,
         })}
       />
-      <JsonLd
-        data={{
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          itemListElement: crumbs.map((crumb, index) => ({
-            "@type": "ListItem",
-            position: index + 1,
-            name: crumb.name,
-            item: crumb.href,
-          })),
-        }}
-      />
+      <JsonLd data={breadcrumbSchema(crumbs)} />
     </>
   );
 }

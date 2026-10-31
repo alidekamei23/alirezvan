@@ -15,7 +15,7 @@ import { NO_PARAMS, decodeSlug } from "@/lib/blog";
 import { cachedQuestionPage } from "@/lib/questions/cached";
 import { excerpt, markdownToPlain } from "@/lib/questions/core";
 import { displayNameOf, isoDate, questionHref } from "@/lib/questions/view";
-import { qaPageSchema } from "@/lib/schema";
+import { breadcrumbSchema, qaPageSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
 type Props = PageProps<"/porsesh/[slug]">;
@@ -135,16 +135,12 @@ export default async function QuestionPage({ params }: Props) {
         })}
       />
       <JsonLd
-        data={{
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          itemListElement: [
-            { "@type": "ListItem", position: 1, name: "خانه", item: "/" },
-            { "@type": "ListItem", position: 2, name: questionsCopy.heading, item: QUESTIONS_HREF },
-            { "@type": "ListItem", position: 3, name: categoryTitle, item: categoryHref },
-            { "@type": "ListItem", position: 4, name: question.title, item: url },
-          ],
-        }}
+        data={breadcrumbSchema([
+          { name: "خانه", href: "/" },
+          { name: questionsCopy.heading, href: QUESTIONS_HREF },
+          { name: categoryTitle, href: categoryHref },
+          { name: question.title, href: url },
+        ])}
       />
     </>
   );

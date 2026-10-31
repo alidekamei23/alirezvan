@@ -4,7 +4,6 @@ import { MessageCircleQuestion, Search } from "lucide-react";
 import { Button } from "@/components/Button";
 import { EmptyState } from "@/components/EmptyState";
 import { FieldLabel, controlClasses } from "@/components/Field";
-import { JsonLd } from "@/components/JsonLd";
 import { LinkButton } from "@/components/LinkButton";
 import { PageHeader } from "@/components/PageHeader";
 import { Pagination } from "@/components/Pagination";
@@ -185,16 +184,6 @@ export default async function QuestionsPage({ searchParams }: Props) {
         </div>
       </Section>
 
-      <JsonLd
-        data={{
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          itemListElement: [
-            { "@type": "ListItem", position: 1, name: "خانه", item: "/" },
-            { "@type": "ListItem", position: 2, name: questionsCopy.heading, item: QUESTIONS_HREF },
-          ],
-        }}
-      />
     </>
   );
 }

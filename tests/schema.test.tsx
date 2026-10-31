@@ -1,5 +1,7 @@
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { jsonLdString } from "@/components/JsonLd";
+import { PageHeader } from "@/components/PageHeader";
 import { lawyer } from "@/content/lawyer";
 import { toolList, tools } from "@/content/tools";
 import {
@@ -7,7 +9,9 @@ import {
   LICENSING_BODY_ID,
   PRACTICE_ID,
   articleSchema,
+  breadcrumbSchema,
   faqPageSchema,
+  profilePageSchema,
   qaPageSchema,
   siteGraph,
   toolSchema,
@@ -65,7 +69,7 @@ describe("site graph", () => {
 });
 
 describe("tool schema", () => {
-  it("describes every calculator as a free WebApplication", () => {
+  it("describes every calculator as a WebApplication", () => {
     for (const tool of toolList) {
       const [app] = graph(toolSchema(tool));
       expect(app["@type"]).toBe("WebApplication");
@@ -74,6 +78,9 @@ describe("tool schema", () => {
       expect(app.operatingSystem).toBe("All");
       expect(["BusinessApplication", "FinanceApplication"]).toContain(app.applicationCategory);
       expect(app.provider).toEqual({ "@id": `${SITE_URL}${PRACTICE_ID}` });
+      // Search engines can show these as «رایگان», a promotional word on this site.
+      expect(app).not.toHaveProperty("offers");
+      expect(app).not.toHaveProperty("isAccessibleForFree");
     }
   });
 
@@ -163,5 +170,46 @@ describe("FAQ schema", () => {
       "@type": "FAQPage",
       mainEntity: [{ "@type": "Question", name: "الف؟", acceptedAnswer: { "@type": "Answer", text: "ب." } }],
     });
+  });
+});
+
+describe("breadcrumb schema", () => {
+  it("numbers the trail and links every item that has a link", () => {
+    const list = render(breadcrumbSchema([{ name: "خانه", href: "/" }, { name: "ابزارها", href: "/tools" }, { name: "دیه" }]));
+    expect(list["@type"]).toBe("BreadcrumbList");
+    expect(list.itemListElement).toEqual([
+      { "@type": "ListItem", position: 1, name: "خانه", item: `${SITE_URL}/` },
+      { "@type": "ListItem", position: 2, name: "ابزارها", item: `${SITE_URL}/tools` },
+      { "@type": "ListItem", position: 3, name: "دیه" },
+    ]);
+  });
+
+  it("is emitted by PageHeader once, with the same trail it shows", () => {
+    const html = renderToStaticMarkup(
+      <PageHeader title="عنوان" crumbs={[{ label: "ابزارها", href: "/tools" }, { label: "دیه" }]} />,
+    );
+    const scripts = [...html.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/g)];
+    expect(scripts).toHaveLength(1);
+    const list = JSON.parse(scripts[0][1]) as Node;
+    expect((list.itemListElement as Node[]).map((item) => item.name)).toEqual(["خانه", "ابزارها", "دیه"]);
+  });
+});
+
+describe("profile page schema", () => {
+  const profile = render(profilePageSchema());
+
+  it("makes the lawyer the subject of the About page", () => {
+    expect(profile["@type"]).toBe("ProfilePage");
+    expect(profile.url).toBe(`${SITE_URL}/about`);
+    expect(profile.mainEntity).toMatchObject({
+      "@type": "Person",
+      "@id": `${SITE_URL}${LAWYER_ID}`,
+      name: lawyer.name,
+      jobTitle: lawyer.grade,
+    });
+  });
+
+  it("adds a description only once the lawyer has supplied a bio", () => {
+    expect(Boolean((profile.mainEntity as Node).description)).toBe(Boolean(lawyer.bio));
   });
 });
