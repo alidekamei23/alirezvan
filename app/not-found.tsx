@@ -1,37 +1,17 @@
-import { CallButton } from "@/components/CallButton";
-import { Container } from "@/components/Container";
-import { LinkButton } from "@/components/LinkButton";
+import { NotFoundContent } from "@/components/NotFoundContent";
 import { SiteShell } from "@/components/SiteShell";
-import { blogCopy, notFoundCopy } from "@/content/pages";
-import { blogHref } from "@/lib/blog";
+import { NOT_FOUND_METADATA } from "@/lib/seo";
 
-export const metadata = { title: notFoundCopy.heading };
+export const metadata = NOT_FOUND_METADATA;
 
 // Shown for every unknown address. It sits above the "(site)" layout, so it brings the
 // public frame itself. Replaces the framework default page, which is in English and
-// turns black when the device is in dark mode.
+// turns black when the device is in dark mode. A notFound() inside a public page uses
+// app/(site)/not-found.tsx instead, which is already inside that frame.
 export default function NotFound() {
   return (
     <SiteShell>
-      <div className="border-b border-line bg-surface py-16 md:py-24">
-        <Container>
-          <div className="max-w-reading">
-            <h1 className="text-3xl font-black text-ink">
-              {notFoundCopy.heading}
-            </h1>
-            <p className="mt-4 text-lg text-ink">{notFoundCopy.text}</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <LinkButton href="/" size="lg">
-                {notFoundCopy.home}
-              </LinkButton>
-              <LinkButton href={blogHref()} variant="secondary" size="lg">
-                {blogCopy.heading}
-              </LinkButton>
-              <CallButton variant="ghost" size="lg" />
-            </div>
-          </div>
-        </Container>
-      </div>
+      <NotFoundContent />
     </SiteShell>
   );
 }

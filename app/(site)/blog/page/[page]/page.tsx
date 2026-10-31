@@ -4,7 +4,7 @@ import { blogCopy } from "@/content/pages";
 import { NO_PARAMS, blogHref, getAllPosts } from "@/lib/blog";
 import { toPersianDigits } from "@/lib/format";
 import { pageCount, parsePageParam } from "@/lib/pagination";
-import { pageMetadata } from "@/lib/seo";
+import { NOT_FOUND_METADATA, pageMetadata } from "@/lib/seo";
 
 type Props = PageProps<"/blog/page/[page]">;
 
@@ -17,7 +17,8 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props) {
   const page = parsePageParam((await params).page);
-  if (!page) return {};
+  // Past the last page, BlogIndex answers 404; the title must say so too.
+  if (!page || page > pageCount((await getAllPosts()).length)) return NOT_FOUND_METADATA;
   return pageMetadata({
     title: `${blogCopy.heading}، صفحه ${toPersianDigits(page)}`,
     description: blogCopy.metaDescription,
@@ -25,9 +26,10 @@ export async function generateMetadata({ params }: Props) {
   });
 }
 
-// The page waits for the URL before rendering, so an unknown address gets a real 404
-// status. `instant = false` tells Next.js that blocking here is intended.
-export const instant = false;
+// Fully static: an address that was not prerendered is rendered whole before anything is
+// sent, so an unknown one gets a real 404 status. Without this, Next.js first streams the
+// prerendered fallback shell with status 200 and the 404 arrives only inside the page.
+export const ensureStatic = "navigation";
 
 export default async function BlogPagedPage({ params }: Props) {
   const { page: pageParam } = await params;

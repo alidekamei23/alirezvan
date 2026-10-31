@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { lawyer } from "@/content/lawyer";
+import { notFoundCopy } from "@/content/pages";
 
 /** Public origin, without a trailing slash. */
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(
@@ -54,3 +55,10 @@ export function pageMetadata({
     },
   };
 }
+
+/**
+ * Metadata of the «صفحه پیدا نشد» page. app/not-found.tsx exports it, and a page whose
+ * generateMetadata finds nothing returns it: the not-found file inside "(site)" may not
+ * export metadata, so without this the tab would show the site's default title.
+ */
+export const NOT_FOUND_METADATA: Metadata = { title: notFoundCopy.heading };

@@ -18,7 +18,7 @@ import { areaForQuestionCategory, questionCategoryHref, toolsForQuestionCategory
 import { excerpt, markdownToPlain } from "@/lib/questions/core";
 import { displayNameOf, isoDate, questionHref } from "@/lib/questions/view";
 import { breadcrumbSchema, qaPageSchema } from "@/lib/schema";
-import { pageMetadata } from "@/lib/seo";
+import { NOT_FOUND_METADATA, pageMetadata } from "@/lib/seo";
 
 type Props = PageProps<"/porsesh/[slug]">;
 
@@ -30,7 +30,9 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const page = await cachedQuestionPage(decodeSlug((await params).slug));
-  if (page.kind !== "question") return {};
+  // A redirect answers before anything renders, so it needs no metadata.
+  if (page.kind === "redirect") return {};
+  if (page.kind !== "question") return NOT_FOUND_METADATA;
   const { question } = page;
   const description =
     question.metaDescription || excerpt(markdownToPlain(question.answer), 155) || excerpt(question.body, 155);
@@ -42,9 +44,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { ...base, openGraph: { ...base.openGraph, type: "article" } };
 }
 
-// The page waits for the URL before rendering, so an unknown address gets a real 404
-// status. `instant = false` tells Next.js that blocking here is intended.
-export const instant = false;
+// Fully static: an address that was not prerendered is rendered whole before anything is
+// sent, so an unknown one gets a real 404 status. Without this, Next.js first streams the
+// prerendered fallback shell with status 200 and the 404 arrives only inside the page.
+export const ensureStatic = "navigation";
 
 export default async function QuestionPage({ params }: Props) {
   const slug = decodeSlug((await params).slug);

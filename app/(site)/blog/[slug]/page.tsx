@@ -35,7 +35,7 @@ import {
 import { toPersianDigits } from "@/lib/format";
 import { toolsForArea } from "@/lib/links";
 import { articleSchema, breadcrumbSchema } from "@/lib/schema";
-import { ALLOW_INDEXING, absoluteUrl } from "@/lib/seo";
+import { ALLOW_INDEXING, NOT_FOUND_METADATA, absoluteUrl } from "@/lib/seo";
 
 type Props = PageProps<"/blog/[slug]">;
 
@@ -48,7 +48,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPostBySlug(decodeSlug((await params).slug));
-  if (!post) return {};
+  if (!post) return NOT_FOUND_METADATA;
   const title = post.seoTitle || post.title;
   const url = absoluteUrl(postHref(post));
   const image = {
@@ -84,9 +84,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// The page waits for the URL before rendering, so an unknown address gets a real 404
-// status. `instant = false` tells Next.js that blocking here is intended.
-export const instant = false;
+// Fully static: an address that was not prerendered is rendered whole before anything is
+// sent, so an unknown one gets a real 404 status. Without this, Next.js first streams the
+// prerendered fallback shell with status 200 and the 404 arrives only inside the page.
+export const ensureStatic = "navigation";
 
 export default async function BlogPostPage({ params }: Props) {
   const post = await getPostBySlug(decodeSlug((await params).slug));
