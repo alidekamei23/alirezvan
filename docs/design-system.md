@@ -171,7 +171,8 @@ Don't
 - [ ] The whole page works with the keyboard alone; focus is always visible; the mobile
       menu traps focus and Escape closes it.
 - [ ] Images have width and height (no layout shift) and meaningful or empty `alt`.
-- [ ] No horizontal page scroll at 360px. Wide tables scroll inside `Table`.
+- [ ] No horizontal page scroll at 360px. Wide tables scroll inside `Table`, or turn into
+      cards below 35rem of width with `Table stacked`.
 - [ ] Messages that appear after an action use `Alert live` or `Toast`.
 
 ## 6. Checks

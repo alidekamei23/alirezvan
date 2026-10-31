@@ -1,13 +1,13 @@
 "use client";
 // CopyButton — copies a calculator result as plain text and confirms with a toast.
 // `text` must already include the estimate disclaimer.
-// Usage: <CopyButton text={summary} />
+// Usage: <CopyButton text={summary} /> (`label` defaults to «کپی نتیجه»)
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/Button";
 import { useToast } from "@/components/Toast";
 
-export function CopyButton({ text }: { text: string }) {
+export function CopyButton({ text, label = "کپی نتیجه" }: { text: string; label?: string }) {
   const toast = useToast();
   const [copied, setCopied] = useState(false);
 
@@ -24,7 +24,7 @@ export function CopyButton({ text }: { text: string }) {
 
   return (
     <Button variant="secondary" icon={copied ? <Check /> : <Copy />} onClick={copy}>
-      {copied ? "کپی شد" : "کپی نتیجه"}
+      {copied ? "کپی شد" : label}
     </Button>
   );
 }
