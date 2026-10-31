@@ -5,12 +5,14 @@ export type ToolSlug =
   | "dastmozd-karshenasi"
   | "sahm-ol-ers"
   | "haghol-vekale"
-  | "mohlat";
+  | "mohlat"
+  | "diyeh";
 
 /** Sections of the /tools page, in display order. */
 export const toolGroups = [
   { id: "procedure", title: "دادرسی و مهلت‌ها" },
   { id: "debt", title: "طلب و دعاوی مالی" },
+  { id: "injury", title: "دیه و صدمات بدنی" },
   { id: "family", title: "خانواده و ارث" },
   { id: "fees", title: "هزینه وکیل و کارشناس" },
 ] as const;
@@ -80,6 +82,14 @@ export const tools: Record<ToolSlug, Tool> = {
     title: "محاسبه مهلت‌های قانونی",
     // TODO: lawyer review
     summary: "آخرین روز مهلت تجدیدنظر، واخواهی، فرجام و اعتراض با لحاظ تعطیلات رسمی",
+  },
+  diyeh: {
+    slug: "diyeh",
+    href: "/tools/diyeh",
+    group: "injury",
+    title: "محاسبه دیه",
+    // TODO: lawyer review
+    summary: "برآورد دیه قتل، اعضا، منافع و جراحات، سهم صندوق خسارت‌های بدنی و اقساط پرداخت",
   },
 };
 

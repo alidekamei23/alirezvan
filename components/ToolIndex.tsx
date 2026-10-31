@@ -10,6 +10,7 @@ import {
   ChevronLeft,
   ClipboardCheck,
   Gem,
+  HeartPulse,
   Landmark,
   TrendingUp,
   Users,
@@ -25,6 +26,7 @@ const ICONS: Record<ToolSlug, LucideIcon> = {
   "haghol-vekale": Briefcase,
   "dastmozd-karshenasi": ClipboardCheck,
   mohlat: CalendarClock,
+  diyeh: HeartPulse,
 };
 
 export function ToolIndex({ tools }: { tools: Tool[] }) {

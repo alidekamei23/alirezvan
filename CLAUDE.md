@@ -92,6 +92,7 @@ app/
   tools/sahm-ol-ers/         # inheritance-share calculator (engine in lib/ers)
   tools/haghol-vekale/       # lawyer fee and tax stamp, 1398 tariff (data and logic in lib/vekalat)
   tools/mohlat/              # legal deadlines with official holidays (data and logic in lib/mohlat)
+  tools/diyeh/               # diyeh of killing, organs, benefits and wounds (engine in lib/diyeh)
   porsesh/                   # Q&A: list, [slug] question, bepors (ask), peygiri (track; noindex)
   blog/page.tsx              # blog index (page 1); blog/page/[page] for pages 2..N
   blog/topic/[area]/         # posts of one practice area, with the same pagination
