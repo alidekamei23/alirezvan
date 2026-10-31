@@ -32,7 +32,7 @@ export type PracticeArea = {
 
 /*
  * TODO: lawyer review — every `intro`, `steps` and `faqs` text below is a draft written
- * without legal review. The copy is exported to review/hubs.md (`npm run review:hubs`).
+ * without legal review. The copy is exported to review/site-copy.md (`npm run review:copy`).
  * Drafting rules: describe the usual route in general terms, give no deadlines, amounts
  * or article numbers, and promise no outcome.
  */

@@ -17,7 +17,7 @@
     "unlock-login": "node --experimental-strip-types --no-warnings scripts/unlock-login.ts",
     "uploads:clean": "node --experimental-strip-types --no-warnings scripts/clean-uploads.ts",
     "revoke-sessions": "node --experimental-strip-types --no-warnings scripts/revoke-sessions.ts",
-    "review:hubs": "node --experimental-strip-types --no-warnings scripts/export-review.ts",
+    "review:copy": "node --experimental-strip-types --no-warnings scripts/export-review.ts",
     "blog:cover": "node scripts/blog-cover.mjs"
   },
   "dependencies": {

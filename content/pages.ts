@@ -1,6 +1,6 @@
 /*
  * Copy for fixed pages (Home, About, Contact). Kept here, not in the page files, so it
- * can be exported for the lawyer's review with `npm run review:hubs`.
+ * can be exported for the lawyer's review with `npm run review:copy`.
  * TODO: lawyer review — everything in this file is a draft.
  */
 

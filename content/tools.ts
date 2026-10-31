@@ -102,3 +102,7 @@ export const homeTools: Tool[] = (
 
 /** The page that lists every tool. */
 export const TOOLS_INDEX_HREF = "/tools";
+
+// TODO: lawyer review
+export const TOOLS_INDEX_LEAD =
+  "برای برآورد مبلغ‌های رایج در پرونده‌های حقوقی، ابزار مربوط را انتخاب کنید. محاسبه در مرورگر خود شما انجام می‌شود و اطلاعاتی ارسال یا ذخیره نمی‌شود.";

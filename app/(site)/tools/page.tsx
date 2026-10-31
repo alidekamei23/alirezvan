@@ -3,7 +3,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Section } from "@/components/Section";
 import { ToolIndex } from "@/components/ToolIndex";
 import { ESTIMATE_DISCLAIMER } from "@/content/legal";
-import { TOOLS_INDEX_HREF, toolGroups, toolList } from "@/content/tools";
+import { TOOLS_INDEX_HREF, TOOLS_INDEX_LEAD, toolGroups, toolList } from "@/content/tools";
 import { toPersianDigits } from "@/lib/format";
 import { pageMetadata } from "@/lib/seo";
 
@@ -20,8 +20,7 @@ export default function Page() {
     <>
       <PageHeader
         title={TITLE}
-        // TODO: lawyer review
-        lead="برای برآورد مبلغ‌های رایج در پرونده‌های حقوقی، ابزار مربوط را انتخاب کنید. محاسبه در مرورگر خود شما انجام می‌شود و اطلاعاتی ارسال یا ذخیره نمی‌شود."
+        lead={TOOLS_INDEX_LEAD}
         crumbs={[{ label: TITLE }]}
       >
         <p className="mt-4 border-s-4 border-estimate-line ps-4 text-sm text-muted">

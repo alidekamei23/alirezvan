@@ -82,10 +82,7 @@ export async function PracticeHub({ area }: { area: PracticeArea }) {
       </Section>
 
       <Section id="questions" tone="surface" title={`پرسش و پاسخ ${area.title}`}>
-        <p className="max-w-reading text-ink">
-          پرسش‌هایی که دیگران در این حوزه پرسیده‌اند و پاسخ وکیل را بخوانید، یا سؤال خود را
-          بدون ثبت‌نام بپرسید.
-        </p>
+        <p className="max-w-reading text-ink">{questionsCopy.hubLead}</p>
         <div className="mt-6 flex flex-wrap gap-3">
           <LinkButton href={questionCategoryHref(area.slug)} variant="secondary">
             پرسش‌های {area.title}
