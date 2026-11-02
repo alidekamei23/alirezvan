@@ -52,7 +52,7 @@ import { ToastDemo } from "./ToastDemo";
 
 export const metadata = { title: "سیستم طراحی (داخلی)", robots: { index: false, follow: false } };
 
-const emerald = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+const scale = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
 
 const semantic = [
   "page",
@@ -145,9 +145,16 @@ export default async function DesignSystemPage() {
       </p>
 
       <Block title="رنگ">
+        <Sub title="Iris (brand)">
+          <Grid cols={4}>
+            {scale.map((step) => (
+              <Swatch key={step} name={`iris-${step}`} />
+            ))}
+          </Grid>
+        </Sub>
         <Sub title="Emerald">
           <Grid cols={4}>
-            {emerald.map((step) => (
+            {scale.map((step) => (
               <Swatch key={step} name={`emerald-${step}`} />
             ))}
           </Grid>

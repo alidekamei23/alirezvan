@@ -45,8 +45,8 @@ export const viewport: Viewport = {
   // Lets the page use the whole screen on notched phones; the gutters and the sticky
   // bar then add the safe-area insets themselves (see app/globals.css).
   viewportFit: "cover",
-  // emerald-700, the primary token in app/globals.css
-  themeColor: "#047857",
+  // iris-700, the primary token in app/globals.css
+  themeColor: "#5752b4",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

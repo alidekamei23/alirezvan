@@ -18,8 +18,8 @@ Style: premium corporate editorial photograph, as in a top international law fir
 A modern, elegant law office: clean lines, glass, light stone or walnut, high-end minimal decor.
 Soft natural daylight, shallow depth of field, sharp focus on the subject. Formal, professional,
 no home or casual setting and no culture-specific objects.
-Colour palette: warm off-white and cream (#FAF8F5, #F3F0EA), deep emerald green accents
-(#047857, #064E3B), muted charcoal (#1F2933). Low contrast, no neon, no heavy saturation.
+Colour palette: cool off-white and pale lavender-grey (#F9F9FC, #F0F0F7), deep violet-blue accents
+(#5752B4, #33306F), muted charcoal (#1F202D). Low contrast, no neon, no heavy saturation.
 Composition: wide 16:9 landscape, main subject slightly off-centre with empty space around it,
 nothing important near the edges (the site crops the image to 16:10).
 
