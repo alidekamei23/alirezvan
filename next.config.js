@@ -24,6 +24,9 @@ const nextConfig = {
   },
   // Liara runs the standalone server (its build sets this anyway).
   output: "standalone",
+  // AVIF first (smaller than WebP for the same look), WebP for browsers without it. Each
+  // size is encoded once, on its first request, and then served from the image cache.
+  images: { formats: ["image/avif", "image/webp"] },
   // Read from disk at runtime (posts, migrations), so file tracing cannot find them.
   outputFileTracingIncludes: {
     "/**": ["./content/blog/**/*", "./db/migrations/**/*"],
@@ -53,8 +56,9 @@ const nextConfig = {
   },
 };
 
-// Blog posts are MDX files in content/blog, loaded with dynamic imports (lib/blog.ts).
-// Plugins are named as strings so Turbopack can load them.
+// MDX support (mdx-components.tsx). Blog posts no longer go through it: lib/blog.ts reads
+// the Markdown files in content/blog at runtime. Plugins are named as strings so
+// Turbopack can load them.
 const withMDX = createMDX({
   options: {
     remarkPlugins: ["remark-gfm"],

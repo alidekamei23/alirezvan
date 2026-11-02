@@ -2,8 +2,8 @@ import { notFound } from "next/navigation";
 import { BlogIndex } from "@/components/BlogIndex";
 import { blogCopy } from "@/content/pages";
 import { getPracticeArea, practiceAreas } from "@/content/practice-areas";
-import { blogHref, isAreaSlug } from "@/lib/blog";
-import { NOT_FOUND_METADATA, pageMetadata } from "@/lib/seo";
+import { blogHref, getPostsByArea, isAreaSlug } from "@/lib/blog";
+import { NOINDEX_FOLLOW, NOT_FOUND_METADATA, pageMetadata } from "@/lib/seo";
 
 type Props = PageProps<"/blog/topic/[area]">;
 
@@ -15,11 +15,14 @@ export async function generateMetadata({ params }: Props) {
   const { area } = await params;
   if (!isAreaSlug(area)) return NOT_FOUND_METADATA;
   const title = getPracticeArea(area).title;
-  return pageMetadata({
+  const metadata = pageMetadata({
     title: `${blogCopy.heading}: ${title}`,
     description: `مقاله‌های حقوقی درباره ${title}، نوشته علی رضوان، عضو کانون وکلای دادگستری مرکز.`,
     path: blogHref(area),
   });
+  // A topic with no posts yet shows only an empty state: nothing for search results.
+  const hasPosts = (await getPostsByArea(area)).length > 0;
+  return hasPosts ? metadata : { ...metadata, robots: NOINDEX_FOLLOW };
 }
 
 // Fully static: an address that was not prerendered is rendered whole before anything is

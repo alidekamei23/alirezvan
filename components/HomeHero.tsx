@@ -48,6 +48,7 @@ export function HomeHero() {
             <span className="block text-3xl font-black text-ink max-md:text-on-inverse">
               {lawyer.name}
             </span>
+            {/* Not drawn between the two lines; keeps the heading's text «name grade», not «namegrade». */}{" "}
             <span className="mt-1 block text-xl font-medium text-primary max-md:text-base max-md:text-on-inverse-muted">
               {lawyer.grade}
             </span>

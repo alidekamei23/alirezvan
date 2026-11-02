@@ -2,10 +2,12 @@
 // every calculator page sends in its first HTML: metadata, schema, hub links and the
 // legal notes.
 import { renderToStaticMarkup } from "react-dom/server";
+import { prerender } from "react-dom/static";
 import { beforeAll, describe, expect, it } from "vitest";
 import { practiceAreas } from "@/content/practice-areas";
 import { questionCategories } from "@/content/question-categories";
 import { toolList, tools, type ToolSlug } from "@/content/tools";
+import { getAllPosts, postHref } from "@/lib/blog";
 import {
   areaForQuestionCategory,
   areasForTool,
@@ -141,7 +143,8 @@ describe("calculator pages", { timeout: 30_000 }, () => {
   for (const tool of toolList) {
     it(`renders ${tool.slug} with its schema, hub links and legal notes in the HTML`, async () => {
       const Page = (await pages[tool.slug]()).default;
-      const html = renderToStaticMarkup(<Page />);
+      // prerender, not renderToStaticMarkup: the related-posts band is an async component.
+      const html = await new Response((await prerender(<Page />)).prelude).text();
 
       const schemas = [...html.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/g)].map(
         (match) => JSON.parse(match[1]) as { "@type"?: string; "@graph"?: { "@type": string; url?: string }[] },
@@ -158,6 +161,13 @@ describe("calculator pages", { timeout: 30_000 }, () => {
       for (const other of relatedToolsFor(tool.slug)) {
         expect(html).toContain(`href="${other.href}"`);
       }
+      // The latest posts of those hubs, when they have any.
+      const hubs = new Set<string>(areasForTool(tool.slug).map((area) => area.slug));
+      const posts = (await getAllPosts()).filter((post) => hubs.has(post.area)).slice(0, 3);
+      for (const post of posts) {
+        expect(html).toContain(`href="${postHref(post)}"`);
+      }
+      expect(html.includes('id="posts"')).toBe(posts.length > 0);
     });
   }
 });

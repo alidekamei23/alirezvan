@@ -203,8 +203,11 @@ export function articleSchema(post: {
   };
 }
 
-/** A published question with the lawyer's answer. */
-export function qaPageSchema(question: {
+/**
+ * A published question with the lawyer's answer. FAQPage, not QAPage: Google keeps QAPage
+ * for pages where visitors can post answers of their own, and here only the lawyer answers.
+ */
+export function questionPageSchema(question: {
   title: string;
   body: string;
   href: string;
@@ -215,24 +218,27 @@ export function qaPageSchema(question: {
 }): JsonLdData {
   return {
     "@context": CONTEXT,
-    "@type": "QAPage",
-    "@id": `${question.href}#qa`,
+    "@type": "FAQPage",
+    "@id": `${question.href}#faq`,
+    url: question.href,
     inLanguage: "fa-IR",
     isPartOf: { "@id": WEBSITE_ID },
-    mainEntity: {
-      "@type": "Question",
-      name: question.title,
-      text: question.body,
-      answerCount: 1,
-      datePublished: question.publishedAt,
-      author: { "@type": "Person", name: question.askedBy },
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: question.answer,
-        datePublished: question.answeredAt,
-        url: question.href,
-        author: { ...lawyerRef, jobTitle: lawyer.grade },
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: question.title,
+        text: question.body,
+        answerCount: 1,
+        datePublished: question.publishedAt,
+        author: { "@type": "Person", name: question.askedBy },
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: question.answer,
+          datePublished: question.answeredAt,
+          url: question.href,
+          author: { ...lawyerRef, jobTitle: lawyer.grade },
+        },
       },
-    },
+    ],
   };
 }

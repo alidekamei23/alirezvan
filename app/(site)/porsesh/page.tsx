@@ -15,7 +15,7 @@ import { cn } from "@/lib/cn";
 import { toPersianDigits } from "@/lib/format";
 import { cachedQuestionList } from "@/lib/questions/cached";
 import { PUBLIC_PAGE_SIZE } from "@/lib/questions/public";
-import { ALLOW_INDEXING, pageMetadata } from "@/lib/seo";
+import { NOINDEX_FOLLOW, pageMetadata, pagedDescription } from "@/lib/seo";
 
 type Props = PageProps<"/porsesh">;
 
@@ -53,11 +53,13 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     .join(" - ");
   const metadata = pageMetadata({
     title,
-    description: questionsCopy.metaDescription,
+    description: pagedDescription(questionsCopy.metaDescription, page),
     path: listHref({ category, page }),
   });
-  // Search results are not pages of their own for search engines.
-  return q ? { ...metadata, robots: { index: false, follow: ALLOW_INDEXING } } : metadata;
+  // Search results are not pages of their own for search engines, and neither is an
+  // empty list (a category with no published questions yet, or a page past the last).
+  const { items } = await cachedQuestionList({ q, category, page });
+  return q || items.length === 0 ? { ...metadata, robots: NOINDEX_FOLLOW } : metadata;
 }
 
 // The page reads the query string before rendering. `instant = false` tells Next.js that
