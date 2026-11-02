@@ -4,7 +4,10 @@
 // Layout (what shows at which width) is checked in the browser, not here.
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import { AuthorBox } from "@/components/AuthorBox";
+import { Footer } from "@/components/Footer";
 import { HomeHero } from "@/components/HomeHero";
+import { LawyerCard } from "@/components/LawyerCard";
 import { LicenseStrip } from "@/components/LicenseStrip";
 import { PracticeTiles } from "@/components/PracticeTiles";
 import { ScrollCue } from "@/components/ScrollCue";
@@ -59,8 +62,10 @@ describe("LicenseStrip", () => {
   });
 
   it("shows the license number in Persian digits only", () => {
-    expect(html).toContain(toPersianDigits(lawyer.licenseNumber));
-    expect(html).not.toContain(lawyer.licenseNumber);
+    // Visible text only: the lookup link's address keeps its Latin digits.
+    const text = html.replace(/<[^>]*>/g, "");
+    expect(text).toContain(toPersianDigits(lawyer.licenseNumber));
+    expect(text).not.toContain(lawyer.licenseNumber);
   });
 
   it("contains no restricted wording", () => {
@@ -92,4 +97,26 @@ describe("ScrollCue", () => {
     expect(html).toContain('href="#tools"');
     expect(html).toContain("ابزارهای محاسبه و بیشتر");
   });
+});
+
+// CLAUDE.md §2.1: wherever the license number is shown, the official lookup is one click away.
+describe("license lookup link", () => {
+  const places = { LicenseStrip, LawyerCard, Footer, AuthorBox };
+
+  it("has the address of this license in the licensing body's directory", () => {
+    expect(lawyer.licenseLookupUrl).toBe(`https://icbar.ir/fa/directory/${lawyer.licenseNumber}`);
+  });
+
+  for (const [name, Component] of Object.entries(places)) {
+    it(`sits next to the license number in ${name}, opening in a new tab`, () => {
+      const html = renderToStaticMarkup(<Component />);
+      expect(html).toContain(toPersianDigits(lawyer.licenseNumber));
+      const start = html.lastIndexOf("<a", html.indexOf(`href="${lawyer.licenseLookupUrl}"`));
+      const link = html.slice(start, html.indexOf("</a>", start));
+      expect(start).toBeGreaterThanOrEqual(0);
+      expect(link).toContain('target="_blank"');
+      expect(link).toContain('rel="noopener noreferrer"');
+      expect(link).toContain("استعلام پروانه");
+    });
+  }
 });

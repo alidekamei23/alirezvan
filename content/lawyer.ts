@@ -12,8 +12,14 @@ export const lawyer = {
   /** Emblem of the licensing body, on a white background. */
   licensingBodyLogo: { src: "/images/kanoon-markaz.webp", width: 320, height: 395 },
   licenseNumber: "40949",
-  // TODO(lawyer): URL of the official license-lookup page
-  licenseLookupUrl: null as string | null,
+  /** Home page of the licensing body (schema.org `url` of the organisation). */
+  licensingBodyUrl: "https://icbar.ir",
+  /**
+   * This license in the licensing body's own directory. Shown as «استعلام پروانه» next to
+   * the number, and given to search engines as the lawyer's `sameAs`. The page shows the
+   * grade the Bar has on record (today «کارآموز»).
+   */
+  licenseLookupUrl: "https://icbar.ir/fa/directory/40949" as string | null,
 
   // TODO(lawyer): short bio, education, more photos
   bio: null as string | null,

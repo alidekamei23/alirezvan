@@ -1,7 +1,8 @@
-// AuthorBox — the author of a blog post: photo, name, grade, license number and a link
-// to the About page. Usage: <AuthorBox />
+// AuthorBox — the author of a blog post: photo, name, grade, license number, a link to the
+// About page and the license lookup on the licensing body's site. Usage: <AuthorBox />
 import Image from "next/image";
 import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 import { Ltr } from "@/components/Ltr";
 import { lawyer } from "@/content/lawyer";
 import { toPersianDigits } from "@/lib/format";
@@ -32,6 +33,17 @@ export function AuthorBox() {
         <p className="text-muted">
           {lawyer.grade}، شماره پروانه <Ltr>{toPersianDigits(lawyer.licenseNumber)}</Ltr>
         </p>
+        {lawyer.licenseLookupUrl && (
+          <a
+            href={lawyer.licenseLookupUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-11 items-center gap-1.5 font-semibold text-primary underline underline-offset-4 hover:text-primary-hover"
+          >
+            استعلام پروانه
+            <ExternalLink aria-hidden="true" className="size-4" />
+          </a>
+        )}
       </div>
     </aside>
   );
