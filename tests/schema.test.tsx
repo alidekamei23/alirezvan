@@ -58,7 +58,15 @@ describe("site graph", () => {
     expect(person.hasCredential).toMatchObject({
       identifier: lawyer.licenseNumber,
       recognizedBy: { "@id": `${SITE_URL}${LICENSING_BODY_ID}` },
+      url: lawyer.licenseLookupUrl,
     });
+  });
+
+  it("points the lawyer to the license lookup, and the licensing body to its own site", () => {
+    const body = byType(nodes, "Organization");
+    expect(person.sameAs).toEqual([lawyer.licenseLookupUrl]);
+    expect(body.url).toBe(lawyer.licensingBodyUrl);
+    expect(body.url).not.toBe(lawyer.licenseLookupUrl);
   });
 
   it("leaves out facts that content/lawyer.ts does not have", () => {

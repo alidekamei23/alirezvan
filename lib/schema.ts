@@ -42,7 +42,7 @@ export function siteGraph(): JsonLdData {
     "@id": LICENSING_BODY_ID,
     name: lawyer.licensingBody,
     logo: { "@type": "ImageObject", url: lawyer.licensingBodyLogo.src },
-    ...(lawyer.licenseLookupUrl && { url: lawyer.licenseLookupUrl }),
+    url: lawyer.licensingBodyUrl,
   };
 
   const person = {
@@ -55,11 +55,14 @@ export function siteGraph(): JsonLdData {
     telephone: lawyer.phone.tel,
     worksFor: practiceRef,
     memberOf: { "@id": LICENSING_BODY_ID },
+    // The licensing body's page for this license: the same person, confirmed by the Bar.
+    ...(lawyer.licenseLookupUrl && { sameAs: [lawyer.licenseLookupUrl] }),
     hasCredential: {
       "@type": "EducationalOccupationalCredential",
       name: lawyer.grade,
       identifier: lawyer.licenseNumber,
       recognizedBy: { "@id": LICENSING_BODY_ID },
+      ...(lawyer.licenseLookupUrl && { url: lawyer.licenseLookupUrl }),
     },
     knowsAbout: practiceAreas.map((area) => area.title),
   };
