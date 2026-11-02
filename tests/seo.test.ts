@@ -90,6 +90,24 @@ describe("seo helpers", () => {
     expect(topic3.alternates?.canonical).toBe("/blog/topic/check-safte/page/3");
   });
 
+  it("numbers the description of page 2 onward and leaves page 1 alone", async () => {
+    const { seo } = await load({});
+    expect(seo.pagedDescription("مقاله‌های حقوقی.", 1)).toBe("مقاله‌های حقوقی.");
+    expect(seo.pagedDescription("مقاله‌های حقوقی.", 2)).toBe("مقاله‌های حقوقی. صفحه ۲.");
+  });
+
+  it("keeps a blog topic out of search results only while it has no posts", { timeout: 30_000 }, async () => {
+    const { seo } = await load({ indexing: "true" });
+    const topic = await import("@/app/(site)/blog/topic/[area]/page");
+    const { getPostsByArea } = await import("@/lib/blog");
+    const { practiceAreas } = await import("@/content/practice-areas");
+    for (const area of practiceAreas) {
+      const metadata = await topic.generateMetadata({ params: Promise.resolve({ area: area.slug }) } as never);
+      const empty = (await getPostsByArea(area.slug)).length === 0;
+      expect(metadata.robots).toEqual(empty ? seo.NOINDEX_FOLLOW : undefined);
+    }
+  });
+
   it("never builds a page-1 URL", () => {
     expect(blogHref(null, 1)).toBe("/blog");
     expect(blogHref("check-safte", 1)).toBe("/blog/topic/check-safte");

@@ -10,7 +10,7 @@ import { pageMetadata } from "@/lib/seo";
 const TITLE = "ابزارهای محاسبه";
 
 export const metadata = pageMetadata({
-  title: "ابزارهای محاسبه حقوقی: خسارت تأخیر، هزینه دادرسی، مهریه، سهم‌الارث و حق‌الوکاله",
+  title: "ماشین‌حساب‌های حقوقی: خسارت تأخیر، دیه، مهریه",
   description: `${toPersianDigits(toolList.length)} ماشین‌حساب حقوقی: خسارت تأخیر تأدیه، هزینه دادرسی، دیه، مهریه به نرخ روز، سهم‌الارث، حق‌الوکاله و تمبر وکیل، دستمزد کارشناس رسمی دادگستری و مهلت‌های قانونی.`,
   path: TOOLS_INDEX_HREF,
 });

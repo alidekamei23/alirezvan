@@ -70,7 +70,8 @@ export async function PracticeHub({ area }: { area: PracticeArea }) {
                 </li>
               ))}
             </ul>
-            {posts.length > POSTS_ON_HUB && (
+            {/* Always, so the hub links to its topic page even before it has more posts. */}
+            {posts.length > 0 && (
               <div className="mt-8">
                 <LinkButton href={blogHref(area.slug)} variant="secondary">
                   همه مقاله‌های {area.title}

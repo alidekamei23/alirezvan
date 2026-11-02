@@ -5,7 +5,7 @@ import { getPracticeArea, practiceAreas } from "@/content/practice-areas";
 import { NO_PARAMS, blogHref, getPostsByArea, isAreaSlug } from "@/lib/blog";
 import { toPersianDigits } from "@/lib/format";
 import { pageCount, parsePageParam } from "@/lib/pagination";
-import { NOT_FOUND_METADATA, pageMetadata } from "@/lib/seo";
+import { NOT_FOUND_METADATA, pageMetadata, pagedDescription } from "@/lib/seo";
 
 type Props = PageProps<"/blog/topic/[area]/page/[page]">;
 
@@ -30,7 +30,10 @@ export async function generateMetadata({ params }: Props) {
   const title = getPracticeArea(area).title;
   return pageMetadata({
     title: `${blogCopy.heading}: ${title}، صفحه ${toPersianDigits(page)}`,
-    description: `مقاله‌های حقوقی درباره ${title}، نوشته علی رضوان، عضو کانون وکلای دادگستری مرکز.`,
+    description: pagedDescription(
+      `مقاله‌های حقوقی درباره ${title}، نوشته علی رضوان، عضو کانون وکلای دادگستری مرکز.`,
+      page,
+    ),
     path: blogHref(area, page),
   });
 }

@@ -51,7 +51,7 @@ redirect (table `question_slug_redirects`).
 - **Track** `/porsesh/peygiri` (noindex): status for a code (waiting / answered and published
   with a link / not published, never the internal reason), «سؤال‌های من», rate-limited
   look-ups.
-- **SEO**: full metadata and canonical; JSON-LD QAPage and BreadcrumbList; sitemap; the
+- **SEO**: full metadata and canonical; JSON-LD FAQPage (one question; QAPage is for pages where visitors answer) and BreadcrumbList; sitemap; the
   list and page refresh at once after publish, edit or unpublish; links in the menu and
   footer.
 

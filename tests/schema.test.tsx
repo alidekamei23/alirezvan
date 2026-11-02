@@ -12,7 +12,7 @@ import {
   breadcrumbSchema,
   faqPageSchema,
   profilePageSchema,
-  qaPageSchema,
+  questionPageSchema,
   siteGraph,
   toolSchema,
 } from "@/lib/schema";
@@ -121,7 +121,7 @@ describe("article schema", () => {
 
 describe("Q&A schema", () => {
   const qa = render(
-    qaPageSchema({
+    questionPageSchema({
       title: "سؤال",
       body: "متن </script> سؤال",
       href: "/porsesh/sample",
@@ -131,10 +131,10 @@ describe("Q&A schema", () => {
       answeredAt: "2026-10-11T00:00:00.000Z",
     }),
   );
-  const question = qa.mainEntity as Node;
+  const question = (qa.mainEntity as Node[])[0];
 
   it("holds the question and the lawyer's accepted answer", () => {
-    expect(qa["@type"]).toBe("QAPage");
+    expect(qa["@type"]).toBe("FAQPage");
     expect(question["@type"]).toBe("Question");
     expect(question.answerCount).toBe(1);
     expect(question.acceptedAnswer).toMatchObject({
@@ -147,7 +147,7 @@ describe("Q&A schema", () => {
 
   it("cannot close the script tag from inside the data", () => {
     const raw = jsonLdString(
-      qaPageSchema({
+      questionPageSchema({
         title: "",
         body: "</script>",
         href: "/x",

@@ -162,10 +162,18 @@ Lists are paginated with real URLs: 10 posts on page 1 (the newest shown large),
 Only lawyer-approved articles are added; do not write or publish legal articles yourself.
 
 ## 6. SEO checklist (every page)
-- Unique Persian `<title>` and meta description; canonical URL; Open Graph tags.
+- Unique Persian `<title>` and meta description; canonical URL; Open Graph and Twitter
+  tags (all from `pageMetadata()` in `lib/seo.ts`).
+- Title at most 60 characters including « | علی رضوان»; description 120–160 characters.
+  Calculator titles keep the word «ماشین‌حساب». Page 2 onward of a list gets its number in
+  the description (`pagedDescription()`).
 - JSON-LD: `LegalService`/`Attorney` + `LocalBusiness` site-wide (from `content/lawyer.ts`),
-  `Article` + `FAQPage` + `BreadcrumbList` on blog posts.
-- `sitemap.ts` and `robots.ts`; no `noindex` outside `/admin` on the live site. Deployments
+  `Article` + `FAQPage` + `BreadcrumbList` on blog posts. Q&A pages use `FAQPage` with one
+  question, not `QAPage` (Google keeps that for pages where visitors post answers).
+- `sitemap.ts` and `robots.ts`; `lastModified` only from real dates (posts, questions),
+  never the build time. No `noindex` outside `/admin` on the live site, except pages with
+  nothing of their own: search results and empty lists (a blog topic without posts, a Q&A
+  category without questions) are `NOINDEX_FOLLOW`. Deployments
   without `NEXT_PUBLIC_ALLOW_INDEXING=true` (local, preview, test) are closed to search
   engines as a whole; turn it on only on the real domain after the lawyer approves the copy.
 

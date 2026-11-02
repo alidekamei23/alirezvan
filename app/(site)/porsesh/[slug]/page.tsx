@@ -17,7 +17,7 @@ import { cachedQuestionPage } from "@/lib/questions/cached";
 import { areaForQuestionCategory, questionCategoryHref, toolsForQuestionCategory } from "@/lib/links";
 import { excerpt, markdownToPlain } from "@/lib/questions/core";
 import { displayNameOf, isoDate, questionHref } from "@/lib/questions/view";
-import { breadcrumbSchema, qaPageSchema } from "@/lib/schema";
+import { breadcrumbSchema, questionPageSchema } from "@/lib/schema";
 import { NOT_FOUND_METADATA, pageMetadata } from "@/lib/seo";
 
 type Props = PageProps<"/porsesh/[slug]">;
@@ -141,7 +141,7 @@ export default async function QuestionPage({ params }: Props) {
       <ViewCounter slug={question.slug} />
 
       <JsonLd
-        data={qaPageSchema({
+        data={questionPageSchema({
           title: question.title,
           body: question.body,
           href: url,

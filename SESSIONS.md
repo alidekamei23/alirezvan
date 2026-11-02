@@ -17,6 +17,7 @@ Claude Code, and the "done when" check. If a session runs over, the unfinished i
 | Late-payment damages calculator | Done 13 Oct | /tools/khesarat-takhir. Logic and index table supplied by the owner in lib/tadieh/ (replaces content/cpi.json and lib/calculators/damages.ts of CLAUDE.md §5.1); amounts are in rials. Legal notes are draft (content/tadieh.ts) |
 | Court-fee calculator | Done 13 Oct | /tools/hazine-dadresi. Logic and tariffs supplied by the owner in lib/hazine/; every fixed tariff is still marked unverified there. Legal notes are draft (content/hazine.ts) |
 | Rent increase calculator | Removed 13 Oct | Dropped by the owner: no page, no links. The rent part of session 5 below no longer applies |
+| SEO audit and code quick wins | Done 2 Nov | Branch feature/seo-quick-wins: shorter titles and descriptions, empty lists noindex, Q&A FAQPage schema, sitemap lastmod, Twitter cards, related posts on calculators, AVIF. Mobile Lighthouse 97–98 performance, 100 SEO. Still open: real domain in .env.production, lawyer approval, then indexing on and Search Console; license-lookup URL, bio, map and Neshan/Balad listings |
 | 4–10 | Not started | Calculators postponed by the owner; articles are written by the owner and approved by the lawyer offline |
 
 Still open from "Before session 1": domain, hosting account, SMS provider account and OTP

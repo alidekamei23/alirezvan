@@ -4,7 +4,7 @@ import { blogCopy } from "@/content/pages";
 import { NO_PARAMS, blogHref, getAllPosts } from "@/lib/blog";
 import { toPersianDigits } from "@/lib/format";
 import { pageCount, parsePageParam } from "@/lib/pagination";
-import { NOT_FOUND_METADATA, pageMetadata } from "@/lib/seo";
+import { NOT_FOUND_METADATA, pageMetadata, pagedDescription } from "@/lib/seo";
 
 type Props = PageProps<"/blog/page/[page]">;
 
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props) {
   if (!page || page > pageCount((await getAllPosts()).length)) return NOT_FOUND_METADATA;
   return pageMetadata({
     title: `${blogCopy.heading}، صفحه ${toPersianDigits(page)}`,
-    description: blogCopy.metaDescription,
+    description: pagedDescription(blogCopy.metaDescription, page),
     path: blogHref(null, page),
   });
 }

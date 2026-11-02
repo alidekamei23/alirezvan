@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { lawyer } from "@/content/lawyer";
 import { notFoundCopy } from "@/content/pages";
+import { toPersianDigits } from "@/lib/format";
 
 /** Public origin, without a trailing slash. */
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(
@@ -13,6 +14,17 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3
  * preview or test deployment can never be indexed by accident.
  */
 export const ALLOW_INDEXING = process.env.NEXT_PUBLIC_ALLOW_INDEXING === "true";
+
+/**
+ * Robots value for a page that stays out of search results while its links still count
+ * (search results, an empty list). Where the whole site is closed, follow stays off too.
+ */
+export const NOINDEX_FOLLOW = { index: false, follow: ALLOW_INDEXING } as const;
+
+/** Page 2 onward of a list gets its number in the description, so no two pages share one. */
+export function pagedDescription(description: string, page: number): string {
+  return page > 1 ? `${description} صفحه ${toPersianDigits(page)}.` : description;
+}
 
 /** "/blog" → "https://example.ir/blog". */
 export function absoluteUrl(path: string): string {
@@ -52,6 +64,12 @@ export function pageMetadata({
       locale: "fa_IR",
       type: "website",
       images: [DEFAULT_OG_IMAGE],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [DEFAULT_OG_IMAGE.url],
     },
   };
 }
