@@ -4,10 +4,11 @@ The visual and interaction rules for the Ali Rezvan site. `CLAUDE.md` wins where
 two disagree. The live reference is `/design-system` (development only; it returns 404
 in a production build).
 
-Direction: a quiet law office. Text-led, generous whitespace, one deep emerald used
+Direction: a quiet law office. Text-led, generous whitespace, one violet-blue (iris, `#5752B4`) used
 sparingly (about a tenth of any screen), flat surfaces, no gradients, no decorative
-motion, no legal stock imagery. One exception to the emerald share: the Home hero on
-phones is a dark emerald band (`HomeHero`, owner's decision, 25 Oct 2026).
+motion, no legal stock imagery. One exception to the iris share: the Home hero on
+phones is a dark iris band (`HomeHero`, owner's decision, 25 Oct 2026). The brand moved
+from emerald to iris on 2 Nov 2026 (owner's decision, branch `feature/iris-palette`).
 
 ## 1. Tokens
 
@@ -19,30 +20,31 @@ class like `bg-blue-500` or `rounded-2xl` does not exist in this project.
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `page` | `#FAF8F5` | Page background |
+| `page` | `#F9F9FC` | Page background |
 | `surface` | `#FFFFFF` | Cards, header, footer, inputs |
-| `surface-muted` | `#F3F0EA` | Alternate section band, table head |
-| `ink` | `#1F2933` | Body text and headings |
-| `muted` | `#5B6673` | Secondary text, hints |
-| `line` | `#E4E0D8` | Dividers and card borders |
-| `line-strong` | `#7B8491` | Borders of form controls (3:1) |
-| `primary` / `-hover` / `-active` | emerald 700 / 800 / 900 | Buttons, links, key figures |
-| `primary-soft` / `-soft-strong` / `primary-line` | emerald 50 / 100 / 200 | Hover fills, selected state, soft borders |
+| `surface-muted` | `#F0F0F7` | Alternate section band, table head |
+| `ink` | `#1F202D` | Body text and headings |
+| `muted` | `#606272` | Secondary text, hints |
+| `line` | `#E0E0E9` | Dividers and card borders |
+| `line-strong` | `#848594` | Borders of form controls (3:1) |
+| `primary` / `-hover` / `-active` | iris 700 / 800 / 900 | Buttons, links, key figures |
+| `primary-soft` / `-soft-strong` / `primary-line` | iris 50 / 100 / 200 | Hover fills, selected state, soft borders |
 | `on-primary` | white | Text on primary and danger |
-| `focus` | emerald 700 | Focus ring |
-| `inverse-surface` | emerald 900 | The one dark surface: Home hero band on phones |
-| `on-inverse` / `on-inverse-muted` | white / emerald 200 | Text on the inverse surface |
+| `focus` | iris 700 | Focus ring |
+| `inverse-surface` | iris 900 | The one dark surface: Home hero band on phones |
+| `on-inverse` / `on-inverse-muted` | white / iris 200 | Text on the inverse surface |
 | `focus-inverse` | white | Focus ring on the inverse surface (`focus-inverse` utility) |
-| `success-*`, `warning-*`, `danger-*`, `info-*` | see file | `-surface`, `-line`, `-ink` triples for notices |
+| `success-*`, `warning-*`, `danger-*`, `info-*` | see file | `-surface`, `-line`, `-ink` triples for notices. Success stays emerald; info is teal so it is not mistaken for the brand |
 | `danger` / `-hover` / `-active` | `#B42318` … | Danger button, error border |
 | `estimate-*` | `#FFF7E0` surface | Calculator estimate notice |
 | `disabled-surface` / `disabled-ink` | | Disabled controls |
 
-Emerald runs 50–950. Anchors: 700 `#047857`, 800 `#065F46`, 900 `#064E3B`,
-50 `#ECFDF5`, 100 `#D1FAE5`. Steps 200–600 are slightly desaturated so tints read as
-sober rather than mint.
+Iris runs 50–950, built in OKLCH at one hue (about 282°) so every tint stays violet-blue.
+Anchors: 700 `#5752B4`, 800 `#454192`, 900 `#33306F`, 50 `#F4F5FE`, 100 `#E8E9FE`,
+200 `#CED2FF`. The neutrals carry a trace of the same hue. Emerald (50–950) remains only
+for the success notice.
 
-Use the semantic names in components. The raw emerald steps are for the token file and
+Use the semantic names in components. The raw iris and emerald steps are for the token file and
 the showcase only. Keeping names semantic is what will let dark mode be added later by
 redefining tokens; dark mode is not built.
 
@@ -77,7 +79,7 @@ At most three heading sizes on a page. Weights: 400 body, 600 labels and buttons
 - z-index: `z-sticky` (header) < `z-bar` (contact bar) < `z-overlay` < `z-toast`.
 - Motion: colour and border transitions only, 150ms (`--duration-base` 200ms for the FAQ
   and `NavDisclosure` chevrons), ease-out. All motion is switched off under `prefers-reduced-motion`.
-- Focus: 2px emerald outline with a 2px gap, set once globally. Never remove it.
+- Focus: 2px iris outline with a 2px gap, set once globally. Never remove it.
 
 ## 2. Components
 
@@ -139,7 +141,7 @@ Don't
   The one exception is the faint dot grid behind the Home hero (`.hero-dots` in
   `app/globals.css`); don't reuse it elsewhere.
 - Don't use scales, gavels, courtrooms or gold-and-black styling. No gold on the
-  emerald band either.
+  iris band either.
 - Don't use the inverse surface outside the Home hero.
 - Don't use badges, banners or copy for superlatives, rankings, discounts, success
   rates, outcome promises or client details (`CLAUDE.md` §2.1).

@@ -1,5 +1,5 @@
 // PracticeIndex — the practice areas as a ruled index: one full-width row per area under
-// a single emerald rule. Use it where the areas are the main content (Home). For a
+// a single brand-colour rule. Use it where the areas are the main content (Home). For a
 // compact grid of areas inside other content use PracticeCard.
 // Usage: <PracticeIndex areas={practiceAreas} />
 import Link from "next/link";

@@ -1,6 +1,6 @@
 // HomeHero — the top of Home: the lawyer's photo, name and grade, the lead and the
 // consultation request. Used once, on Home.
-// Phones (below `md`) get a dark emerald band: round photo beside the name, the lead and
+// Phones (below `md`) get a dark iris band: round photo beside the name, the lead and
 // one light button underneath; call and WhatsApp stay in the sticky contact bar. Every
 // phone-only style is a `max-md:` addition, so from `md` the hero is the white one with
 // the full portrait and its contact buttons, unchanged.

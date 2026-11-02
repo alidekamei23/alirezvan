@@ -4,7 +4,7 @@
 // readers: the legend (and usually a table) carries the numbers.
 // Colours are token utilities passed in by the caller; `pattern` marks a part that is set
 // aside rather than shared out, so it is not told apart by colour alone.
-// Usage: <ShareBar label="سهم وراث" parts={[{ key, label, value: 0.25, percent: "۲۵٪", color: "bg-emerald-700" }]} />
+// Usage: <ShareBar label="سهم وراث" parts={[{ key, label, value: 0.25, percent: "۲۵٪", color: "bg-iris-700" }]} />
 import { cn } from "@/lib/cn";
 
 export type SharePart = {
@@ -14,7 +14,7 @@ export type SharePart = {
   value: number;
   /** The value as text, e.g. «۲۵٪». */
   percent: string;
-  /** A background utility from the tokens, e.g. "bg-emerald-700". */
+  /** A background utility from the tokens, e.g. "bg-iris-700". */
   color: string;
   pattern?: "reserved";
 };

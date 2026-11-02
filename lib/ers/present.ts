@@ -331,13 +331,13 @@ export const UNCLE_SIDES: Side[] = SIDE_OF;
 
 /** Colour of each share in the stacked bar: token utilities, cycled. */
 export const SHARE_COLORS = [
-  "bg-emerald-700",
+  "bg-iris-700",
   "bg-info-ink",
-  "bg-emerald-400",
+  "bg-iris-400",
   "bg-warning-ink",
-  "bg-emerald-200",
+  "bg-iris-200",
   "bg-warning-line",
-  "bg-emerald-900",
+  "bg-iris-900",
   "bg-info-line",
   "bg-line-strong",
   "bg-danger-line",
