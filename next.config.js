@@ -19,6 +19,8 @@ const securityHeaders = [
 /** @type {import("next").NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
+  // Consultation Server Functions carry private form fields and verification digits.
+  logging: { serverFunctions: false },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

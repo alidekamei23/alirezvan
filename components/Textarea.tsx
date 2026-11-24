@@ -1,11 +1,10 @@
 "use client";
-// Textarea — multi-line text with a live character counter (300 by default, the limit
-// for the consultation summary). Normalises ی/ک on blur.
+// Textarea — multi-line text with a live character counter. Normalises ی/ک on blur.
 // Usage: <Textarea label="خلاصه موضوع" name="summary" maxLength={300} />
 import { useId, useState } from "react";
 import { Field, controlClasses, fieldIds, type FieldBaseProps } from "@/components/Field";
 import { cn } from "@/lib/cn";
-import { normalizePersian, toPersianDigits } from "@/lib/format";
+import { formatNumber, normalizePersian } from "@/lib/format";
 
 export type TextareaProps = FieldBaseProps & {
   name: string;
@@ -65,7 +64,7 @@ export function Textarea({
           remaining <= 20 ? "font-semibold text-warning-ink" : "text-muted",
         )}
       >
-        {toPersianDigits(value.length)} از {toPersianDigits(maxLength)} نویسه
+        {formatNumber(value.length)} از {formatNumber(maxLength)} نویسه
       </p>
     </Field>
   );

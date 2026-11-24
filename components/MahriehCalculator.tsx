@@ -10,7 +10,7 @@ import { Alert } from "@/components/Alert";
 import { Badge } from "@/components/Badge";
 import { Button } from "@/components/Button";
 import { Checkbox } from "@/components/Checkbox";
-import { CopyButton } from "@/components/CopyButton";
+import { CalculatorResultActions } from "@/components/CalculatorResultActions";
 import { EmptyState } from "@/components/EmptyState";
 import { MoneyField } from "@/components/MoneyField";
 import { RadioCards } from "@/components/RadioCards";
@@ -418,7 +418,7 @@ export function MahriehCalculator() {
                     </Badge>
                   </div>
                 )}
-                <CopyButton
+                <CalculatorResultActions
                   text={buildSummary(result, {
                     marriageYear: marriageYear ?? paymentYear,
                     paymentYear,

@@ -12,7 +12,7 @@ import { Badge } from "@/components/Badge";
 import { Button } from "@/components/Button";
 import { Checkbox } from "@/components/Checkbox";
 import { Combobox } from "@/components/Combobox";
-import { CopyButton } from "@/components/CopyButton";
+import { CalculatorResultActions } from "@/components/CalculatorResultActions";
 import { EmptyState } from "@/components/EmptyState";
 import { RadioCards } from "@/components/RadioCards";
 import { ResultCard } from "@/components/ResultCard";
@@ -448,7 +448,7 @@ function MohlatResultView({
       }
       notes={result.notes.map(faText)}
     >
-      <CopyButton text={buildSummary(result, form, start, startTitle)} />
+      <CalculatorResultActions text={buildSummary(result, form, start, startTitle)} />
     </ResultCard>
   );
 }

@@ -35,7 +35,7 @@ export function RadioCards({
   const id = useId();
   const { hintId, errorId, describedBy } = fieldIds(id, { hint, error });
   return (
-    <fieldset aria-describedby={describedBy} className="flex min-w-0 flex-col gap-1.5">
+    <fieldset aria-invalid={error ? true : undefined} aria-describedby={describedBy} className="flex min-w-0 flex-col gap-1.5">
       <legend className="mb-1.5 text-base font-semibold text-ink">{legend}</legend>
       {hint && <FieldHint id={hintId}>{hint}</FieldHint>}
       <div
@@ -61,6 +61,7 @@ export function RadioCards({
               name={name}
               value={option.value}
               disabled={option.disabled}
+              aria-describedby={describedBy}
               required
               defaultChecked={defaultValue === option.value}
               onChange={onValueChange ? () => onValueChange(option.value) : undefined}

@@ -10,7 +10,7 @@ import { Alert } from "@/components/Alert";
 import { Badge, type BadgeTone } from "@/components/Badge";
 import { Button } from "@/components/Button";
 import { Checkbox } from "@/components/Checkbox";
-import { CopyButton } from "@/components/CopyButton";
+import { CalculatorResultActions } from "@/components/CalculatorResultActions";
 import { EmptyState } from "@/components/EmptyState";
 import { MoneyField } from "@/components/MoneyField";
 import { RadioCards } from "@/components/RadioCards";
@@ -752,7 +752,7 @@ function ErsResultView({
       }
       notes={result.notes.map((note) => toPersianDigits(note))}
     >
-      <CopyButton text={buildSummary(result, form, useLcd)} />
+      <CalculatorResultActions text={buildSummary(result, form, useLcd)} />
     </ResultCard>
   );
 }

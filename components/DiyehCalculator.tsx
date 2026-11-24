@@ -12,7 +12,7 @@ import { Badge } from "@/components/Badge";
 import { Button } from "@/components/Button";
 import { Checkbox } from "@/components/Checkbox";
 import { Combobox } from "@/components/Combobox";
-import { CopyButton } from "@/components/CopyButton";
+import { CalculatorResultActions } from "@/components/CalculatorResultActions";
 import { Disclosure, DisclosureGroup } from "@/components/Disclosure";
 import { ResultCard } from "@/components/ResultCard";
 import { SegmentedControl } from "@/components/SegmentedControl";
@@ -885,7 +885,7 @@ function DiyehResultView({
       notes={ok ? ok.notes.map((note) => toPersianDigits(note)) : []}
     >
       <div className="flex flex-wrap gap-3">
-        {ok && <CopyButton text={buildSummary(ok, settings)} label="کپی خلاصه" />}
+        {ok && <CalculatorResultActions text={buildSummary(ok, settings)} label="کپی خلاصه" />}
         <Button variant="ghost" icon={<RotateCcw />} onClick={onClear}>
           پاک کردن همه
         </Button>

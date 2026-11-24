@@ -8,7 +8,7 @@ import { useId, useState, type ReactNode } from "react";
 import { Calculator, Plane } from "lucide-react";
 import { Alert } from "@/components/Alert";
 import { Checkbox } from "@/components/Checkbox";
-import { CopyButton } from "@/components/CopyButton";
+import { CalculatorResultActions } from "@/components/CalculatorResultActions";
 import { EmptyState } from "@/components/EmptyState";
 import { MoneyField } from "@/components/MoneyField";
 import { RadioCards } from "@/components/RadioCards";
@@ -509,7 +509,7 @@ function VekalatResultView({ result, form }: { result: VekalatOk; form: VekalatF
       }
       notes={result.notes.map(faText)}
     >
-      <CopyButton text={buildSummary(result, form)} />
+      <CalculatorResultActions text={buildSummary(result, form)} />
     </ResultCard>
   );
 }

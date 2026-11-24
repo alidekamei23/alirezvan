@@ -80,6 +80,7 @@ export function OtpInput({
             inputMode="numeric"
             autoComplete={index === 0 ? "one-time-code" : "off"}
             aria-label={`رقم ${toPersianDigits(index + 1)} از ${toPersianDigits(length)}`}
+            aria-describedby={describedBy}
             aria-invalid={error ? true : undefined}
             disabled={disabled}
             value={toPersianDigits(digit)}
@@ -108,7 +109,7 @@ export function OtpInput({
             }}
             onFocus={(event) => event.target.select()}
             className={cn(
-              "size-12 rounded-sm border bg-surface text-center text-xl font-bold text-ink transition-colors xs:size-14",
+              "size-12 min-w-0 rounded-sm border bg-surface text-center text-xl font-bold text-ink transition-colors xs:size-14",
               "hover:border-ink disabled:cursor-not-allowed disabled:border-line disabled:bg-disabled-surface disabled:text-disabled-ink",
               error ? "border-2 border-danger" : "border-line-strong",
             )}

@@ -3,6 +3,40 @@
 // Times are stored as integer milliseconds and read as Date objects.
 import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
+export const consultationRequests = sqliteTable("consultation_requests", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  mobile: text("mobile").notNull(),
+  messenger: text("messenger", { enum: ["bale", "eitaa", "whatsapp", "telegram"] }),
+  topic: text("topic", { enum: ["criminal", "civil", "other"] }).notNull(),
+  otherTopic: text("other_topic"),
+  description: text("description").notNull(),
+  source: text("source", { enum: ["page", "calculator"] }).notNull(),
+  status: text("status", { enum: ["new"] }).notNull().default("new"),
+  createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull(),
+});
+
+export const consultationCodes = sqliteTable(
+  "consultation_codes",
+  {
+    id: text("id").primaryKey(),
+    requestId: text("request_id").notNull(),
+    mobileKey: text("mobile_key").notNull(),
+    ipKey: text("ip_key").notNull(),
+    hash: text("hash"),
+    issuedAt: integer("issued_at").notNull(),
+    expiresAt: integer("expires_at"),
+    attempts: integer("attempts").notNull().default(0),
+    state: text("state", { enum: ["sending", "active", "inactive", "used"] }).notNull(),
+  },
+  (table) => [
+    index("consultation_codes_request_idx").on(table.requestId),
+    index("consultation_codes_mobile_idx").on(table.mobileKey, table.issuedAt),
+    index("consultation_codes_ip_idx").on(table.ipKey, table.issuedAt),
+    index("consultation_codes_issued_idx").on(table.issuedAt),
+  ],
+);
+
 export const ARTICLE_STATUSES = ["draft", "published"] as const;
 export type ArticleStatus = (typeof ARTICLE_STATUSES)[number];
 

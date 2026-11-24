@@ -7,7 +7,7 @@ import { useId, useRef, useState } from "react";
 import { Calculator, Plus, Trash2 } from "lucide-react";
 import { Alert } from "@/components/Alert";
 import { Button } from "@/components/Button";
-import { CopyButton } from "@/components/CopyButton";
+import { CalculatorResultActions } from "@/components/CalculatorResultActions";
 import { EmptyState } from "@/components/EmptyState";
 import { MoneyField } from "@/components/MoneyField";
 import { RadioCards } from "@/components/RadioCards";
@@ -347,7 +347,7 @@ export function TadiehCalculator() {
                     : []),
                 ]}
               >
-                <CopyButton text={buildSummary(result)} />
+                <CalculatorResultActions text={buildSummary(result)} />
               </ResultCard>
             </>
           )}

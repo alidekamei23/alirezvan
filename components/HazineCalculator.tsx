@@ -6,7 +6,7 @@
 import { useId, useState } from "react";
 import { Calculator } from "lucide-react";
 import { Checkbox } from "@/components/Checkbox";
-import { CopyButton } from "@/components/CopyButton";
+import { CalculatorResultActions } from "@/components/CalculatorResultActions";
 import { EmptyState } from "@/components/EmptyState";
 import { MoneyField } from "@/components/MoneyField";
 import { RadioCards } from "@/components/RadioCards";
@@ -102,7 +102,7 @@ export function HazineCalculator() {
                 `بر پایه تعرفه سال ${TARIFF_YEAR_LABEL}`,
               ]}
             >
-              <CopyButton text={buildSummary(result)} />
+              <CalculatorResultActions text={buildSummary(result)} />
             </ResultCard>
           ) : (
             <EmptyState
