@@ -1,7 +1,10 @@
-// StickyContactBar — call, WhatsApp and Bale, always within thumb reach below `lg`.
+"use client";
+
+// StickyContactBar — call, WhatsApp and Bale within thumb reach below `lg`.
 // It never covers content: the layout reserves its height at the bottom of the page,
 // and it hides while a text field has focus (rule in app/globals.css) so it cannot sit
 // on a field or the OTP boxes above the on-screen keyboard. Mounted once in the layout.
+import { usePathname } from "next/navigation";
 import { contactChannels, type ContactChannel } from "@/components/ContactButton";
 import { cn } from "@/lib/cn";
 
@@ -12,6 +15,7 @@ const channels = (["call", "whatsapp", "bale"] as ContactChannel[]).filter(
 const columns = { 1: "grid-cols-1", 2: "grid-cols-2", 3: "grid-cols-3" }[channels.length];
 
 export function StickyContactBar() {
+  if (usePathname() === "/request") return null;
   return (
     <nav
       data-contact-bar

@@ -12,6 +12,7 @@ export type TextareaProps = FieldBaseProps & {
   maxLength?: number;
   rows?: number;
   defaultValue?: string;
+  placeholder?: string;
   disabled?: boolean;
   onValueChange?: (value: string) => void;
 };
@@ -26,6 +27,7 @@ export function Textarea({
   maxLength = 300,
   rows = 5,
   defaultValue = "",
+  placeholder,
   disabled,
   onValueChange,
 }: TextareaProps) {
@@ -47,6 +49,7 @@ export function Textarea({
         id={fieldId}
         name={name}
         rows={rows}
+        placeholder={placeholder}
         maxLength={maxLength}
         value={value}
         onChange={(event) => update(event.target.value)}

@@ -13,7 +13,7 @@ import { ToastProvider } from "@/components/Toast";
 export function SiteShell({ children }: { children: ReactNode }) {
   return (
     // The bottom padding keeps the last content clear of the sticky contact bar.
-    <div className="flex flex-1 flex-col pb-[calc(var(--contact-bar-height)+env(safe-area-inset-bottom))] lg:pb-0">
+    <div className="flex flex-1 flex-col max-lg:has-[[data-contact-bar]]:pb-[calc(var(--contact-bar-height)+env(safe-area-inset-bottom))]">
       <ToastProvider>
         <SkipLink />
         <Header />

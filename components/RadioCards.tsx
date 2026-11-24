@@ -21,6 +21,7 @@ export function RadioCards({
   defaultValue,
   onValueChange,
   columns = 3,
+  compact = false,
 }: {
   legend: string;
   name: string;
@@ -31,6 +32,7 @@ export function RadioCards({
   /** Needs a client component as the parent. */
   onValueChange?: (value: string) => void;
   columns?: 1 | 2 | 3;
+  compact?: boolean;
 }) {
   const id = useId();
   const { hintId, errorId, describedBy } = fieldIds(id, { hint, error });
@@ -49,7 +51,8 @@ export function RadioCards({
           <label
             key={option.value}
             className={cn(
-              "flex min-h-12 cursor-pointer items-start gap-3 rounded-sm border bg-surface p-4 transition-colors",
+              "flex min-h-12 cursor-pointer gap-3 rounded-sm border bg-surface transition-colors",
+              compact ? "items-center px-3 py-2" : "items-start p-4",
               "hover:border-ink has-checked:border-primary has-checked:bg-primary-soft",
               "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-focus",
               "has-disabled:cursor-not-allowed has-disabled:border-line has-disabled:bg-disabled-surface has-disabled:text-disabled-ink",
@@ -65,7 +68,7 @@ export function RadioCards({
               required
               defaultChecked={defaultValue === option.value}
               onChange={onValueChange ? () => onValueChange(option.value) : undefined}
-              className="mt-1.5 size-5 shrink-0 accent-primary outline-none"
+              className={cn("size-5 shrink-0 accent-primary outline-none", !compact && "mt-1.5")}
             />
             <span className="flex flex-col">
               <span className="font-semibold">{option.title}</span>

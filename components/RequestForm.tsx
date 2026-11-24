@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { useEffect, useRef, useState, useTransition, type FormEvent } from "react";
 import { sendConsultationCode, submitConsultation } from "@/app/(site)/request/actions";
 import { Alert } from "@/components/Alert";
@@ -25,7 +26,7 @@ const emptyDraft: ConsultationDraft = {
 type Errors = Partial<Record<keyof ConsultationDraft, string[]>>;
 type Stage = "details" | "verify" | "saved";
 
-export function RequestForm() {
+export function RequestForm({ enabled }: { enabled: boolean }) {
   const [stage, setStage] = useState<Stage>("details");
   const [draft, setDraft] = useState(emptyDraft);
   const [topic, setTopic] = useState("");
@@ -134,6 +135,7 @@ export function RequestForm() {
 
   function sendDetails(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!enabled) return;
     const form = new FormData(event.currentTarget);
     const next = {
       name: String(form.get("name") ?? ""),
@@ -193,24 +195,43 @@ export function RequestForm() {
   }
 
   return (
-    <div ref={panel} className="min-w-0 rounded-md border border-line bg-surface p-4 sm:p-6">
-      <h2 ref={heading} tabIndex={-1} className="scroll-mt-24 text-xl font-bold text-ink">
-        {stage === "details" ? "اطلاعات درخواست" : stage === "verify" ? "تأیید شماره موبایل" : "ثبت درخواست"}
-      </h2>
+    <div ref={panel} className="min-w-0 rounded-lg border border-line bg-surface p-4 shadow-sm sm:px-6">
+      <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b border-line pb-3">
+        <h1 ref={heading} tabIndex={-1} className="scroll-mt-24 text-2xl font-bold text-ink">
+          {stage === "details" ? "درخواست مشاوره" : stage === "verify" ? "تأیید شماره موبایل" : "درخواست ثبت شد"}
+        </h1>
+        {stage !== "saved" && (
+          <ol aria-label="مراحل ثبت درخواست" className="flex flex-wrap items-center gap-2 text-sm font-semibold">
+            {["اطلاعات درخواست", "تأیید شماره"].map((label, index) => (
+              <li key={label} aria-current={(stage === "details" ? 0 : 1) === index ? "step" : undefined}
+                className="group flex items-center gap-1.5 rounded-sm px-2 py-1 text-muted aria-[current=step]:bg-primary-soft aria-[current=step]:text-primary">
+                <span className="grid size-5 place-items-center rounded-full bg-surface-muted text-xs group-aria-[current=step]:bg-primary group-aria-[current=step]:text-white">{index === 0 ? "۱" : "۲"}</span>
+                {label}
+              </li>
+            ))}
+          </ol>
+        )}
+      </header>
 
       {stage === "details" && (
-        <form method="post" noValidate onSubmit={sendDetails} className="mt-5 flex flex-col gap-5">
-          <fieldset disabled={pending} className="grid min-w-0 gap-5">
-            <TextField label="نام" name="name" autoComplete="given-name" maxLength={NAME_LIMIT}
-              defaultValue={draft.name} error={errors.name?.[0]} />
-            <PhoneField label="شماره موبایل" id="consultation-mobile" name="mobile"
-              defaultValue={draft.mobile} error={errors.mobile?.[0]}
-              hint="کد تأیید به این شماره پیامک می‌شود." />
-            <Select label="پیام‌رسان ترجیحی برای هماهنگی" name="messenger" optional
+        <form method="post" noValidate onSubmit={sendDetails} className="mt-3 grid gap-3">
+          {!enabled && (
+            <Alert title="ثبت آنلاین فعلاً در دسترس نیست" tone="warning">
+              برای هماهنگی مشاوره از <a href="#office-contact" className="font-bold underline">راه‌های تماس با دفتر</a> استفاده کنید.
+            </Alert>
+          )}
+          <fieldset disabled={pending || !enabled} className="grid min-w-0 gap-3">
+            <div className="grid items-start gap-4 sm:grid-cols-2 [&_p[id$='-hint']]:order-last">
+              <TextField label="نام" name="name" autoComplete="given-name" maxLength={NAME_LIMIT}
+                defaultValue={draft.name} error={errors.name?.[0]} />
+              <PhoneField label="شماره موبایل" id="consultation-mobile" name="mobile"
+                defaultValue={draft.mobile} error={errors.mobile?.[0]}
+                hint="کد تأیید به این شماره پیامک می‌شود." />
+            </div>
+            <Select label="پیام‌رسان ترجیحی" name="messenger" optional
               options={[...messengers]} placeholder="بدون ترجیح" defaultValue={draft.messenger}
-              error={errors.messenger?.[0]}
-              hint="اگر ترجیح می‌دهید دفتر برای هماهنگی پیام بدهد، پیام‌رسانی را انتخاب کنید که با همین شماره در آن در دسترس هستید." />
-            <RadioCards legend="موضوع مشاوره" name="topic" columns={1} options={[...topics]}
+              error={errors.messenger?.[0]} />
+            <RadioCards legend="موضوع مشاوره" name="topic" compact options={[...topics]}
               defaultValue={topic} error={errors.topic?.[0]}
               onValueChange={(value) => {
                 setTopic(value);
@@ -222,14 +243,14 @@ export function RequestForm() {
                 defaultValue={draft.otherTopic} error={errors.otherTopic?.[0]}
                 hint="مثلاً برای بررسی قرارداد پیش از امضا مشاوره می‌خواهم." />
             )}
-            <Textarea key={draft.source} label="شرح موضوع مشاوره" name="description" rows={7}
+            <Textarea key={draft.source} label="شرح موضوع مشاوره" name="description" rows={3}
               maxLength={DESCRIPTION_LIMIT} defaultValue={draft.description} error={errors.description?.[0]}
-              hint="بنویسید چه اتفاقی افتاده، تاکنون چه اقدامی کرده‌اید و دربارهٔ چه چیزی راهنمایی می‌خواهید. اگر تاریخ یا جزئیاتی در فهم موضوع مؤثر است، آن را هم ذکر کنید." />
+              placeholder="چه اتفاقی افتاده و چه راهنمایی می‌خواهید؟" />
           </fieldset>
           {notice && <Alert live tone="danger">{notice}</Alert>}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            <Button type="submit" loading={pending}>{pending ? "در حال ارسال کد" : "ارسال کد تأیید"}</Button>
-            <Link href="/privacy" target="_blank" rel="noopener" className="inline-flex min-h-11 items-center text-sm font-semibold text-primary underline underline-offset-4">
+          <div className="flex flex-col items-stretch gap-x-4 gap-y-1 sm:flex-row sm:items-center">
+            <Button type="submit" disabled={!enabled} loading={pending}>{pending ? "در حال ارسال کد" : "ارسال کد تأیید"}<ArrowLeft aria-hidden="true" className="size-4" /></Button>
+            <Link href="/privacy" target="_blank" rel="noopener" className="inline-flex min-h-11 items-center justify-center text-sm font-semibold text-primary underline underline-offset-4">
               حریم خصوصی
             </Link>
           </div>
@@ -238,7 +259,7 @@ export function RequestForm() {
       )}
 
       {stage === "verify" && (
-        <form method="post" noValidate onSubmit={verify} className="mt-3 flex flex-col gap-5">
+        <form method="post" noValidate onSubmit={verify} className="mt-4 flex max-w-form flex-col gap-4">
           <p className="text-muted">
             کد به شمارهٔ <strong className="text-ink"><Ltr>{toPersianDigits(draft.mobile)}</Ltr></strong> پیامک شد.
           </p>
@@ -257,7 +278,7 @@ export function RequestForm() {
             </Button>
           </div>
           {wait > 0 && <p className="-mt-3 text-sm text-muted">تا ارسال مجدد کد، {waitLabel} صبر کنید.</p>}
-          <Button type="submit" className="self-start" disabled={pending}
+          <Button type="submit" className="sm:self-start" disabled={pending}
             loading={pending && pendingTask === "verify"}>
             {pending && pendingTask === "verify" ? "در حال ثبت درخواست" : "تأیید و ثبت درخواست"}
           </Button>
