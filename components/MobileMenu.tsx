@@ -5,6 +5,7 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { NavigationHint } from "@/components/NavigationHint";
 import type { NavItem } from "@/content/navigation";
 
 export function MobileMenu({
@@ -52,10 +53,11 @@ export function MobileMenu({
                   <li key={item.href} className="border-b border-line">
                     <Link
                       href={item.href}
-                      onClick={close}
+                      onNavigate={close}
                       className="flex min-h-12 items-center text-lg font-semibold text-ink hover:text-primary"
                     >
                       {item.label}
+                      <NavigationHint />
                     </Link>
                   </li>
                 ))}

@@ -7,6 +7,7 @@
 // Usage: <HeaderRequestLink />
 import { usePathname } from "next/navigation";
 import { LinkButton } from "@/components/LinkButton";
+import { NavigationHint } from "@/components/NavigationHint";
 import { requestNav } from "@/content/navigation";
 import { cn } from "@/lib/cn";
 
@@ -22,6 +23,7 @@ export function HeaderRequestLink() {
     >
       <span className="sm:hidden">مشاوره</span>
       <span className="hidden sm:inline">{requestNav.label}</span>
+      <NavigationHint />
     </LinkButton>
   );
 }

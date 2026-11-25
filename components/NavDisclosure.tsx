@@ -9,6 +9,7 @@
 import { useEffect, useId, useRef, useState, type FocusEvent } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
+import { NavigationHint } from "@/components/NavigationHint";
 import type { NavItem } from "@/content/navigation";
 
 export function NavDisclosure({ label, items }: { label: string; items: NavItem[] }) {
@@ -65,10 +66,14 @@ export function NavDisclosure({ label, items }: { label: string; items: NavItem[
           <li key={item.href}>
             <Link
               href={item.href}
-              onClick={() => setOpen(false)}
+              onNavigate={() => {
+                setOpen(false);
+                button.current?.focus();
+              }}
               className="flex min-h-11 items-center px-4 text-sm font-semibold whitespace-nowrap text-ink transition-colors -outline-offset-2 hover:bg-primary-soft hover:text-primary"
             >
               {item.label}
+              <NavigationHint />
             </Link>
           </li>
         ))}

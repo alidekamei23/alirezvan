@@ -8,6 +8,7 @@ import { HeaderRequestLink } from "@/components/HeaderRequestLink";
 import { Ltr } from "@/components/Ltr";
 import { MobileMenu } from "@/components/MobileMenu";
 import { NavDisclosure } from "@/components/NavDisclosure";
+import { NavigationHint } from "@/components/NavigationHint";
 import { contactLinks, lawyer } from "@/content/lawyer";
 import { practiceNav, practiceNavTitle, requestNav, siteNav } from "@/content/navigation";
 import { toPersianDigits } from "@/lib/format";
@@ -26,6 +27,7 @@ export function Header() {
         <Link href="/" className="flex min-h-11 min-w-0 flex-col justify-center lg:shrink-0">
           <span className="text-lg font-bold leading-tight text-ink">{lawyer.name}</span>
           <span className="text-sm leading-tight text-muted">{lawyer.grade}</span>
+          <NavigationHint />
         </Link>
 
         {/* The four practice areas share one disclosure, so the links, the name and grade on
@@ -42,6 +44,7 @@ export function Header() {
                   className="flex min-h-11 items-center rounded-sm px-2 text-sm font-semibold whitespace-nowrap text-ink transition-colors hover:bg-primary-soft hover:text-primary"
                 >
                   {item.label}
+                  <NavigationHint />
                 </Link>
               </li>
             ))}
@@ -62,6 +65,7 @@ export function Header() {
           </div>
         </div>
       </Container>
+      <div id="header-nav-status" role="status" />
     </header>
   );
 }

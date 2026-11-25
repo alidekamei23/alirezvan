@@ -1,5 +1,4 @@
 import { connection } from "next/server";
-import { Suspense } from "react";
 import { BaleButton } from "@/components/BaleButton";
 import { CallButton } from "@/components/CallButton";
 import { Container } from "@/components/Container";
@@ -22,11 +21,7 @@ export const metadata = pageMetadata({
 
 const trail = [{ label: "خانه", href: "/" }, { label: requestCopy.heading }];
 
-export default function RequestPage() {
-  return <Suspense><RequestContent /></Suspense>;
-}
-
-async function RequestContent() {
+export default async function RequestPage() {
   await connection();
   const enabled = Boolean(getCodeSender());
   return (

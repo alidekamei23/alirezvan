@@ -11,6 +11,7 @@ import { BaleButton } from "@/components/BaleButton";
 import { CallButton } from "@/components/CallButton";
 import { Container } from "@/components/Container";
 import { LinkButton } from "@/components/LinkButton";
+import { NavigationHint } from "@/components/NavigationHint";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { lawyer } from "@/content/lawyer";
 import { requestNav } from "@/content/navigation";
@@ -67,10 +68,12 @@ export function HomeHero() {
             {requestNav.label}
             {/* Points left: "forward" in RTL. */}
             <ArrowLeft aria-hidden="true" className="size-5" />
+            <NavigationHint />
           </LinkButton>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap max-md:hidden">
             <LinkButton href={requestNav.href} size="lg">
               {requestNav.label}
+              <NavigationHint />
             </LinkButton>
             <CallButton size="lg" />
           </div>

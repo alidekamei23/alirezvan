@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { MessageCircleQuestion, Search } from "lucide-react";
 import { Button } from "@/components/Button";
 import { EmptyState } from "@/components/EmptyState";
@@ -8,6 +9,7 @@ import { LinkButton } from "@/components/LinkButton";
 import { PageHeader } from "@/components/PageHeader";
 import { Pagination } from "@/components/Pagination";
 import { Section } from "@/components/Section";
+import { Skeleton } from "@/components/Skeleton";
 import { QuestionIndex } from "@/components/questions/QuestionIndex";
 import { isQuestionCategory, questionCategories, questionCategoryTitle } from "@/content/question-categories";
 import { ASK_HREF, QUESTIONS_HREF, TRACK_HREF, questionsCopy } from "@/content/questions";
@@ -62,16 +64,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   return q || items.length === 0 ? { ...metadata, robots: NOINDEX_FOLLOW } : metadata;
 }
 
-// The page reads the query string before rendering. `instant = false` tells Next.js that
-// waiting for it here is intended; the list itself comes from the cache.
-export const instant = false;
-
-export default async function QuestionsPage({ searchParams }: Props) {
-  const { q, category, page } = readParams(await searchParams);
-  const { items, total } = await cachedQuestionList({ q, category, page });
-  const pages = Math.max(1, Math.ceil(total / PUBLIC_PAGE_SIZE));
-  const filtered = q !== "" || category !== undefined;
-
+export default function QuestionsPage({ searchParams }: Props) {
   return (
     <>
       <PageHeader
@@ -93,99 +86,122 @@ export default async function QuestionsPage({ searchParams }: Props) {
       </PageHeader>
 
       <Section>
-        {/* A plain GET form: the search lives in the address, and works without JavaScript. */}
-        <form
-          action={QUESTIONS_HREF}
-          role="search"
-          aria-label={questionsCopy.searchLabel}
-          className="grid gap-4 rounded-md border border-line bg-surface p-4 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_auto] sm:items-end"
-        >
-          <div className="flex flex-col gap-1.5">
-            <FieldLabel htmlFor="porsesh-q">{questionsCopy.searchLabel}</FieldLabel>
-            <input
-              id="porsesh-q"
-              name="q"
-              type="search"
-              defaultValue={q}
-              maxLength={100}
-              placeholder={questionsCopy.searchPlaceholder}
-              className={controlClasses(undefined, "min-h-12")}
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <FieldLabel htmlFor="porsesh-category">{questionsCopy.categoryLabel}</FieldLabel>
-            <select
-              id="porsesh-category"
-              name="dasteh"
-              defaultValue={category ?? ""}
-              className={controlClasses(undefined, "min-h-12")}
-            >
-              <option value="">{questionsCopy.allCategories}</option>
-              {questionCategories.map((option) => (
-                <option key={option.slug} value={option.slug}>
-                  {option.title}
-                </option>
-              ))}
-            </select>
-          </div>
-          <Button type="submit" icon={<Search />}>
-            جست‌وجو
-          </Button>
-        </form>
-
-        {/* Category links: one click, and internal links for search engines. */}
-        <nav aria-label="دسته‌بندی پرسش‌ها" className="mt-4">
-          <ul className="flex flex-wrap gap-2">
-            {[{ slug: undefined, title: questionsCopy.allCategories }, ...questionCategories].map((option) => {
-              const active = option.slug === category;
-              return (
-                <li key={option.slug ?? "all"}>
-                  <Link
-                    href={listHref({ category: option.slug })}
-                    aria-current={active ? "page" : undefined}
-                    className={cn(
-                      "inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold transition-colors",
-                      active
-                        ? "border-primary bg-primary text-on-primary"
-                        : "border-line bg-surface text-ink hover:border-primary hover:text-primary",
-                    )}
-                  >
-                    {option.title}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-
-        <div className="mt-8">
-          {filtered && total > 0 && (
-            <p className="mb-3 text-sm text-muted" aria-live="polite">
-              {toPersianDigits(total)} پرسش
-              {q && <> برای «{q}»</>}
-              {category && <> در دسته {questionCategoryTitle(category)}</>}
-            </p>
-          )}
-          {items.length > 0 ? (
-            <QuestionIndex items={items} />
-          ) : (
-            <EmptyState
-              Icon={MessageCircleQuestion}
-              title={filtered ? questionsCopy.noResultsTitle : questionsCopy.emptyTitle}
-              description={filtered ? questionsCopy.noResultsText : questionsCopy.emptyText}
-              action={
-                <LinkButton href={ASK_HREF} variant="secondary">
-                  {questionsCopy.askButton}
-                </LinkButton>
-              }
-            />
-          )}
-          <div className="mt-8">
-            <Pagination current={page} total={pages} hrefFor={(n) => listHref({ q, category, page: n })} />
-          </div>
-        </div>
+        <Suspense fallback={
+          <>
+            <p role="status" className="sr-only">در حال بارگذاری پرسش‌ها…</p>
+            <div aria-busy="true">
+              <Skeleton className="h-64 sm:h-28" />
+              <Skeleton className="mt-4 h-24 sm:h-11" />
+              <Skeleton className="mt-8 h-64" />
+            </div>
+          </>
+        }>
+          <QuestionResults searchParams={searchParams} />
+        </Suspense>
       </Section>
+    </>
+  );
+}
 
+async function QuestionResults({ searchParams }: Pick<Props, "searchParams">) {
+  const { q, category, page } = readParams(await searchParams);
+  const { items, total } = await cachedQuestionList({ q, category, page });
+  const pages = Math.max(1, Math.ceil(total / PUBLIC_PAGE_SIZE));
+  const filtered = q !== "" || category !== undefined;
+
+  return (
+    <>
+      {/* A plain GET form: the search lives in the address, and works without JavaScript. */}
+      <form
+        action={QUESTIONS_HREF}
+        role="search"
+        aria-label={questionsCopy.searchLabel}
+        className="grid gap-4 rounded-md border border-line bg-surface p-4 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_auto] sm:items-end"
+      >
+        <div className="flex flex-col gap-1.5">
+          <FieldLabel htmlFor="porsesh-q">{questionsCopy.searchLabel}</FieldLabel>
+          <input
+            id="porsesh-q"
+            name="q"
+            type="search"
+            defaultValue={q}
+            maxLength={100}
+            placeholder={questionsCopy.searchPlaceholder}
+            className={controlClasses(undefined, "min-h-12")}
+          />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <FieldLabel htmlFor="porsesh-category">{questionsCopy.categoryLabel}</FieldLabel>
+          <select
+            id="porsesh-category"
+            name="dasteh"
+            defaultValue={category ?? ""}
+            className={controlClasses(undefined, "min-h-12")}
+          >
+            <option value="">{questionsCopy.allCategories}</option>
+            {questionCategories.map((option) => (
+              <option key={option.slug} value={option.slug}>
+                {option.title}
+              </option>
+            ))}
+          </select>
+        </div>
+        <Button type="submit" icon={<Search />}>
+          جست‌وجو
+        </Button>
+      </form>
+
+      {/* Category links: one click, and internal links for search engines. */}
+      <nav aria-label="دسته‌بندی پرسش‌ها" className="mt-4">
+        <ul className="flex flex-wrap gap-2">
+          {[{ slug: undefined, title: questionsCopy.allCategories }, ...questionCategories].map((option) => {
+            const active = option.slug === category;
+            return (
+              <li key={option.slug ?? "all"}>
+                <Link
+                  href={listHref({ category: option.slug })}
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold transition-colors",
+                    active
+                      ? "border-primary bg-primary text-on-primary"
+                      : "border-line bg-surface text-ink hover:border-primary hover:text-primary",
+                  )}
+                >
+                  {option.title}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      <div className="mt-8">
+        {filtered && total > 0 && (
+          <p className="mb-3 text-sm text-muted" aria-live="polite">
+            {toPersianDigits(total)} پرسش
+            {q && <> برای «{q}»</>}
+            {category && <> در دسته {questionCategoryTitle(category)}</>}
+          </p>
+        )}
+        {items.length > 0 ? (
+          <QuestionIndex items={items} />
+        ) : (
+          <EmptyState
+            Icon={MessageCircleQuestion}
+            title={filtered ? questionsCopy.noResultsTitle : questionsCopy.emptyTitle}
+            description={filtered ? questionsCopy.noResultsText : questionsCopy.emptyText}
+            action={
+              <LinkButton href={ASK_HREF} variant="secondary">
+                {questionsCopy.askButton}
+              </LinkButton>
+            }
+          />
+        )}
+        <div className="mt-8">
+          <Pagination current={page} total={pages} hrefFor={(n) => listHref({ q, category, page: n })} />
+        </div>
+      </div>
     </>
   );
 }
