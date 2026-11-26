@@ -1,0 +1,50 @@
+/* Keep the existing hero on touch-first tablets, including in landscape. */
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  .home-hero {
+    background: radial-gradient(ellipse at 18% 18%, #43556c, #203248 44%, #142235 82%);
+  }
+
+  .home-hero .hero-dots {
+    display: none;
+  }
+
+  /* Trace the white-backed original so the browser can reuse its responsive image. */
+  .home-hero .hero-portrait {
+    mask: url("/images/ali-rezvan-portrait-mask.svg") center / contain no-repeat;
+  }
+
+  .home-hero h1 span,
+  .home-hero p,
+  .home-hero-call,
+  .home-hero-messages a {
+    color: var(--color-on-inverse);
+  }
+
+  .home-hero h1 span + span {
+    color: var(--color-on-inverse-muted);
+  }
+
+  .home-hero-request {
+    background: #f8f2e8;
+    color: #142235;
+  }
+
+  .home-hero-request:hover,
+  .home-hero-request:active {
+    background: var(--color-white);
+  }
+
+  .home-hero-call {
+    border-color: var(--color-on-inverse-muted);
+    background: transparent;
+  }
+
+  .home-hero-call:is(:hover, :active),
+  .home-hero-messages a:is(:hover, :active) {
+    background: rgb(255 255 255 / 12%);
+  }
+
+  .home-hero a:focus-visible {
+    outline-color: var(--color-focus-inverse);
+  }
+}

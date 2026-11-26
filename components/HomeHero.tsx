@@ -2,10 +2,10 @@
 // consultation request. Used once, on Home.
 // Phones (below `md`) get a dark iris band: round photo beside the name, the lead and
 // one light button underneath; call and WhatsApp stay in the sticky contact bar. Every
-// phone-only style is a `max-md:` addition, so from `md` the hero is the white one with
-// the full portrait and its contact buttons, unchanged.
+// phone-only style is a `max-md:` addition. The desktop palette lives in HomeHero.css.
 // Usage: <HomeHero />
 import Image from "next/image";
+import "./HomeHero.css";
 import { ArrowLeft } from "lucide-react";
 import { BaleButton } from "@/components/BaleButton";
 import { CallButton } from "@/components/CallButton";
@@ -20,7 +20,7 @@ export function HomeHero() {
   return (
     // From md the hero has no block padding: the portrait file carries its own top margin,
     // and this keeps the license strip below it inside the first screen on laptops.
-    <section className="relative isolate bg-surface py-10 md:py-0 max-md:bg-inverse-surface max-md:py-8 max-md:focus-inverse">
+    <section className="home-hero relative isolate bg-surface py-10 md:py-0 max-md:bg-inverse-surface max-md:py-8 max-md:focus-inverse">
       <div aria-hidden="true" className="hero-dots max-md:hidden" />
       {/* Phones: a two-column grid (photo | name), and the text block below dissolves into
           it with `contents` so the lead and the button span both columns. */}
@@ -69,12 +69,12 @@ export function HomeHero() {
             <ArrowLeft aria-hidden="true" className="size-5" />
           </LinkButton>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap max-md:hidden">
-            <LinkButton href={requestNav.href} size="lg">
+            <LinkButton href={requestNav.href} size="lg" className="home-hero-request">
               {requestNav.label}
             </LinkButton>
-            <CallButton size="lg" />
+            <CallButton size="lg" className="home-hero-call" />
           </div>
-          <div className="mt-2 flex flex-wrap gap-x-2 max-md:hidden">
+          <div className="home-hero-messages mt-2 flex flex-wrap gap-x-2 max-md:hidden">
             <WhatsAppButton variant="ghost" size="sm" />
             <BaleButton variant="ghost" size="sm" />
           </div>
