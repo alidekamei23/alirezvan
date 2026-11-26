@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MessageCircleQuestion, Search } from "lucide-react";
-import { Button } from "@/components/Button";
+import { ArrowDownWideNarrow, ChevronDown, ListFilter, MessageCircleQuestion, Search } from "lucide-react";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { Container } from "@/components/Container";
 import { EmptyState } from "@/components/EmptyState";
-import { FieldLabel, controlClasses } from "@/components/Field";
+import { JsonLd } from "@/components/JsonLd";
 import { LinkButton } from "@/components/LinkButton";
-import { PageHeader } from "@/components/PageHeader";
 import { Pagination } from "@/components/Pagination";
-import { Section } from "@/components/Section";
 import { QuestionIndex } from "@/components/questions/QuestionIndex";
 import { isQuestionCategory, questionCategories, questionCategoryTitle } from "@/content/question-categories";
 import { ASK_HREF, QUESTIONS_HREF, TRACK_HREF, questionsCopy } from "@/content/questions";
@@ -15,6 +14,7 @@ import { cn } from "@/lib/cn";
 import { toPersianDigits } from "@/lib/format";
 import { cachedQuestionList } from "@/lib/questions/cached";
 import { PUBLIC_PAGE_SIZE } from "@/lib/questions/public";
+import { breadcrumbSchema } from "@/lib/schema";
 import { NOINDEX_FOLLOW, pageMetadata, pagedDescription } from "@/lib/seo";
 
 type Props = PageProps<"/porsesh">;
@@ -72,120 +72,129 @@ export default async function QuestionsPage({ searchParams }: Props) {
   const pages = Math.max(1, Math.ceil(total / PUBLIC_PAGE_SIZE));
   const filtered = q !== "" || category !== undefined;
 
-  return (
-    <>
-      <PageHeader
-        title={questionsCopy.heading}
-        lead={questionsCopy.lead}
-        crumbs={[{ label: questionsCopy.heading }]}
-      >
-        <div className="mt-6 flex flex-wrap items-center gap-3">
-          <LinkButton href={ASK_HREF} size="lg" icon={<MessageCircleQuestion />}>
-            {questionsCopy.askButton}
-          </LinkButton>
+  const trail = [{ label: "خانه", href: "/" }, { label: questionsCopy.heading }];
+  const categoryLinks = (
+    <ul className="grid gap-0.5">
+      {[{ slug: undefined, title: "همه پرسش‌ها" }, ...questionCategories].map((option) => (
+        <li key={option.slug ?? "all"}>
           <Link
-            href={TRACK_HREF}
-            className="inline-flex min-h-11 items-center px-2 font-semibold text-primary underline underline-offset-4 hover:text-primary-hover"
+            href={listHref({ q, category: option.slug })}
+            aria-current={category === option.slug ? "page" : undefined}
+            className={cn(
+              "flex min-h-11 items-center rounded-sm px-3 text-sm transition-colors",
+              category === option.slug
+                ? "bg-primary-soft-strong font-bold text-primary-active"
+                : "text-ink hover:bg-primary-soft hover:text-primary-hover",
+            )}
           >
+            {option.title}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+
+  return (
+    <Container className="pb-12 md:pb-16">
+      <div className="flex flex-wrap items-center justify-between gap-x-5 py-1">
+        <Breadcrumbs items={trail} />
+        <div className="flex flex-wrap items-center gap-x-5 text-sm font-semibold text-primary-hover">
+          <Link href={ASK_HREF} className="inline-flex min-h-11 items-center gap-2 hover:underline">
+            <MessageCircleQuestion aria-hidden="true" className="size-4" />
+            {questionsCopy.askButton}
+          </Link>
+          <Link href={TRACK_HREF} className="inline-flex min-h-11 items-center hover:underline">
             {questionsCopy.trackLink}
           </Link>
         </div>
-      </PageHeader>
+      </div>
+      <JsonLd data={breadcrumbSchema(trail.map((crumb) => ({ name: crumb.label, href: crumb.href })))} />
 
-      <Section>
-        {/* A plain GET form: the search lives in the address, and works without JavaScript. */}
-        <form
-          action={QUESTIONS_HREF}
-          role="search"
-          aria-label={questionsCopy.searchLabel}
-          className="grid gap-4 rounded-md border border-line bg-surface p-4 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_auto] sm:items-end"
-        >
-          <div className="flex flex-col gap-1.5">
-            <FieldLabel htmlFor="porsesh-q">{questionsCopy.searchLabel}</FieldLabel>
+      <header className="relative isolate overflow-hidden rounded-lg bg-linear-to-l from-primary-soft-strong to-primary-soft px-5 py-5 sm:px-8 sm:py-6">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 -z-10 w-1/3 bg-[url('/images/courthouse-linework.svg')] bg-cover bg-left-bottom bg-no-repeat opacity-35 [mask-image:linear-gradient(to_right,black_55%,transparent)] sm:w-2/5 sm:opacity-70" />
+        <div className="sm:w-3/5">
+          <h1 className="text-2xl font-black text-ink">{questionsCopy.heading}</h1>
+          <p className="mt-1 text-muted">{questionsCopy.lead}</p>
+          <form
+            action={QUESTIONS_HREF}
+            role="search"
+            aria-label={questionsCopy.searchLabel}
+            className="mt-4 flex items-center rounded-sm border border-line-strong bg-surface focus-within:border-primary"
+          >
+            {category && <input type="hidden" name="dasteh" value={category} />}
+            <button type="submit" aria-label="جست‌وجو" className="grid size-12 shrink-0 cursor-pointer place-items-center rounded-sm text-primary hover:bg-primary-soft">
+              <Search aria-hidden="true" className="size-5" />
+            </button>
+            <label htmlFor="porsesh-q" className="sr-only">{questionsCopy.searchLabel}</label>
             <input
               id="porsesh-q"
+              key={q}
               name="q"
               type="search"
               defaultValue={q}
               maxLength={100}
-              placeholder={questionsCopy.searchPlaceholder}
-              className={controlClasses(undefined, "min-h-12")}
+              placeholder={questionsCopy.searchLabel}
+              className="min-h-12 min-w-0 flex-1 rounded-sm pe-3 text-ink placeholder:text-muted"
             />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <FieldLabel htmlFor="porsesh-category">{questionsCopy.categoryLabel}</FieldLabel>
-            <select
-              id="porsesh-category"
-              name="dasteh"
-              defaultValue={category ?? ""}
-              className={controlClasses(undefined, "min-h-12")}
-            >
-              <option value="">{questionsCopy.allCategories}</option>
-              {questionCategories.map((option) => (
-                <option key={option.slug} value={option.slug}>
-                  {option.title}
-                </option>
-              ))}
-            </select>
-          </div>
-          <Button type="submit" icon={<Search />}>
-            جست‌وجو
-          </Button>
-        </form>
+          </form>
+        </div>
+      </header>
 
-        {/* Category links: one click, and internal links for search engines. */}
-        <nav aria-label="دسته‌بندی پرسش‌ها" className="mt-4">
-          <ul className="flex flex-wrap gap-2">
-            {[{ slug: undefined, title: questionsCopy.allCategories }, ...questionCategories].map((option) => {
-              const active = option.slug === category;
-              return (
-                <li key={option.slug ?? "all"}>
-                  <Link
-                    href={listHref({ category: option.slug })}
-                    aria-current={active ? "page" : undefined}
-                    className={cn(
-                      "inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold transition-colors",
-                      active
-                        ? "border-primary bg-primary text-on-primary"
-                        : "border-line bg-surface text-ink hover:border-primary hover:text-primary",
-                    )}
-                  >
-                    {option.title}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+      <div className="mt-6 grid items-start gap-3 md:grid-cols-[minmax(0,1fr)_minmax(11rem,22%)] md:gap-x-5">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 md:col-start-1 md:row-start-1">
+          <h2 className="text-xl font-extrabold text-ink">پرسش‌ها</h2>
+          {items.length > 0 && (
+            <span className="inline-flex items-center gap-2 text-sm text-muted">
+              <ArrowDownWideNarrow aria-hidden="true" className="size-4" /> برگزیده‌ها، سپس تازه‌ترین‌ها
+            </span>
+          )}
+        </div>
+        <nav aria-label="دسته‌بندی پرسش‌ها" className="rounded-md border border-line bg-surface p-2 md:col-start-2 md:row-start-2">
+          <details className="group md:hidden" key={category ?? "all"}>
+            <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-sm px-2 text-sm font-bold text-ink [&::-webkit-details-marker]:hidden">
+              <ListFilter aria-hidden="true" className="size-4 text-primary" />
+              دسته‌بندی‌ها
+              <span className="ms-auto text-sm font-normal text-muted">{category ? questionCategoryTitle(category) : "همه پرسش‌ها"}</span>
+              <ChevronDown aria-hidden="true" className="size-4 group-open:rotate-180" />
+            </summary>
+            {categoryLinks}
+          </details>
+          <div className="hidden md:block">
+            <h2 className="px-3 pt-1 pb-3 font-bold text-ink">دسته‌بندی‌ها</h2>
+            {categoryLinks}
+          </div>
         </nav>
 
-        <div className="mt-8">
-          {filtered && total > 0 && (
-            <p className="mb-3 text-sm text-muted" aria-live="polite">
-              {toPersianDigits(total)} پرسش
-              {q && <> برای «{q}»</>}
-              {category && <> در دسته {questionCategoryTitle(category)}</>}
-            </p>
+        <section aria-label="فهرست پرسش‌ها" className="min-w-0 md:col-start-1 md:row-start-2">
+          {filtered && (
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-x-3 rounded-sm bg-primary-soft px-3 text-sm">
+              <p className="min-w-0 py-1 text-muted wrap-anywhere" aria-live="polite">
+                {toPersianDigits(total)} پرسش
+                {q && <> برای «{q}»</>}
+                {category && <> در دسته {questionCategoryTitle(category)}</>}
+              </p>
+              <Link href={QUESTIONS_HREF} className="inline-flex min-h-11 items-center font-semibold text-primary-hover underline underline-offset-4">
+                نمایش همه پرسش‌ها
+              </Link>
+            </div>
           )}
           {items.length > 0 ? (
-            <QuestionIndex items={items} />
+            <QuestionIndex items={items} headingLevel="h3" />
           ) : (
             <EmptyState
               Icon={MessageCircleQuestion}
               title={filtered ? questionsCopy.noResultsTitle : questionsCopy.emptyTitle}
               description={filtered ? questionsCopy.noResultsText : questionsCopy.emptyText}
-              action={
-                <LinkButton href={ASK_HREF} variant="secondary">
-                  {questionsCopy.askButton}
-                </LinkButton>
-              }
+              action={<LinkButton href={ASK_HREF} variant="secondary">{questionsCopy.askButton}</LinkButton>}
             />
           )}
-          <div className="mt-8">
-            <Pagination current={page} total={pages} hrefFor={(n) => listHref({ q, category, page: n })} />
-          </div>
-        </div>
-      </Section>
-
-    </>
+          {pages > 1 && (
+            <div className="mt-6">
+              <Pagination current={page} total={pages} hrefFor={(n) => listHref({ q, category, page: n })} />
+            </div>
+          )}
+        </section>
+      </div>
+    </Container>
   );
 }
