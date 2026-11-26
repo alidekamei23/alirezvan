@@ -448,7 +448,17 @@ function MohlatResultView({
       }
       notes={result.notes.map(faText)}
     >
-      <CalculatorResultActions text={buildSummary(result, form, start, startTitle)} />
+      <CalculatorResultActions
+        text={buildSummary(result, form, start, startTitle)}
+        result={{
+          title: "نتیجهٔ محاسبهٔ مهلت قانونی",
+          lines: [
+            faText(result.title),
+            `${resultHeading(result.mode)} · ${faText(result.endLabel)}`,
+            ...(result.warnings.length ? ["تعطیلات قمری منتشرنشده در این برآورد لحاظ نشده‌اند."] : []),
+          ],
+        }}
+      />
     </ResultCard>
   );
 }

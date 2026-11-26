@@ -752,7 +752,20 @@ function ErsResultView({
       }
       notes={result.notes.map((note) => toPersianDigits(note))}
     >
-      <CalculatorResultActions text={buildSummary(result, form, useLcd)} />
+      <CalculatorResultActions
+        text={buildSummary(result, form, useLcd)}
+        result={{
+          title: "برآورد سهم‌الارث",
+          lines: [
+            ...shares.map((share) => {
+              const label = share.count > 1 ? `${share.label}، هر نفر از ${toPersianDigits(share.count)} نفر` : share.label;
+              const amount = money ? `، ${formatToman(money.perShare(share).each)}` : "";
+              return `${label} · ${percentText(share.each)}${amount}${share.reserved ? " (کنار گذاشته شده)" : ""}`;
+            }),
+            ...(hasHakem ? [`${HAKEM_LABEL} · ${percentText(result.hakem)}`] : []),
+          ],
+        }}
+      />
     </ResultCard>
   );
 }

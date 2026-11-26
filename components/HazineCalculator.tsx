@@ -102,7 +102,13 @@ export function HazineCalculator() {
                 `بر پایه تعرفه سال ${TARIFF_YEAR_LABEL}`,
               ]}
             >
-              <CalculatorResultActions text={buildSummary(result)} />
+              <CalculatorResultActions
+                text={buildSummary(result)}
+                result={{
+                  title: "برآورد هزینهٔ دادرسی",
+                  lines: [`مرحلهٔ ${STAGES[result.stage].title} · ${result.total % 10 ? rial(result.total) : tomanEquivalent(result.total)}${includeEnforcement ? " با احتساب حق اجرا" : ""}`],
+                }}
+              />
             </ResultCard>
           ) : (
             <EmptyState

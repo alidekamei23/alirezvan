@@ -347,7 +347,16 @@ export function TadiehCalculator() {
                     : []),
                 ]}
               >
-                <CalculatorResultActions text={buildSummary(result)} />
+                <CalculatorResultActions
+                  text={buildSummary(result)}
+                  result={{
+                    title: "برآورد خسارت تأخیر تأدیه",
+                    lines: [
+                      `خسارت تأخیر · ${rial(result.totalDamage)}`,
+                      `مجموع قابل پرداخت · ${rial(result.grandTotal)}`,
+                    ],
+                  }}
+                />
               </ResultCard>
             </>
           )}

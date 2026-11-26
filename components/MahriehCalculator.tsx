@@ -39,7 +39,7 @@ import {
   formatMahrFactor,
   yearIndexLabel,
 } from "@/lib/mahrieh/present";
-import { formatIndex, rial } from "@/lib/tadieh/present";
+import { formatIndex, rial, tomanEquivalent } from "@/lib/tadieh/present";
 
 type Unit = "rial" | "toman";
 type PaymentRow = { id: number; amount: number | null; year: number | null };
@@ -419,6 +419,13 @@ export function MahriehCalculator() {
                   </div>
                 )}
                 <CalculatorResultActions
+                  result={{
+                    title: "برآورد مهریه به نرخ روز",
+                    lines: [
+                      `ارزش کل برآوردی · ${result.total % 10 ? rial(result.total) : tomanEquivalent(result.total)}`,
+                      ...(result.cash && result.warnings.length ? result.warnings.map(faText) : []),
+                    ],
+                  }}
                   text={buildSummary(result, {
                     marriageYear: marriageYear ?? paymentYear,
                     paymentYear,

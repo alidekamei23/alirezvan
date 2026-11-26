@@ -469,6 +469,16 @@ export function KarshenasiCalculator() {
             }
           >
             <CalculatorResultActions
+              result={{
+                title: "برآورد دستمزد کارشناسی",
+                lines: [
+                  faText(result.item.title),
+                  result.total === null
+                    ? `دستمزد هر کارشناس · ${faText(result.rangeText ?? "در فرایند کارشناسی تعیین می‌شود")}`
+                    : `${result.provisional ? "جمع موقت" : "جمع کل"} · ${rial(result.total)}`,
+                  ...(result.total === null && extras > 0 ? [`هزینه‌های جدا از دستمزد · ${rial(extras)}`] : []),
+                ],
+              }}
               text={buildSummary(result, {
                 values: values ?? [],
                 missionDays: days,

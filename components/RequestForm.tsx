@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { useEffect, useRef, useState, useTransition, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, useTransition, type FormEvent } from "react";
 import { sendConsultationCode, submitConsultation } from "@/app/(site)/request/actions";
 import { Alert } from "@/components/Alert";
 import { Button } from "@/components/Button";
@@ -13,9 +14,12 @@ import { RadioCards } from "@/components/RadioCards";
 import { Select } from "@/components/Select";
 import { Textarea } from "@/components/Textarea";
 import { TextField } from "@/components/TextField";
-import { takeCalculatorResult } from "@/lib/consultation/prefill";
 import {
-  DESCRIPTION_LIMIT, NAME_LIMIT, OTHER_TOPIC_LIMIT, messengers, topics, type ConsultationDraft,
+  forgetConsultationDraft, getConsultationDraft, rememberConsultationDraft, takeCalculatorResult,
+} from "@/lib/consultation/prefill";
+import {
+  DESCRIPTION_LIMIT, NAME_LIMIT, OTHER_TOPIC_LIMIT, messengers, topics,
+  type CalculatorResult, type ConsultationDraft,
 } from "@/lib/consultation/schema";
 import { formatNumber, toPersianDigits } from "@/lib/format";
 
@@ -26,10 +30,134 @@ const emptyDraft: ConsultationDraft = {
 type Errors = Partial<Record<keyof ConsultationDraft, string[]>>;
 type Stage = "details" | "verify" | "saved";
 
-export function RequestForm({ enabled }: { enabled: boolean }) {
+const panelClass = "min-w-0 rounded-lg border border-line bg-surface p-4 shadow-sm sm:px-6";
+
+function withResult(draft: ConsultationDraft, calculatorResult: CalculatorResult | undefined): ConsultationDraft {
+  return { ...draft, calculatorResult, source: calculatorResult ? "calculator" : "page" };
+}
+
+function CalculatorResultPreview({ result, onRemove, error }: {
+  result: CalculatorResult;
+  onRemove?: () => void;
+  error?: string;
+}) {
+  const titleId = useId();
+  return (
+    <section aria-labelledby={titleId} className="grid gap-1 rounded-md border border-line bg-surface-muted px-3 py-2">
+      <div className="flex flex-wrap items-center justify-between gap-x-3">
+        <h2 id={titleId} className="font-bold text-ink">{result.title}</h2>
+        {onRemove && <Button variant="ghost" size="sm" onClick={onRemove}>حذف نتیجه</Button>}
+      </div>
+      <ul className="grid gap-1 text-sm font-semibold text-ink">
+        {result.lines.map((line, index) => <li key={index} className="wrap-break-word">{line}</li>)}
+      </ul>
+      {onRemove && <p className="text-sm text-muted">این نتیجه همراه درخواست شما ثبت می‌شود.</p>}
+      {error && <p role="alert" className="text-sm text-danger-ink">{error}</p>}
+    </section>
+  );
+}
+
+export function RequestForm({ enabled, resultId }: { enabled: boolean; resultId?: string }) {
+  const { bfcacheId } = useRouter();
+  // A fresh visit must start its own form, even when Next restores the route's DOM.
+  const entryId = JSON.stringify([bfcacheId, resultId]);
+  return <RequestVisit key={entryId} entryId={entryId} enabled={enabled} resultId={resultId} />;
+}
+
+type Visit = {
+  initial: ConsultationDraft;
+  previous?: NonNullable<ReturnType<typeof getConsultationDraft>>;
+  incoming?: CalculatorResult;
+  revision: number;
+};
+
+function RequestVisit({ entryId, enabled, resultId }: { entryId: string; enabled: boolean; resultId?: string }) {
+  const [visit, setVisit] = useState<Visit>();
+  const ownedDraftWhenHidden = useRef(false);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      const incoming = takeCalculatorResult(resultId);
+      const saved = getConsultationDraft();
+      const owned = saved?.entryId === entryId;
+      const lostDraft = ownedDraftWhenHidden.current && !owned;
+      setVisit((current) => {
+        if (current && !incoming && !lostDraft && (!current.previous || current.previous.entryId === saved?.entryId)) {
+          return current;
+        }
+        const result = incoming ?? current?.incoming;
+        const previous = owned ? undefined : saved;
+        return {
+          initial: owned && !result ? saved.draft : withResult(emptyDraft, previous ? undefined : result),
+          previous,
+          incoming: previous ? result : undefined,
+          revision: (current?.revision ?? -1) + 1,
+        };
+      });
+    });
+    return () => {
+      window.cancelAnimationFrame(frame);
+      ownedDraftWhenHidden.current = getConsultationDraft()?.entryId === entryId;
+    };
+  }, [entryId, resultId]);
+
+  function chooseDraft(keep: boolean) {
+    if (!visit?.previous) return;
+    const saved = getConsultationDraft();
+    const previous = saved?.entryId === visit.previous.entryId ? saved : undefined;
+    let initial = withResult(emptyDraft, visit.incoming);
+    if (previous && keep) {
+      initial = visit.incoming ? withResult(previous.draft, visit.incoming) : previous.draft;
+      rememberConsultationDraft(entryId, initial);
+    } else if (previous) {
+      forgetConsultationDraft(previous.entryId);
+    }
+    setVisit({ initial, revision: visit.revision + 1 });
+  }
+
+  if (!visit) {
+    return (
+      <div className={panelClass} aria-busy="true">
+        <h1 className="text-2xl font-bold text-ink">درخواست مشاوره</h1>
+        <p role="status" className="sr-only">در حال آماده کردن فرم مشاوره…</p>
+      </div>
+    );
+  }
+
+  if (visit.incoming && visit.previous) {
+    return (
+      <div className={`${panelClass} grid gap-3`}>
+        <h1 className="text-2xl font-bold text-ink">درخواست مشاوره</h1>
+        <CalculatorResultPreview result={visit.incoming} />
+        <Alert live title="یک پیش‌نویس مشاوره دارید">
+          <p>
+            {visit.previous.draft.calculatorResult ? "می‌توانید نتیجهٔ قبلی را عوض کنید و نوشته‌تان را نگه دارید." : "می‌توانید این نتیجه را به پیش‌نویس اضافه کنید."}
+            {" با شروع درخواست تازه، پیش‌نویس قبلی پاک می‌شود."}
+          </p>
+        </Alert>
+        <div className="flex flex-wrap gap-2">
+          <Button onClick={() => chooseDraft(true)}>استفاده از نتیجه در همین درخواست</Button>
+          <Button variant="secondary" onClick={() => chooseDraft(false)}>شروع درخواست تازه</Button>
+        </div>
+      </div>
+    );
+  }
+
+  return <RequestDetails key={visit.revision} enabled={enabled} entryId={entryId} initial={visit.initial}
+    focusOnMount={visit.revision > 0} onResume={visit.previous ? () => chooseDraft(true) : undefined} />;
+}
+
+function RequestDetails({ enabled, entryId, initial, focusOnMount, onResume }: {
+  enabled: boolean;
+  entryId: string;
+  initial: ConsultationDraft;
+  focusOnMount: boolean;
+  onResume?: () => void;
+}) {
   const [stage, setStage] = useState<Stage>("details");
-  const [draft, setDraft] = useState(emptyDraft);
-  const [topic, setTopic] = useState("");
+  const [draft, setDraft] = useState(initial);
+  const latestDraft = useRef(initial);
+  const [canResume, setCanResume] = useState(Boolean(onResume));
   const [challengeId, setChallengeId] = useState("");
   const [errors, setErrors] = useState<Errors>({});
   const [notice, setNotice] = useState("");
@@ -42,21 +170,10 @@ export function RequestForm({ enabled }: { enabled: boolean }) {
   const panel = useRef<HTMLDivElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const focusAfterEdit = useRef(false);
+  const focusOnOpen = useRef(focusOnMount);
   const focusError = useRef(false);
   const previousStage = useRef<Stage>("details");
   const previousChallenge = useRef("");
-
-  useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
-      const description = takeCalculatorResult();
-      if (description) {
-        setDraft((current) => ({
-          ...current, source: "calculator", description: description.slice(0, DESCRIPTION_LIMIT),
-        }));
-      }
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, []);
 
   useEffect(() => {
     if (retryAt <= now) return;
@@ -74,7 +191,10 @@ export function RequestForm({ enabled }: { enabled: boolean }) {
       ? panel.current?.querySelector<HTMLElement>('fieldset[aria-invalid="true"] input, input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="true"]')
       : undefined;
     focusError.current = false;
-    if (firstInvalid) firstInvalid.focus();
+    if (focusOnOpen.current) {
+      focusOnOpen.current = false;
+      heading.current?.focus({ preventScroll: true });
+    } else if (firstInvalid) firstInvalid.focus();
     else if (changed && focusAfterEdit.current) {
       panel.current?.querySelector<HTMLElement>("#consultation-mobile")?.focus();
       focusAfterEdit.current = false;
@@ -84,6 +204,15 @@ export function RequestForm({ enabled }: { enabled: boolean }) {
 
   const wait = Math.max(0, Math.ceil((retryAt - now) / 1000));
   const waitLabel = wait >= 60 ? `${formatNumber(Math.ceil(wait / 60))} دقیقه` : `${formatNumber(wait)} ثانیه`;
+
+  function updateDraft(changes: Partial<ConsultationDraft>) {
+    const next = { ...latestDraft.current, ...changes };
+    latestDraft.current = next;
+    setDraft(next);
+    rememberConsultationDraft(entryId, next);
+    if (next.description.trim()) setCanResume(false);
+    return next;
+  }
 
   function clearFeedback() {
     setErrors({});
@@ -137,17 +266,15 @@ export function RequestForm({ enabled }: { enabled: boolean }) {
     event.preventDefault();
     if (!enabled) return;
     const form = new FormData(event.currentTarget);
-    const next = {
+    const topic = String(form.get("topic") ?? "");
+    send(updateDraft({
       name: String(form.get("name") ?? ""),
       mobile: String(form.get("mobile") ?? ""),
       messenger: String(form.get("messenger") ?? ""),
       topic,
       otherTopic: topic === "other" ? String(form.get("otherTopic") ?? "") : "",
       description: String(form.get("description") ?? ""),
-      source: draft.source,
-    };
-    setDraft(next);
-    send(next);
+    }));
   }
 
   function verify(event: FormEvent<HTMLFormElement>) {
@@ -163,6 +290,7 @@ export function RequestForm({ enabled }: { enabled: boolean }) {
         focusError.current = true;
         switch (result.kind) {
           case "saved":
+            forgetConsultationDraft(entryId);
             setDraft(emptyDraft);
             setStage("saved");
             break;
@@ -195,7 +323,7 @@ export function RequestForm({ enabled }: { enabled: boolean }) {
   }
 
   return (
-    <div ref={panel} className="min-w-0 rounded-lg border border-line bg-surface p-4 shadow-sm sm:px-6">
+    <div ref={panel} className={panelClass}>
       <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b border-line pb-3">
         <h1 ref={heading} tabIndex={-1} className="scroll-mt-24 text-2xl font-bold text-ink">
           {stage === "details" ? "درخواست مشاوره" : stage === "verify" ? "تأیید شماره موبایل" : "درخواست ثبت شد"}
@@ -220,32 +348,49 @@ export function RequestForm({ enabled }: { enabled: boolean }) {
               برای هماهنگی مشاوره از <a href="#office-contact" className="font-bold underline">راه‌های تماس با دفتر</a> استفاده کنید.
             </Alert>
           )}
+          {enabled && canResume && onResume && (
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-md border border-line px-3 py-1.5">
+              <p className="text-sm text-muted">یک درخواست ناتمام دارید.</p>
+              <Button variant="ghost" size="sm" onClick={onResume}>ادامهٔ پیش‌نویس</Button>
+            </div>
+          )}
           <fieldset disabled={pending || !enabled} className="grid min-w-0 gap-3">
             <div className="grid items-start gap-4 sm:grid-cols-2 [&_p[id$='-hint']]:order-last">
               <TextField label="نام" name="name" autoComplete="given-name" maxLength={NAME_LIMIT}
-                defaultValue={draft.name} error={errors.name?.[0]} />
+                defaultValue={draft.name} error={errors.name?.[0]}
+                onChange={(event) => updateDraft({ name: event.target.value })} />
               <PhoneField label="شماره موبایل" id="consultation-mobile" name="mobile"
                 defaultValue={draft.mobile} error={errors.mobile?.[0]}
-                hint="کد تأیید به این شماره پیامک می‌شود." />
+                hint="کد تأیید به این شماره پیامک می‌شود."
+                onValueChange={(mobile) => updateDraft({ mobile })} />
             </div>
             <Select label="پیام‌رسان ترجیحی" name="messenger" optional
               options={[...messengers]} placeholder="بدون ترجیح" defaultValue={draft.messenger}
-              error={errors.messenger?.[0]} />
+              error={errors.messenger?.[0]}
+              onChange={(event) => updateDraft({ messenger: event.target.value })} />
             <RadioCards legend="موضوع مشاوره" name="topic" compact options={[...topics]}
-              defaultValue={topic} error={errors.topic?.[0]}
+              defaultValue={draft.topic} error={errors.topic?.[0]}
               onValueChange={(value) => {
-                setTopic(value);
+                updateDraft({ topic: value, otherTopic: "" });
                 setErrors((current) => ({ ...current, topic: undefined, otherTopic: undefined }));
-                if (value !== "other") setDraft((current) => ({ ...current, otherTopic: "" }));
               }} />
-            {topic === "other" && (
+            {draft.topic === "other" && (
               <TextField label="موضوع شما در یک جمله" name="otherTopic" maxLength={OTHER_TOPIC_LIMIT}
                 defaultValue={draft.otherTopic} error={errors.otherTopic?.[0]}
-                hint="مثلاً برای بررسی قرارداد پیش از امضا مشاوره می‌خواهم." />
+                hint="مثلاً برای بررسی قرارداد پیش از امضا مشاوره می‌خواهم."
+                onChange={(event) => updateDraft({ otherTopic: event.target.value })} />
             )}
-            <Textarea key={draft.source} label="شرح موضوع مشاوره" name="description" rows={3}
+            {draft.calculatorResult && (
+              <CalculatorResultPreview result={draft.calculatorResult} error={errors.calculatorResult?.[0]} onRemove={() => {
+                updateDraft(withResult(latestDraft.current, undefined));
+                setErrors((current) => ({ ...current, calculatorResult: undefined }));
+                panel.current?.querySelector<HTMLTextAreaElement>('textarea[name="description"]')?.focus();
+              }} />
+            )}
+            <Textarea label="شرح موضوع مشاوره" name="description" rows={3}
               maxLength={DESCRIPTION_LIMIT} defaultValue={draft.description} error={errors.description?.[0]}
-              placeholder="چه اتفاقی افتاده و چه راهنمایی می‌خواهید؟" />
+              hint="چه اتفاقی افتاده و می‌خواهید وکیل چه چیزی را بررسی کند؟"
+              onValueChange={(description) => updateDraft({ description })} />
           </fieldset>
           {notice && <Alert live tone="danger">{notice}</Alert>}
           <div className="flex flex-col items-stretch gap-x-4 gap-y-1 sm:flex-row sm:items-center">

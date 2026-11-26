@@ -509,7 +509,16 @@ function VekalatResultView({ result, form }: { result: VekalatOk; form: VekalatF
       }
       notes={result.notes.map(faText)}
     >
-      <CalculatorResultActions text={buildSummary(result, form)} />
+      <CalculatorResultActions
+        text={buildSummary(result, form)}
+        result={{
+          title: "برآورد حق‌الوکاله و تمبر وکیل",
+          lines: [
+            `حق‌الوکاله طبق تعرفه · ${rangeText(result.fee)}`,
+            `جمع تمبر · ${rial(result.stamp.total)}`,
+          ],
+        }}
+      />
     </ResultCard>
   );
 }

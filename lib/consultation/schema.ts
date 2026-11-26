@@ -23,6 +23,12 @@ const shortText = (limit: number, missing: string) =>
   z.string().max(limit, "متن واردشده بیش از حد طولانی است.")
     .transform(normalizeInput).pipe(z.string().min(1, missing));
 
+const resultError = "نتیجهٔ محاسبه معتبر نیست. می‌توانید آن را حذف کنید و ادامه دهید.";
+const calculatorResultSchema = z.object({
+  title: shortText(100, resultError),
+  lines: z.array(shortText(300, resultError)).min(1, resultError).max(40, resultError),
+});
+
 export const consultationSchema = z.object({
   name: shortText(NAME_LIMIT, "نام را وارد کنید."),
   mobile: z.string().max(40, "شماره موبایل ایران را وارد کنید.")
@@ -35,8 +41,14 @@ export const consultationSchema = z.object({
   otherTopic: z.unknown(),
   description: z.string().max(DESCRIPTION_LIMIT, "شرح موضوع باید حداکثر ۳٬۰۰۰ نویسه باشد.")
     .transform(normalizeInput).pipe(z.string().min(1, "شرح موضوع مشاوره را بنویسید.")),
+  calculatorResult: calculatorResultSchema.optional(),
   source: z.enum(["page", "calculator"]),
-}).transform((value, ctx) => {
+}).transform(({ calculatorResult, ...fields }, ctx) => {
+  const value = calculatorResult ? {
+    ...fields,
+    description: `${fields.description}\n\n${calculatorResult.title}\n${calculatorResult.lines.join("\n")}`,
+    source: "calculator" as const,
+  } : fields;
   if (value.topic !== "other") return { ...value, otherTopic: null };
   const other = shortText(OTHER_TOPIC_LIMIT, "موضوع را در یک جمله بنویسید.")
     .safeParse(typeof value.otherTopic === "string" ? value.otherTopic : "");
@@ -49,6 +61,7 @@ export const requestIdSchema = z.uuid();
 export const codeSchema = z.string().length(5).transform(toLatinDigits).pipe(z.string().regex(/^\d{5}$/));
 
 export type ConsultationInput = z.output<typeof consultationSchema>;
+export type CalculatorResult = z.input<typeof calculatorResultSchema>;
 export type ConsultationDraft = {
   [Field in Exclude<keyof ConsultationInput, "source">]: string;
-} & { source: ConsultationInput["source"] };
+} & { source: ConsultationInput["source"]; calculatorResult?: CalculatorResult };

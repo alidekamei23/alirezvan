@@ -1,12 +1,31 @@
-// Keep the one-time handoff in this tab's memory, away from URLs and browser storage.
-let handoff: { text: string; expires: number } | undefined;
+import type { CalculatorResult, ConsultationDraft } from "./schema";
 
-export function handOffCalculatorResult(text: string) {
-  handoff = { text, expires: Date.now() + 60_000 };
+// Keep results and unfinished requests in this tab's memory. The URL carries only an ID.
+let handoff: { id: string; result: CalculatorResult; expires: number } | undefined;
+let savedDraft: { entryId: string; draft: ConsultationDraft } | undefined;
+
+export function handOffCalculatorResult(result: CalculatorResult) {
+  const id = crypto.randomUUID();
+  handoff = { id, result, expires: Date.now() + 60_000 };
+  return id;
 }
 
-export function takeCalculatorResult() {
-  const result = handoff;
+export function takeCalculatorResult(id: string | undefined) {
+  if (!handoff || handoff.id !== id) return undefined;
+  const { result, expires } = handoff;
   handoff = undefined;
-  return result && result.expires > Date.now() ? result.text : "";
+  if (expires > Date.now()) return result;
+}
+
+export function getConsultationDraft() {
+  return savedDraft;
+}
+
+export function rememberConsultationDraft(entryId: string, draft: ConsultationDraft) {
+  if (draft.description.trim()) savedDraft = { entryId, draft };
+  else forgetConsultationDraft(entryId);
+}
+
+export function forgetConsultationDraft(entryId: string) {
+  if (savedDraft?.entryId === entryId) savedDraft = undefined;
 }

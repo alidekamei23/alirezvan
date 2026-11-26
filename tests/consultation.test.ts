@@ -3,8 +3,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { sendConsultationCode, submitConsultation } from "@/app/(site)/request/actions";
 import type { Db } from "@/db/client";
 import { consultationCodes, consultationRequests } from "@/db/schema";
+import {
+  forgetConsultationDraft, getConsultationDraft, handOffCalculatorResult, rememberConsultationDraft, takeCalculatorResult,
+} from "@/lib/consultation/prefill";
 import { issueCode, verifyAndSave } from "@/lib/consultation/repository";
-import { consultationSchema } from "@/lib/consultation/schema";
+import { consultationSchema, type ConsultationDraft } from "@/lib/consultation/schema";
 import { getCodeSender } from "@/lib/sms";
 import { testDb } from "./admin/helpers";
 
@@ -14,8 +17,9 @@ vi.mock("@/lib/auth/admin", () => ({ clientIp: async () => "test-ip" }));
 const fields = {
   name: "علی", mobile: "+۹۸ ۹۱۲-۳۴۵-۶۷۸۹", messenger: "", topic: "civil",
   otherTopic: "", description: "شرح آزمایشی درخواست", source: "page",
-};
+} satisfies ConsultationDraft;
 const draft = consultationSchema.parse(fields);
+const calculatorResult = { title: "برآورد هزینهٔ دادرسی", lines: ["مرحلهٔ بدوی · ۲۵۰٬۰۰۰ تومان"] };
 const secret = "consultation-test-secret-at-least-32";
 let db: Db;
 
@@ -38,6 +42,49 @@ describe("consultation validation", () => {
     expect(consultationSchema.safeParse({ ...fields, description: " \n " }).success).toBe(false);
     expect(consultationSchema.safeParse({ ...fields, description: "س".repeat(3000) }).success).toBe(true);
     expect(consultationSchema.safeParse({ ...fields, description: "س".repeat(3001) }).success).toBe(false);
+  });
+
+  it("validates the user's description separately and appends the selected result only after validation", () => {
+    expect(consultationSchema.safeParse({ ...fields, description: " ", calculatorResult }).success).toBe(false);
+    const description = "س".repeat(3000);
+    expect(consultationSchema.parse({ ...fields, description, calculatorResult })).toMatchObject({
+      source: "calculator",
+      description: `${description}\n\nبرآورد هزینهٔ دادرسی\nمرحلهٔ بدوی · 250٬000 تومان`,
+    });
+    expect(consultationSchema.safeParse({ ...fields, calculatorResult: { ...calculatorResult, lines: [] } }).success).toBe(false);
+    expect(consultationSchema.parse(fields)).toMatchObject({ source: "page", description: fields.description });
+  });
+});
+
+describe("calculator handoff and consultation drafts", () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it("takes only the latest result for its own entry, once, and expires unused results", () => {
+    const now = vi.spyOn(Date, "now").mockReturnValue(1000);
+    const first = handOffCalculatorResult(calculatorResult);
+    const deadline = { title: "مهلت قانونی", lines: ["آخرین روز · ۲۵ آذر"] };
+    const second = handOffCalculatorResult(deadline);
+    expect(takeCalculatorResult(undefined)).toBeUndefined();
+    expect(takeCalculatorResult(first)).toBeUndefined();
+    expect(takeCalculatorResult(second)).toEqual(deadline);
+    expect(takeCalculatorResult(second)).toBeUndefined();
+
+    const expired = handOffCalculatorResult(calculatorResult);
+    now.mockReturnValue(61_000);
+    expect(takeCalculatorResult(expired)).toBeUndefined();
+  });
+
+  it("treats written text as a draft and clears it only for its current owner", () => {
+    rememberConsultationDraft("first", { ...fields, calculatorResult, description: " " });
+    expect(getConsultationDraft()).toBeUndefined();
+    rememberConsultationDraft("first", { ...fields, calculatorResult });
+    rememberConsultationDraft("second", { ...fields, description: "" });
+    expect(getConsultationDraft()?.entryId).toBe("first");
+    rememberConsultationDraft("second", fields);
+    forgetConsultationDraft("first");
+    expect(getConsultationDraft()).toEqual({ entryId: "second", draft: fields });
+    forgetConsultationDraft("second");
+    expect(getConsultationDraft()).toBeUndefined();
   });
 });
 
@@ -155,12 +202,13 @@ describe("consultation verification and storage", () => {
     expect((await send("09200000500", "test-ip", randomUUID())).kind).toBe("limited");
   });
 
-  it("runs the development actions end to end and disables both in production", async () => {
+  it("registers a calculator request after verification and disables both actions without a production sender", async () => {
     vi.stubEnv("NODE_ENV", "development");
     vi.stubEnv("IP_HASH_SALT", secret);
+    const withCalculator = { ...fields, calculatorResult };
     const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
-    expect((await sendConsultationCode(requestId, { ...fields, description: "" })).kind).toBe("fields");
-    const sent = await sendConsultationCode(requestId, fields);
+    expect((await sendConsultationCode(requestId, { ...withCalculator, description: "" })).kind).toBe("fields");
+    const sent = await sendConsultationCode(requestId, withCalculator);
     if (sent.kind !== "sent") throw Error(sent.kind);
     expect(Object.keys(sent).sort()).toEqual(["challengeId", "kind", "retryAt"]);
     expect(stdout).toHaveBeenCalledOnce();
@@ -173,7 +221,13 @@ describe("consultation verification and storage", () => {
     expect(await submitConsultation(requestId, sent.challengeId, otp, fields)).toEqual({ kind: "unavailable" });
     expect(db.select().from(consultationRequests).all()).toEqual([]);
     vi.stubEnv("NODE_ENV", "development");
-    expect(await submitConsultation(requestId, sent.challengeId, otp, fields)).toEqual({ kind: "saved" });
+    expect(await submitConsultation(requestId, sent.challengeId, otp, { ...withCalculator, description: "" }))
+      .toMatchObject({ kind: "fields" });
+    expect(await submitConsultation(requestId, sent.challengeId, otp, withCalculator)).toEqual({ kind: "saved" });
+    expect(db.select().from(consultationRequests).get()).toMatchObject({
+      source: "calculator",
+      description: `${fields.description}\n\nبرآورد هزینهٔ دادرسی\nمرحلهٔ بدوی · 250٬000 تومان`,
+    });
   });
 
   it("sends a single SMS.ir verification and registers only after the delivered code", async () => {

@@ -885,7 +885,19 @@ function DiyehResultView({
       notes={ok ? ok.notes.map((note) => toPersianDigits(note)) : []}
     >
       <div className="flex flex-wrap gap-3">
-        {ok && <CalculatorResultActions text={buildSummary(ok, settings)} label="کپی خلاصه" />}
+        {ok && (
+          <CalculatorResultActions
+            text={buildSummary(ok, settings)} label="کپی خلاصه"
+            result={{
+              title: "برآورد دیه",
+              lines: [
+                `جمع دریافتی · ${rial(ok.victimTotal)}`,
+                ...(ok.fundTotal > 0 ? [`سهم صندوق از دریافتی · ${rial(ok.fundTotal)}`] : []),
+                ...(ok.arshCount ? ["ارشِ تعیین‌نشده در این مبلغ لحاظ نشده است."] : []),
+              ],
+            }}
+          />
+        )}
         <Button variant="ghost" icon={<RotateCcw />} onClick={onClear}>
           پاک کردن همه
         </Button>

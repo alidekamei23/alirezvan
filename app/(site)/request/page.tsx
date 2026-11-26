@@ -22,18 +22,19 @@ export const metadata = pageMetadata({
 
 const trail = [{ label: "خانه", href: "/" }, { label: requestCopy.heading }];
 
-export default function RequestPage() {
-  return <Suspense><RequestContent /></Suspense>;
+export default function RequestPage({ searchParams }: PageProps<"/request">) {
+  return <Suspense><RequestContent searchParams={searchParams} /></Suspense>;
 }
 
-async function RequestContent() {
+async function RequestContent({ searchParams }: Pick<PageProps<"/request">, "searchParams">) {
   await connection();
+  const { result } = await searchParams;
   const enabled = Boolean(getCodeSender());
   return (
     <Container className="py-3 sm:py-4">
       <div id="request-details" className="mx-auto grid max-w-[64rem] gap-3">
         <JsonLd data={breadcrumbSchema(trail.map(({ label, href }) => ({ name: label, href })))} />
-        <RequestForm enabled={enabled} />
+        <RequestForm enabled={enabled} resultId={typeof result === "string" ? result : undefined} />
         <aside id="office-contact" aria-labelledby="request-office-heading"
           className="flex scroll-mt-24 flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded-md border border-line bg-surface px-4 py-2 sm:px-6">
           <h2 id="request-office-heading" className="font-bold">تماس مستقیم با دفتر</h2>

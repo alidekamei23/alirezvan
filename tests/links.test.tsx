@@ -3,7 +3,7 @@
 // legal notes.
 import { renderToStaticMarkup } from "react-dom/server";
 import { prerender } from "react-dom/static";
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import { practiceAreas } from "@/content/practice-areas";
 import { questionCategories } from "@/content/question-categories";
 import { toolList, tools, type ToolSlug } from "@/content/tools";
@@ -16,6 +16,12 @@ import {
   toolsForArea,
   toolsForQuestionCategory,
 } from "@/lib/links";
+
+// These pages are rendered without Next's App Router in the static HTML checks.
+vi.mock("next/navigation", async (importOriginal) => ({
+  ...await importOriginal<typeof import("next/navigation")>(),
+  useRouter: () => ({ push: vi.fn() }),
+}));
 
 describe("hub and calculator links", () => {
   it("gives every practice hub at least one calculator, each listed once", () => {
