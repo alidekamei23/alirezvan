@@ -39,11 +39,11 @@ export function HomeHero() {
           alt={`تصویر ${lawyer.name}`}
           width={lawyer.photo.width}
           height={lawyer.photo.height}
-          sizes="(min-width: 64rem) 24rem, (min-width: 48rem) 16rem, 1px"
+          sizes="(min-width: 48rem) min(37vw, 26rem), 1px"
           preload
-          className="hero-portrait hidden h-auto w-64 shrink-0 md:order-last md:block lg:w-96"
+          className="hero-portrait hidden h-auto shrink-0 md:order-last md:block"
         />
-        <div className="max-w-reading md:self-center md:py-10 lg:pt-0 max-md:contents">
+        <div className="home-hero-copy max-w-reading md:self-center max-md:contents">
           <h1>
             <span className="block text-3xl font-black text-ink max-md:text-on-inverse">
               {lawyer.name}

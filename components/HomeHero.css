@@ -1,16 +1,30 @@
-/* Keep the existing hero on touch-first tablets, including in landscape. */
-@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+/* The full portrait and two-column layout both start at md. */
+@media (min-width: 48rem) {
   .home-hero {
-    background: radial-gradient(ellipse at 18% 18%, #43556c, #203248 44%, #142235 82%);
+    background: radial-gradient(ellipse at 16% 22%, #50647a, #24374b 46%, #142235 82%);
   }
 
   .home-hero .hero-dots {
-    display: none;
+    /* Directional daylight with a soft shadow from the window frame. */
+    inset: 0 auto 0 0;
+    width: 55%;
+    opacity: 1;
+    background:
+      linear-gradient(84deg, transparent 19%, rgb(21 36 52 / 38%) 21%, transparent 24%),
+      linear-gradient(48deg, transparent 37%, rgb(227 235 237 / 30%) 40% 47%,
+        transparent 50% 52%, rgb(225 232 235 / 20%) 55% 65%, transparent 69%);
+    mask-image: radial-gradient(ellipse at 10% 25%, black 16%, transparent 72%);
   }
 
   /* Trace the white-backed original so the browser can reuse its responsive image. */
   .home-hero .hero-portrait {
+    width: min(37vw, 26rem);
     mask: url("/images/ali-rezvan-portrait-mask.svg") center / contain no-repeat;
+  }
+
+  .home-hero-copy {
+    min-width: 0;
+    padding-block: clamp(1.5rem, 3vw, 2.75rem);
   }
 
   .home-hero h1 span,
@@ -46,5 +60,12 @@
 
   .home-hero a:focus-visible {
     outline-color: var(--color-focus-inverse);
+  }
+}
+
+@media (48rem <= width < 64rem) {
+  .home-hero-request,
+  .home-hero-call {
+    padding-inline: 1rem;
   }
 }
