@@ -24,7 +24,7 @@ export function HomeHero() {
       <div aria-hidden="true" className="hero-dots max-md:hidden" />
       {/* Phones: a two-column grid (photo | name), and the text block below dissolves into
           it with `contents` so the lead and the button span both columns. */}
-      <Container className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-10 lg:gap-16 max-md:grid max-md:grid-cols-[auto_1fr] max-md:items-center max-md:gap-x-4">
+      <Container className="home-hero-layout flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-10 lg:gap-16 max-md:grid max-md:grid-cols-[auto_1fr] max-md:items-center max-md:gap-x-4">
         {/* Phones get the tight round crop; from md the full portrait stands on the strip below. */}
         <Image
           src={lawyer.avatar.src}
@@ -62,13 +62,13 @@ export function HomeHero() {
             variant="inverse"
             size="lg"
             fullWidth
-            className="col-span-2 md:hidden"
+            className="home-hero-mobile-request col-span-2 md:hidden"
           >
             {requestNav.label}
             {/* Points left: "forward" in RTL. */}
             <ArrowLeft aria-hidden="true" className="size-5" />
           </LinkButton>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap max-md:hidden">
+          <div className="home-hero-actions mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap max-md:hidden">
             <LinkButton href={requestNav.href} size="lg" className="home-hero-request">
               {requestNav.label}
             </LinkButton>

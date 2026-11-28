@@ -37,7 +37,7 @@ export function LicenseStrip() {
   ];
 
   return (
-    <div className="border-y border-line bg-surface">
+    <div className="license-strip border-y border-line bg-surface">
       <Container className="flex flex-col md:flex-row md:items-stretch">
         <dl className="grid flex-1 grid-cols-3 md:grid-cols-[auto_1fr_1fr]">
           {items.map((item) => (
