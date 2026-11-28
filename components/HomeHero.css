@@ -14,8 +14,8 @@
     mask-image:
       linear-gradient(91deg, transparent 2%, black 3.8% 21%, transparent 22.6%,
         black 24.3%),
-      repeating-linear-gradient(39deg, transparent 0 0.55em, black 0.88em 3.25em,
-        transparent 3.65em 4.35em);
+      linear-gradient(39deg, transparent 0.55em, black 0.88em 3.25em,
+        transparent 3.65em 4.9em, black 5.23em 7.6em, transparent 8em);
     mask-composite: intersect;
     font-size: clamp(1.1rem, 3.9vw, 3.8rem);
   }
