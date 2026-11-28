@@ -149,7 +149,7 @@ export default async function QuestionsPage({ searchParams }: Props) {
             </span>
           )}
         </div>
-        <nav aria-label="دسته‌بندی پرسش‌ها" className="rounded-md border border-line bg-surface p-2 md:col-start-2 md:row-start-2">
+        <nav aria-label="دسته‌بندی پرسش‌ها" className="rounded-md border border-line bg-surface p-2 md:sticky md:top-[calc(var(--header-height)+1rem)] md:col-start-2 md:row-start-2 md:max-h-[calc(100dvh-var(--header-height)-var(--contact-bar-height)-env(safe-area-inset-bottom)-2rem)] md:overflow-y-auto lg:max-h-[calc(100dvh-var(--header-height)-2rem)]">
           <details className="group md:hidden" key={category ?? "all"}>
             <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-sm px-2 text-sm font-bold text-ink [&::-webkit-details-marker]:hidden">
               <ListFilter aria-hidden="true" className="size-4 text-primary" />
